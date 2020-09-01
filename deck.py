@@ -6,6 +6,7 @@ class Deck_and_hand:
         self.card = namedtuple('Card', ['value', 'suit'])
         self.suits = ['hearts', 'diamonds', 'spades', 'clubs']
         self.deck = [self.card(value, suit) for value in range(1, 14) for suit in self.suits]
+        self.deck = [(card.suit,card.value) for card in self.deck]
         self.my_hand = []
         self.opponent_hand = []
         self.neutral_hand = self.draw_hand()

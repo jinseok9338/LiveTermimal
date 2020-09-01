@@ -1,12 +1,19 @@
-from opponent_hand import Opponent
+from hand import Hand
 from pprint import pprint
 
-opponent = Opponent()
-opponent.add_hand(6)
-print(opponent.opponent_hand)
-print(opponent.neutral_hand)
-graph = opponent.make_graph()
-paths = opponent.find_from_the_shortest_to_longest_path(graph,opponent.neutral_hand)
-pprint(graph)
-pprint(paths)
+game = Hand()
+game.add_hand(6,game.my_hand)
+game.add_hand(6,game.opponent_hand)
+
+
+while len(game.deck) !=0 or len(game.opponent_hand) !=0 or len(game.my_hand) !=0:
+    game.my_turn()
+    game.your_turn()
+
+if len(game.opponent_hand) > len(game.my_hand):
+    print("You win")
+elif len(game.opponent_hand) < len(game.my_hand):
+    print("You lost")
+else:
+    print("Draw")
 
