@@ -5,9 +5,10 @@ class Opponent(Deck_and_hand):
         Deck_and_hand.__init__(self)
 
     def add_hand(self,num):
-        card = self.draw_hand()
         for _ in range(num):
+            card = self.draw_hand()
             self.opponent_hand.append(card)
+            self.deck.remove(card)
 
 
     def make_graph(self):
