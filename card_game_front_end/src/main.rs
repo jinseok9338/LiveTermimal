@@ -1,6 +1,6 @@
 mod components;
 
-use web_sys::HtmlInputElement;
+use web_sys::HtmlInputElement as InputElement;
 use yew::prelude::*;
 
 #[function_component(App)]
@@ -10,14 +10,12 @@ fn app() -> Html {
     let onclick = {
         let input_ref = input_ref.clone();
         move |_| {
-            if let Some(input) = input_ref.cast::<HtmlInputElement>() {
-                input.focus()
-            } else {
-                println!("ds")
-            }
+            let input = input_ref.cast::<InputElement>();
+            input.unwrap().focus().unwrap();
         }
     };
     html! {
+
     <div
       class="text-light-foreground dark:text-dark-foreground min-w-max text-xs md:min-w-full md:text-base"
       onclick={onclick}
