@@ -6,3 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+stdweb = "0.4.20"
+web-sys = "0.3.57"
+# you can check the latest version here: https://crates.io/crates/yew
+yew = "0.19"
