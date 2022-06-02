@@ -54,7 +54,7 @@ class Hand(Deck_and_hand):
     def your_turn(self):
         graph = self.make_graph()
         all_path = self.find_from_the_shortest_to_longest_path(graph,self.neutral_hand)
-        all_path.sort(key=lambda x: len(x),reverse=True)
+        all_path.sort(key=len,reverse=True)
         longest_path = all_path[0]
         self.neutral_hand = longest_path[-1]
         for card in longest_path:
