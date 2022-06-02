@@ -1,5 +1,7 @@
 mod components;
+mod config;
 
+use gloo_console::log;
 use web_sys::HtmlInputElement as InputElement;
 use yew::prelude::*;
 
@@ -9,19 +11,19 @@ fn app() -> Html {
 
     let onclick = {
         let input_ref = input_ref.clone();
+
         move |_| {
             let input = input_ref.cast::<InputElement>();
-            input.unwrap().focus().unwrap();
+            input.unwrap().focus().unwrap()
         }
     };
     html! {
 
     <div
       class="text-light-foreground dark:text-dark-foreground min-w-max text-xs md:min-w-full md:text-base"
-      onclick={onclick}
     >
       <main class="bg-light-background dark:bg-dark-background w-full h-full p-2">
-        <h1>{"Hello World"}</h1>
+        <button {onclick}>{"Hello World"}</button>
       </main>
     </div>}
 }

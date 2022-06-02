@@ -30,6 +30,10 @@ checksum = "37ccbd214614c6783386c1af30caf03192f17891059cecc394b4fb119e363de3"
 name = "card_game_front_end"
 version = "0.1.0"
 dependencies = [
+ "gloo-console",
+ "gloo-dialogs",
+ "serde",
+ "serde_json",
  "stdweb",
  "web-sys",
  "yew",
