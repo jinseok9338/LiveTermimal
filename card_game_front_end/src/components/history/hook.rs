@@ -27,16 +27,18 @@ use yew::{use_state, UseStateHandle};
 
 use crate::components::history::interface::History;
 
-
-#[derive(Debug, Clone)]
-pub struct UseHistoryHandle {
+#[derive(Debug)]
+pub struct UseHistoryHandle<T, A>
+where
+    T: Fn(History) -> (),
+    A: Fn(String) -> (),
+{
     history: UseStateHandle<Vec<History>>,
     command: UseStateHandle<String>,
-    last_command_index :UseStateHandle<usize>,
-    clear_history : |History| -> (),
-    set_history: |History| -> (),
+    last_command_index: UseStateHandle<usize>,
+    clear_history: A,
+    set_history: T,
 }
-
 
 pub fn useHistory(defaultValue: Vec<History>) {
     let history: UseStateHandle<Vec<History>> = use_state(|| defaultValue);
@@ -46,16 +48,14 @@ pub fn useHistory(defaultValue: Vec<History>) {
     let clear_history = {
         let history = history.clone();
 
-        move |_| {
-            history.set(vec![])
-        }
+        move |_: String| history.set(vec![])
     };
 
     let set_history = {
         let history = history.clone();
-    
-        move |new_history:History| {
-            let old_history = *history;
+        let mut old_history = *history;
+
+        move |new_history: History| {
             old_history.push(new_history);
             history.set(old_history)
         }
@@ -67,5 +67,5 @@ pub fn useHistory(defaultValue: Vec<History>) {
         last_command_index;
         clear_history;
         set_history;
-    }
+    };
 }

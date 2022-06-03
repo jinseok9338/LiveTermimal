@@ -6,3 +6,11 @@ pub struct History {
     pub command: String,
     pub output: String,
 }
+
+impl Copy for History {}
+
+impl Clone for History {
+    fn clone(&self) -> History {
+        *self
+    }
+}

@@ -3,6 +3,4 @@
 # and commit this file to your remote git repository to share the goodness with others.
 
 tasks:
-  - command: python main.py
-
-
+  - init: rustup target add wasm32-unknown-unknown && cargo install trunk
