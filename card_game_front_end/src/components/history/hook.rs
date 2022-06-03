@@ -47,13 +47,13 @@ pub fn useHistory(defaultValue: Vec<History>) {
 
     let clear_history = {
         let history = history.clone();
-
-        move |_: String| history.set(vec![])
+        let empty_vector = Vec::new();
+        move |_: String| history.set(empty_vector)
     };
 
     let set_history = {
         let history = history.clone();
-        let mut old_history = *history;
+        let mut old_history = (*history).clone();
 
         move |new_history: History| {
             old_history.push(new_history);
