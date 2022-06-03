@@ -1,2 +1,2 @@
-mod history;
-mod ps_1;
+pub mod history;
+pub mod ps_1;

@@ -32,9 +32,9 @@ use crate::components::history::interface::History;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct HistoryContext {
-    history: UseStateHandle<Vec<History>>,
-    command: UseStateHandle<String>,
-    last_command_index: UseStateHandle<usize>,
+    pub history: UseStateHandle<Vec<History>>,
+    pub command: UseStateHandle<String>,
+    pub last_command_index: UseStateHandle<usize>,
 }
 
 impl HistoryContext {
@@ -69,21 +69,21 @@ pub(crate) struct HistoryProviderProps {
     pub default_value: Vec<History>,
 }
 
-#[function_component(ThemeProvider)]
-pub(crate) fn theme_provider(props: &HistoryProviderProps) -> Html {
+#[function_component(HistoryContextProvider)]
+pub(crate) fn history_provider(props: &HistoryProviderProps) -> Html {
     let history = use_state(|| props.default_value.to_owned());
     let command = use_state(|| "".to_owned());
     let last_command_index = use_state(|| 0);
 
-    let theme_ctx = HistoryContext::new(history, command, last_command_index);
+    let history_ctx = HistoryContext::new(history, command, last_command_index);
 
     html! {
-        <ContextProvider<HistoryContext> context={theme_ctx}>
+        <ContextProvider<HistoryContext> context={history_ctx}>
             {props.children.clone()}
         </ContextProvider<HistoryContext>>
     }
 }
 
-pub fn useHistory(defaultValue: Vec<History>) -> HistoryContext {
+pub fn use_history() -> HistoryContext {
     use_context::<HistoryContext>().unwrap()
 }
