@@ -24,7 +24,7 @@
 // };
 
 use yew::{
-    function_component, html, use_context, use_state, Children, ContextProvider, Html, Properties,
+    function_component, html, use_context, use_state, Children, ContextProvider, Properties,
     UseStateHandle,
 };
 
@@ -64,13 +64,13 @@ impl HistoryContext {
 }
 
 #[derive(Debug, PartialEq, Properties)]
-pub(crate) struct HistoryProviderProps {
+pub struct HistoryProviderProps {
     pub children: Children,
     pub default_value: Vec<History>,
 }
 
 #[function_component(HistoryContextProvider)]
-pub(crate) fn history_provider(props: &HistoryProviderProps) -> Html {
+pub fn history_provider(props: &HistoryProviderProps) -> Html {
     let history = use_state(|| props.default_value.to_owned());
     let command = use_state(|| "".to_owned());
     let last_command_index = use_state(|| 0);
@@ -85,5 +85,5 @@ pub(crate) fn history_provider(props: &HistoryProviderProps) -> Html {
 }
 
 pub fn use_history() -> HistoryContext {
-    use_context::<HistoryContext>().unwrap()
+    use_context::<HistoryContext>().expect("no ctx found")
 }

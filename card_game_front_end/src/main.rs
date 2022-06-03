@@ -3,7 +3,8 @@ mod config;
 mod index;
 
 use crate::components::history::hook::HistoryContextProvider;
-use gloo_console::log;
+// use gloo_console::log;
+use index::Main;
 use web_sys::HtmlInputElement as InputElement;
 use yew::prelude::*;
 
@@ -14,18 +15,18 @@ fn app() -> Html {
     let onclick = {
         let input_ref = input_ref.clone();
 
-        move |_| {
+        move |_: String| {
             let input = input_ref.cast::<InputElement>();
             input.unwrap().focus().unwrap()
         }
     };
     html! {
-      <HistoryContextProvider>
+      <HistoryContextProvider default_value ={vec![]}>
         <div
             class="text-light-foreground dark:text-dark-foreground min-w-max text-xs md:min-w-full md:text-base"
           >
           <main class="bg-light-background dark:bg-dark-background w-full h-full p-2">
-            <button {onclick}>{"Hello World"}</button>
+            <Main/>
           </main>
         </div>
       </HistoryContextProvider>

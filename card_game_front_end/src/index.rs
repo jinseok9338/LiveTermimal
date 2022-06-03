@@ -4,8 +4,9 @@ use yew::prelude::*;
 #[function_component(Main)]
 pub fn main() -> Html {
     let history_props = use_history();
-    let print = *(history_props.history);
+    let index = *(history_props.last_command_index.clone());
+
     html! {
-        <h1>{"command"}</h1>
+        <h1>{index}</h1>
     }
 }
