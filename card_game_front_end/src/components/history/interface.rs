@@ -1,6 +1,6 @@
 use stdweb::web::Date;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct History {
     pub id: usize,
     pub date: Date,
