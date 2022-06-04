@@ -1,5 +1,4 @@
 use chrono::DateTime;
-use stdweb::web::Date;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct History {

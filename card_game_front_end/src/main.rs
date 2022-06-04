@@ -1,6 +1,7 @@
 mod components;
 mod config;
 mod index;
+mod utils;
 
 use crate::components::history::hook::HistoryContextProvider;
 // use gloo_console::log;

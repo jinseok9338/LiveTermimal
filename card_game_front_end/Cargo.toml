@@ -15,4 +15,5 @@ yew = "0.19"
 serde_json = "1.0.66"
 serde = "1.0.137"
 chrono = "0.4"
+reqwest = {version = "0.11.10", features=["json"]}
 

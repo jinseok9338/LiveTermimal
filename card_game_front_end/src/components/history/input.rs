@@ -79,8 +79,8 @@
 //   };
 
 //   return (
-//     <div className="flex flex-row space-x-2">
-//       <label htmlFor="prompt" className="flex-shrink">
+//     <div class="flex flex-row space-x-2">
+//       <label htmlFor="prompt" class="flex-shrink">
 //         <Ps1 />
 //       </label>
 
@@ -88,7 +88,7 @@
 //         ref={inputRef}
 //         id="prompt"
 //         type="text"
-//         className={`bg-light-background dark:bg-dark-background focus:outline-none flex-grow ${
+//         class={`bg-light-background dark:bg-dark-background focus:outline-none flex-grow ${
 //           commandExists(command) || command === ''
 //             ? 'text-dark-green'
 //             : 'text-dark-red'
@@ -150,7 +150,39 @@ pub fn input(props: &InputProps) -> Html {
                 // containerRef.current.scrollTo(0, containerRef.current.scrollHeight);
             }
 
-            todo! {}
+            if event.key() == "ArrowUp" {
+                event.prevent_default();
+                let command_length = commands.len();
+                if &command_length == 0.try_into().unwrap() {
+                    return;
+                }
+
+                let index = *(cloned_history.last_command_index) + 1;
+                if index <= command_length.clone() {
+                    cloned_history.last_command_index.set(index);
+                    cloned_history
+                        .command
+                        .set(commands[&command_length - 1].to_owned())
+                }
+            }
+
+            if event.key() == "ArrowDown" {
+                event.prevent_default();
+                let command_length = commands.len();
+                if command_length == 0 {
+                    return;
+                }
+                let index = *(cloned_history.last_command_index) - 1;
+                if index > 0 {
+                    cloned_history.last_command_index.set(index);
+                    cloned_history
+                        .command
+                        .set(commands[&command_length - index].to_owned())
+                } else {
+                    cloned_history.last_command_index.set(0);
+                    cloned_history.command.set("".to_owned());
+                }
+            }
         }
     };
 
@@ -161,8 +193,8 @@ pub fn input(props: &InputProps) -> Html {
     };
 
     html! {
-        <div className="flex flex-row space-x-2">
-              <label htmlFor="prompt" className="flex-shrink">
+        <div class="flex flex-row space-x-2">
+              <label htmlFor="prompt" class="flex-shrink">
                 <Ps1 />
               </label>
 
