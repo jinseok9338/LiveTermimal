@@ -117,10 +117,12 @@ pub fn input(props: &InputProps) -> Html {
 
     let on_submit = {
         let cloned_history = history.clone();
-        let commands_hostory = history.clone().history.to_owned();
-        let commands = (*commands_hostory)
+        let commands_hostory = history.clone().history;
+        let commands_history_vec = &(*commands_hostory);
+        let commands = commands_history_vec
             .into_iter()
-            .map(|command_history: History| command_history.command);
+            .map(|history| &history.command)
+            .collect::<Vec<&String>>();
 
         move |event: KeyboardEvent| {}
     };
