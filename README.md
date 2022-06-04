@@ -1,1 +1,1 @@
-\*\*\* web based Cli themed card game
+**_ web based Cli themed card game _**
