@@ -23,12 +23,12 @@
 //   };
 // };
 
+use crate::components::history::interface::History;
+use chrono::prelude::*;
 use yew::{
     function_component, html, use_context, use_state, Children, ContextProvider, Properties,
     UseStateHandle,
 };
-
-use crate::components::history::interface::History;
 
 #[derive(Debug, PartialEq, Clone)]
 pub struct HistoryContext {
@@ -50,15 +50,25 @@ impl HistoryContext {
         }
     }
 
-    pub fn clear_history(history: UseStateHandle<Vec<History>>) {
-        let cloned_history = history.clone();
+    pub fn clear_history(self: &Self) {
+        let cloned_history = self.history.clone();
         let empty_vector = Vec::new();
         cloned_history.set(empty_vector)
     }
 
-    pub fn set_history(history: UseStateHandle<Vec<History>>) {
-        let cloned_history = history.clone();
-        let mut old_history = (*history).clone();
+    pub fn set_history(self: &Self, value: String) {
+        let cloned_history = self.history.clone();
+        let cloned_command = self.command.clone();
+        let command = &*cloned_command;
+        let new_history = History {
+            command: command.to_owned(),
+            id: (*cloned_history).len(),
+            output: value,
+            date: Utc::now(),
+        };
+
+        let mut old_history = (*self.history).clone();
+        old_history.push(new_history);
         cloned_history.set(old_history)
     }
 }

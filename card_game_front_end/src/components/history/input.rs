@@ -107,6 +107,7 @@
 use yew::prelude::*;
 
 use crate::components::history::{hook::use_history, interface::History};
+use crate::components::ps_1::Ps1;
 
 #[derive(Properties, PartialEq)]
 pub struct InputProps {}
@@ -124,8 +125,43 @@ pub fn input(props: &InputProps) -> Html {
             .map(|history| &history.command)
             .collect::<Vec<&String>>();
 
-        move |event: KeyboardEvent| {}
+        move |event: KeyboardEvent| {
+            if event.key() == "c".to_owned() && event.ctrl_key() {
+                event.prevent_default();
+                cloned_history.command.set("".to_owned());
+                cloned_history.set_history("".to_owned());
+                cloned_history.last_command_index.set(0);
+            }
+
+            if event.key() == "l" && event.ctrl_key() {
+                event.prevent_default();
+                cloned_history.clear_history();
+            }
+
+            if event.key() == "Tab" {
+                event.prevent_default();
+                todo! {} //handle_tab_completion(command, cloned_history.command.set);
+            }
+        }
     };
 
-    html! {}
+    html! {
+        <div className="flex flex-row space-x-2">
+              <label htmlFor="prompt" className="flex-shrink">
+                <Ps1 />
+              </label>
+
+              <input
+                ref={inputRef}
+                id="prompt"
+                type="text"
+                value={command}
+                onChange={onChange}
+                autoFocus="true"
+                onKeyDown={onSubmit}
+                autoComplete="off"
+                spellCheck="false"
+              />
+            </div>
+    }
 }
