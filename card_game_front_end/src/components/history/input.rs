@@ -133,16 +133,31 @@ pub fn input(props: &InputProps) -> Html {
                 cloned_history.last_command_index.set(0);
             }
 
-            if event.key() == "l" && event.ctrl_key() {
+            if event.key() == "l".to_owned() && event.ctrl_key() {
                 event.prevent_default();
                 cloned_history.clear_history();
             }
 
-            if event.key() == "Tab" {
+            if event.key() == "Tab".to_owned() {
                 event.prevent_default();
                 todo! {} //handle_tab_completion(command, cloned_history.command.set);
             }
+
+            if event.key() == "Enter".to_owned() || event.code() == "13".to_owned() {
+                event.prevent_default();
+                cloned_history.last_command_index.set(0);
+                // await shell(command, setHistory, clearHistory, setCommand);
+                // containerRef.current.scrollTo(0, containerRef.current.scrollHeight);
+            }
+
+            todo! {}
         }
+    };
+
+    let on_change = {
+        let cloned_history = history.clone();
+
+        |input_event: InputEvent| cloned_history.command.set(input_event.data().unwrap())
     };
 
     html! {
