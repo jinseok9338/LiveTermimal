@@ -174,6 +174,10 @@ impl Commands {
         Self { config, window }
     }
 
+    pub fn help(self: &Self, args: Vec<String>) -> Result<String, Error> {
+        todo! {}
+    }
+
     //Redirection to repo
     pub async fn repo(self: &Self, args: Vec<String>) -> Result<String, Error> {
         self.window
