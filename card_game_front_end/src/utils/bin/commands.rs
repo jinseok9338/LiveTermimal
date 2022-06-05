@@ -1,6 +1,6 @@
 use crate::config::config::config::Config;
-use std::{fs, io::Error};
-use web_sys::{window, Window};
+use std::io::Error;
+use web_sys::Window;
 
 pub enum CommandsList {
     Help,
@@ -19,20 +19,47 @@ pub enum CommandsList {
     Banner,
 }
 
+fn commands_in_text(command: CommandsList) -> Result<String, Error> {
+    match command {
+        CommandsList::About => Ok("about".to_owned()),
+        CommandsList::Banner => Ok("banner".to_owned()),
+        CommandsList::Bing => Ok("bing".to_owned()),
+        CommandsList::Help => Ok("help".to_owned()),
+        CommandsList::Repo => Ok("repo".to_owned()),
+        CommandsList::Resume => Ok("resume".to_owned()),
+        CommandsList::Donate => Ok("donate".to_owned()),
+        CommandsList::Google => Ok("google".to_owned()),
+        CommandsList::Duckduckgo => Ok("duckduckgo".to_owned()),
+        CommandsList::Reddit => Ok("reddit".to_owned()),
+        CommandsList::Echo => Ok("echo".to_owned()),
+        CommandsList::Whoami => Ok("whoami".to_owned()),
+        CommandsList::Ls => Ok("ls".to_owned()),
+        CommandsList::Cd => Ok("cd".to_owned()),
+    }
+}
+
 pub struct Commands {
     config: Config,
     window: Window,
 }
 
 impl Commands {
-    pub fn new() -> Self {
-        let data = fs::read_to_string("./src/config/config.json").expect("Unable to read file");
-        let config: Config =
-            serde_json::from_str(&data).expect("JSON does not have correct format.");
-        let window = window().unwrap();
-
-        Self { config, window }
-    }
+    pub const COMMAND_LIST: Vec<String> = vec![
+        "about".to_owned(),
+        "banner".to_owned(),
+        "bing".to_owned(),
+        "help".to_owned(),
+        "repo".to_owned(),
+        "resume".to_owned(),
+        "donate".to_owned(),
+        "google".to_owned(),
+        "duckduckgo".to_owned(),
+        "reddit".to_owned(),
+        "echo".to_owned(),
+        "whoami".to_owned(),
+        "ls".to_owned(),
+        "cd".to_owned(),
+    ];
 
     pub fn help(self: &Self, args: Vec<String>) -> Result<String, Error> {
         todo! {}

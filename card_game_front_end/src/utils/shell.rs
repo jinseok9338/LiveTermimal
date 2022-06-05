@@ -2,7 +2,7 @@ use std::ascii::AsciiExt;
 
 use crate::components::history::hook::use_history;
 
-use super::command_exists::command_exists;
+use super::{bin::commands::Commands, command_exists::command_exists};
 
 // import React from 'react';
 // import * as bin from './bin';
@@ -44,7 +44,7 @@ pub async fn shell() {
     } else if *command_clone == "".to_owned() {
         history.set_history("".to_owned())
     } else if !command_exists {
-        let output = todo! {};
+        let output = Commands::COMMAND_LIST;
         history.set_history(output);
     }
     command_clone.set("".to_owned())

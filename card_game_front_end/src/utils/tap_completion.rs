@@ -20,7 +20,7 @@ pub fn handle_tap_completion() {
     let command_handler = history.clone().command;
     let commands: Vec<String> = todo! {};
 
-    if *commands.len() == 1 {
+    if commands.len() == 1 {
         command_handler.set(commands[0])
     }
 }
