@@ -67,7 +67,7 @@ impl CommandsContext {
         Self { config, window }
     }
 
-    pub async fn help(self: &Self, args: Vec<&str>) -> Result<String, Error> {
+    pub fn help(self: &Self, _args: Vec<&str>) -> Result<String, Error> {
         let mut result_string = "".to_owned();
         for (i, command) in CommandsContext::COMMAND_LIST.into_iter().enumerate() {
             if i % 7 == 0 {
@@ -88,7 +88,7 @@ impl CommandsContext {
     }
 
     //Redirection to repo
-    pub async fn repo(self: &Self, args: Vec<&str>) -> Result<String, Error> {
+    pub fn repo(self: &Self, _args: Vec<&str>) -> Result<String, Error> {
         self.window
             .open_with_url(self.config.repo.as_ref())
             .unwrap();
@@ -97,7 +97,7 @@ impl CommandsContext {
     }
 
     //About
-    pub async fn about(self: &Self, args: Vec<&str>) -> Result<String, Error> {
+    pub fn about(self: &Self, _args: Vec<&str>) -> Result<String, Error> {
         Ok(format!(
             r#"Hi, I am {name}.
         Welcome to my website!
@@ -111,7 +111,7 @@ impl CommandsContext {
         .to_owned())
     }
 
-    pub async fn resume(self: &Self, args: Vec<&str>) -> Result<String, Error> {
+    pub fn resume(self: &Self, _args: Vec<&str>) -> Result<String, Error> {
         self.window
             .open_with_url(self.config.resume_url.as_ref())
             .unwrap();
@@ -119,7 +119,7 @@ impl CommandsContext {
         Ok("Opening resume".to_owned())
     }
 
-    pub async fn donate(self: &Self, args: Vec<&str>) -> Result<String, Error> {
+    pub fn donate(self: &Self, _args: Vec<&str>) -> Result<String, Error> {
         Ok(r#"
         thank you for your interest.
         here are the ways you can support my work:
@@ -128,7 +128,7 @@ impl CommandsContext {
         "#.to_owned())
     }
 
-    pub async fn google(self: &Self, args: Vec<&str>) -> Result<String, Error> {
+    pub fn google(self: &Self, args: Vec<&str>) -> Result<String, Error> {
         let query = args.join(" ");
         self.window
             .open_with_url(format!("https://google.com/search?q=${query}", query = query).as_ref())
@@ -136,7 +136,7 @@ impl CommandsContext {
         Ok(format!("Searching google for {query}...", query = query))
     }
 
-    pub async fn duckduckgo(self: &Self, args: Vec<&str>) -> Result<String, Error> {
+    pub fn duckduckgo(self: &Self, args: Vec<&str>) -> Result<String, Error> {
         let query = args.join(" ");
         self.window
             .open_with_url(format!("https://duckduckgo.com/?q=${query}", query = query).as_ref())
@@ -147,7 +147,7 @@ impl CommandsContext {
         ))
     }
 
-    pub async fn bing(self: &Self, args: Vec<&str>) -> Result<String, Error> {
+    pub fn bing(self: &Self, args: Vec<&str>) -> Result<String, Error> {
         let query = args.join(" ");
         self.window
             .open_with_url(format!("https://bing.com/search?q=${query}", query = query).as_ref())
@@ -158,7 +158,7 @@ impl CommandsContext {
         ))
     }
 
-    pub async fn reddit(self: &Self, args: Vec<&str>) -> Result<String, Error> {
+    pub fn reddit(self: &Self, args: Vec<&str>) -> Result<String, Error> {
         let query = args.join(" ");
         self.window
             .open_with_url(format!("https://reddit.com/search/?q=${query}", query = query).as_ref())
@@ -167,26 +167,26 @@ impl CommandsContext {
     }
 
     //Typical linux Commands
-    pub async fn echo(self: &Self, args: Vec<&str>) -> Result<String, Error> {
+    pub fn echo(self: &Self, args: Vec<&str>) -> Result<String, Error> {
         let query = args.join(" ");
         Ok(query)
     }
 
-    pub async fn whoami(self: &Self, args: Vec<&str>) -> Result<String, Error> {
+    pub fn whoami(self: &Self, _args: Vec<&str>) -> Result<String, Error> {
         Ok(self.config.ps1_username.to_owned())
     }
 
-    pub async fn ls(self: &Self, args: Vec<&str>) -> Result<String, Error> {
+    pub fn ls(self: &Self, _args: Vec<&str>) -> Result<String, Error> {
         todo! {}
         Ok("this is temp ls".to_owned())
     }
 
-    pub async fn cd(self: &Self, args: Vec<&str>) -> Result<String, Error> {
+    pub fn cd(self: &Self, _args: Vec<&str>) -> Result<String, Error> {
         todo! {}
         Ok("this is temp cd".to_owned())
     }
 
-    pub async fn banner(self: &Self, args: Vec<&str>) -> Result<String, Error> {
+    pub fn banner(self: &Self) -> Result<String, Error> {
         Ok(r#"
         █████        ███                       ███████████
         ░░███        ░░░                       ░█░░░███░░░█
@@ -207,20 +207,20 @@ impl CommandsContext {
         command: String,
         args: Vec<&str>,
     ) -> Result<String, Error> {
-        match command.as_ref() {
-            "help" => Ok(self.help(args).await.unwrap()),
-            "banner" => Ok(self.banner(args).await.unwrap()),
-            "about" => Ok(self.about(args).await.unwrap()),
-            "bing" => Ok(self.bing(args).await.unwrap()),
-            "repo" => Ok(self.repo(args).await.unwrap()),
-            "resume" => Ok(self.resume(args).await.unwrap()),
-            "donate" => Ok(self.donate(args).await.unwrap()),
-            "google" => Ok(self.google(args).await.unwrap()),
-            "duckduckgo" => Ok(self.duckduckgo(args).await.unwrap()),
-            "reddit" => Ok(self.reddit(args).await.unwrap()),
-            "whoami" => Ok(self.whoami(args).await.unwrap()),
-            "ls" => Ok(self.ls(args).await.unwrap()),
-            "cd" => Ok(self.cd(args).await.unwrap()),
+        match command {
+            "help" => Ok(self.help(args).unwrap()),
+            "banner" => Ok(self.banner().unwrap()),
+            "about" => Ok(self.about(args).unwrap()),
+            "bing" => Ok(self.bing(args).unwrap()),
+            "repo" => Ok(self.repo(args).unwrap()),
+            "resume" => Ok(self.resume(args).unwrap()),
+            "donate" => Ok(self.donate(args).unwrap()),
+            "google" => Ok(self.google(args).unwrap()),
+            "duckduckgo" => Ok(self.duckduckgo(args).unwrap()),
+            "reddit" => Ok(self.reddit(args).unwrap()),
+            "whoami" => Ok(self.whoami(args).unwrap()),
+            "ls" => Ok(self.ls(args).unwrap()),
+            "cd" => Ok(self.cd(args).unwrap()),
         }
     }
 }

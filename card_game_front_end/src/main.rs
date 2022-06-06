@@ -28,7 +28,7 @@ fn app() -> Html {
               class="text-light-foreground dark:text-dark-foreground min-w-max text-xs md:min-w-full md:text-base"
             >
             <main class="bg-light-background dark:bg-dark-background w-full h-full p-2">
-              <Main/>
+              <Main input_ref ={(&input_ref).clone()}/>
             </main>
           </div>
         </HistoryContextProvider>
