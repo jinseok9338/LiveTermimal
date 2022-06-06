@@ -1,120 +1,18 @@
-// import React from 'react';
-// import { commandExists } from '../utils/commandExists';
-// import { shell } from '../utils/shell';
-// import { handleTabCompletion } from '../utils/tabCompletion';
-// import { Ps1 } from './Ps1';
-
-// export const Input = ({
-//   inputRef,
-//   containerRef,
-//   command,
-//   history,
-//   lastCommandIndex,
-//   setCommand,
-//   setHistory,
-//   setLastCommandIndex,
-//   clearHistory,
-// }) => {
-//   const onSubmit = async (event: React.KeyboardEvent<HTMLInputElement>) => {
-//     const commands: [string] = history
-//       .map(({ command }) => command)
-//       .filter((command: string) => command);
-
-//     if (event.key === 'c' && event.ctrlKey) {
-//       event.preventDefault();
-//       setCommand('');
-//       setHistory('');
-//       setLastCommandIndex(0);
-//     }
-
-//     if (event.key === 'l' && event.ctrlKey) {
-//       event.preventDefault();
-//       clearHistory();
-//     }
-
-//     if (event.key === 'Tab') {
-//       event.preventDefault();
-//       handleTabCompletion(command, setCommand);
-//     }
-
-//     if (event.key === 'Enter' || event.code === '13') {
-//       event.preventDefault();
-//       setLastCommandIndex(0);
-//       await shell(command, setHistory, clearHistory, setCommand);
-//       containerRef.current.scrollTo(0, containerRef.current.scrollHeight);
-//     }
-
-//     if (event.key === 'ArrowUp') {
-//       event.preventDefault();
-//       if (!commands.length) {
-//         return;
-//       }
-//       const index: number = lastCommandIndex + 1;
-//       if (index <= commands.length) {
-//         setLastCommandIndex(index);
-//         setCommand(commands[commands.length - index]);
-//       }
-//     }
-
-//     if (event.key === 'ArrowDown') {
-//       event.preventDefault();
-//       if (!commands.length) {
-//         return;
-//       }
-//       const index: number = lastCommandIndex - 1;
-//       if (index > 0) {
-//         setLastCommandIndex(index);
-//         setCommand(commands[commands.length - index]);
-//       } else {
-//         setLastCommandIndex(0);
-//         setCommand('');
-//       }
-//     }
-//   };
-
-//   const onChange = ({
-//     target: { value },
-//   }: React.ChangeEvent<HTMLInputElement>) => {
-//     setCommand(value);
-//   };
-
-//   return (
-//     <div class="flex flex-row space-x-2">
-//       <label htmlFor="prompt" class="flex-shrink">
-//         <Ps1 />
-//       </label>
-
-//       <input
-//         ref={inputRef}
-//         id="prompt"
-//         type="text"
-//         class={`bg-light-background dark:bg-dark-background focus:outline-none flex-grow ${
-//           commandExists(command) || command === ''
-//             ? 'text-dark-green'
-//             : 'text-dark-red'
-//         }`}
-//         value={command}
-//         onChange={onChange}
-//         autoFocus
-//         onKeyDown={onSubmit}
-//         autoComplete="off"
-//         spellCheck="false"
-//       />
-//     </div>
-//   );
-// };
-
 use yew::prelude::*;
 
 use crate::components::history::{hook::use_history, interface::History};
 use crate::components::ps_1::Ps1;
 
 #[derive(Properties, PartialEq)]
-pub struct InputProps {}
+pub struct InputProps {
+    pub input_ref: NodeRef,
+    pub container_ref: NodeRef,
+}
 
 #[function_component(Input)]
 pub fn input(props: &InputProps) -> Html {
     let history = use_history();
+    let cloned_history = history.clone();
 
     let on_submit = {
         let cloned_history = history.clone();
@@ -125,7 +23,7 @@ pub fn input(props: &InputProps) -> Html {
             .map(|history| &history.command)
             .collect::<Vec<&String>>();
 
-        move |event: KeyboardEvent| {
+        Callback::from(move |event: KeyboardEvent| {
             if event.key() == "c".to_owned() && event.ctrl_key() {
                 event.prevent_default();
                 cloned_history.command.set("".to_owned());
@@ -152,17 +50,17 @@ pub fn input(props: &InputProps) -> Html {
 
             if event.key() == "ArrowUp" {
                 event.prevent_default();
-                let command_length = commands.len();
-                if &command_length == 0.try_into().unwrap() {
+                let command_length = commands.len() as u32;
+                if command_length == 0 as u32 {
                     return;
                 }
 
                 let index = *(cloned_history.last_command_index) + 1;
-                if index <= command_length.clone() {
+                if index <= command_length.clone().try_into().unwrap() {
                     cloned_history.last_command_index.set(index);
                     cloned_history
                         .command
-                        .set(commands[&command_length - 1].to_owned())
+                        .set(commands[(&command_length - 1) as usize].to_owned())
                 }
             }
 
@@ -183,13 +81,15 @@ pub fn input(props: &InputProps) -> Html {
                     cloned_history.command.set("".to_owned());
                 }
             }
-        }
+        })
     };
 
     let on_change = {
         let cloned_history = history.clone();
 
-        |input_event: InputEvent| cloned_history.command.set(input_event.data().unwrap())
+        Callback::from(move |input_event: InputEvent| {
+            cloned_history.command.set(input_event.data().unwrap())
+        })
     };
 
     html! {
@@ -199,13 +99,18 @@ pub fn input(props: &InputProps) -> Html {
               </label>
 
               <input
-                ref={inputRef}
+                ref={props.input_ref.clone()}
                 id="prompt"
                 type="text"
-                value={command}
-                onChange={onChange}
+                value={*(cloned_history.command).clone()}
+                oninput={on_change}
+                // class={`bg-light-background dark:bg-dark-background focus:outline-none flex-grow ${
+                //                commandExists(command) || command === ''
+                //                  ? 'text-dark-green'
+                //                  : 'text-dark-red'
+                //              }`}
                 autoFocus="true"
-                onKeyDown={onSubmit}
+                onkeydown={on_submit}
                 autoComplete="off"
                 spellCheck="false"
               />
