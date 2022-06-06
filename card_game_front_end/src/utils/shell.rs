@@ -1,8 +1,4 @@
-use std::ascii::AsciiExt;
-
 use crate::components::history::hook::use_history;
-
-use super::{bin::commands::Commands, command_exists::command_exists};
 
 // import React from 'react';
 // import * as bin from './bin';
@@ -36,10 +32,10 @@ pub async fn shell() {
     let history = use_history();
     let command_clone = history.command.clone();
     let args: Vec<&str> = (*command_clone.split(" ").collect::<Vec<&str>>()).to_vec();
-    let arg = &args[0].to_ascii_lowercase();
-    let command_exists = command_exists(arg.to_owned()).unwrap();
+    let first_arg: String = args[0].to_lowercase();
+    let command_exists = command_exists(first_arg).unwrap();
 
-    if arg == "clear" {
+    if first_arg == "clear" {
         history.clear_history();
     } else if *command_clone == "".to_owned() {
         history.set_history("".to_owned())

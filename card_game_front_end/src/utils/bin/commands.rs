@@ -1,6 +1,7 @@
 use crate::config::config::config::Config;
-use std::io::Error;
-use web_sys::Window;
+use std::{io::Error, fs};
+use web_sys::{Window, window};
+use yew::{function_component, html, use_context, use_state, Children, Properties ContextProvider};
 
 pub enum CommandsList {
     Help,
@@ -38,12 +39,13 @@ fn commands_in_text(command: CommandsList) -> Result<String, Error> {
     }
 }
 
-pub struct Commands {
+#[derive(Debug, PartialEq, Properties,Clone)]
+pub struct CommandsContext {
     config: Config,
     window: Window,
 }
 
-impl Commands {
+impl CommandsContext {
     pub const COMMAND_LIST: Vec<String> = vec![
         "about".to_owned(),
         "banner".to_owned(),
@@ -60,6 +62,13 @@ impl Commands {
         "ls".to_owned(),
         "cd".to_owned(),
     ];
+
+    pub fn new (config: Config, window:Window) -> Self {
+        Self {
+            config,
+            window,
+        }
+    }
 
     pub fn help(self: &Self, args: Vec<String>) -> Result<String, Error> {
         todo! {}
@@ -179,4 +188,28 @@ impl Commands {
         Type 'repo' or click <u><a class="text-light-blue dark:text-dark-blue underline" href="${config.repo}" target="_blank">here</a></u> for the Github repository.
         "#.to_owned())
     }
+}
+
+#[derive(Debug, PartialEq, Properties)]
+pub struct CommandProviderProps {
+    pub children: Children,
+}
+
+#[function_component(CommandContextProvider)]
+pub fn history_provider(props: &CommandProviderProps) -> Html {
+    let data = fs::read_to_string("./src/config/config.json").expect("Unable to read file");
+    let config: Config = serde_json::from_str(&data).expect("JSON does not have correct format.");
+    let window = window().unwrap();
+
+    let history_ctx = CommandsContext::new(config,window);
+
+    html! {
+        <ContextProvider<CommandsContext> context={history_ctx}>
+            {props.children.clone()}
+        </ContextProvider<CommandsContext>>
+    }
+}
+
+pub fn use_command() -> CommandsContext {
+    use_context::<CommandsContext>().expect("no ctx found")
 }
