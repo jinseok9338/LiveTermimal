@@ -10,9 +10,9 @@ pub fn handle_tap_completion() {
     let commands = existing_commands
         .into_iter()
         .filter(|command| command.starts_with(&*command_handler))
-        .collect::<Vec<String>>();
+        .collect::<Vec<&str>>();
 
     if commands.len() == 1 {
-        command_handler.set(commands[0])
+        command_handler.set(commands[0].to_string())
     }
 }

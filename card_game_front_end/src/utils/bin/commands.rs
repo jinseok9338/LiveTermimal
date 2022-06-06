@@ -46,21 +46,21 @@ pub struct CommandsContext {
 }
 
 impl CommandsContext {
-    pub const COMMAND_LIST: Vec<String> = vec![
-        "about".to_owned(),
-        "banner".to_owned(),
-        "bing".to_owned(),
-        "help".to_owned(),
-        "repo".to_owned(),
-        "resume".to_owned(),
-        "donate".to_owned(),
-        "google".to_owned(),
-        "duckduckgo".to_owned(),
-        "reddit".to_owned(),
-        "echo".to_owned(),
-        "whoami".to_owned(),
-        "ls".to_owned(),
-        "cd".to_owned(),
+    pub const COMMAND_LIST: Vec<&'static str> = vec![
+        "about",
+        "banner",
+        "bing",
+        "help",
+        "repo",
+        "resume",
+        "donate",
+        "google",
+        "duckduckgo",
+        "reddit",
+        "echo",
+        "whoami",
+        "ls",
+        "cd",
     ];
 
     pub fn new(config: Config, window: Window) -> Self {
@@ -71,9 +71,9 @@ impl CommandsContext {
         let mut result_string = "".to_owned();
         for (i, command) in CommandsContext::COMMAND_LIST.into_iter().enumerate() {
             if i % 7 == 0 {
-                result_string += &(command + "\n");
+                result_string += &(command.to_owned() + "\n");
             } else {
-                result_string += &(command + " ");
+                result_string += &(command.to_owned() + " ");
             }
         }
 
@@ -207,7 +207,7 @@ impl CommandsContext {
         command: String,
         args: Vec<&str>,
     ) -> Result<String, Error> {
-        match command {
+        match command.as_str() {
             "help" => Ok(self.help(args).unwrap()),
             "banner" => Ok(self.banner().unwrap()),
             "about" => Ok(self.about(args).unwrap()),
@@ -221,6 +221,7 @@ impl CommandsContext {
             "whoami" => Ok(self.whoami(args).unwrap()),
             "ls" => Ok(self.ls(args).unwrap()),
             "cd" => Ok(self.cd(args).unwrap()),
+            &_ => Ok("Unvalid Command...  type 'help' to get started".to_owned()),
         }
     }
 }

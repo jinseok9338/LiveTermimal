@@ -13,15 +13,10 @@ pub struct InputProps {
 pub fn input(props: &InputProps) -> Html {
     let history = use_history();
     let cloned_history = history.clone();
+    let command = &*cloned_history.command.clone();
 
     let on_submit = {
         let cloned_history = history.clone();
-        let commands_hostory = history.clone().history;
-        let commands_history_vec = &(*commands_hostory);
-        let commands = commands_history_vec
-            .into_iter()
-            .map(|history| &history.command)
-            .collect::<Vec<&String>>();
 
         Callback::from(move |event: KeyboardEvent| {
             if event.key() == "c".to_owned() && event.ctrl_key() {
@@ -49,6 +44,12 @@ pub fn input(props: &InputProps) -> Html {
             }
 
             if event.key() == "ArrowUp" {
+                let commands_history = &*(cloned_history.history);
+                let commands = commands_history
+                    .into_iter()
+                    .map(|history| &history.command)
+                    .collect::<Vec<&String>>();
+
                 event.prevent_default();
                 let command_length = commands.len() as u32;
                 if command_length == 0 as u32 {
@@ -65,6 +66,12 @@ pub fn input(props: &InputProps) -> Html {
             }
 
             if event.key() == "ArrowDown" {
+                let commands_history = &*(cloned_history.history);
+                let commands = commands_history
+                    .into_iter()
+                    .map(|history| &history.command)
+                    .collect::<Vec<&String>>();
+
                 event.prevent_default();
                 let command_length = commands.len();
                 if command_length == 0 {
@@ -102,7 +109,7 @@ pub fn input(props: &InputProps) -> Html {
                 ref={props.input_ref.clone()}
                 id="prompt"
                 type="text"
-                value={*(cloned_history.command).clone()}
+                value={command.to_owned()}
                 oninput={on_change}
                 // class={`bg-light-background dark:bg-dark-background focus:outline-none flex-grow ${
                 //                commandExists(command) || command === ''

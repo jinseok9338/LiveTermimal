@@ -14,11 +14,10 @@ pub struct MainProps {
 pub fn main(props: &MainProps) -> Html {
     let history_props = use_history();
     let cloned_history_props = history_props.clone();
-    let history = *(cloned_history_props.history.clone());
+    let history = &*(cloned_history_props.history.clone());
     let commands_context = use_command();
 
     let container_ref = use_node_ref();
-    let index = *(history_props.last_command_index.clone());
     let input_ref = props.input_ref.clone().cast::<HtmlInputElement>().unwrap();
 
     use_effect_with_deps(
@@ -38,13 +37,13 @@ pub fn main(props: &MainProps) -> Html {
             //This is Clean Up
             || {}
         },
-        [history],
+        [history.clone()],
     );
 
     html! {
         <>
       <div className="p-8 overflow-hidden h-full border-2 rounded border-light-yellow dark:border-dark-yellow">
-        <div ref={container_ref} className="overflow-y-auto h-full">
+        <div ref={&container_ref.clone()} className="overflow-y-auto h-full">
           <HistoryComponent />
           <Input
             input_ref={&props.input_ref.clone()}

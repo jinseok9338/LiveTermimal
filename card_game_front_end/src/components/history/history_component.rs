@@ -1,4 +1,3 @@
-use super::interface::History;
 use crate::components::{history::hook::use_history, ps_1::Ps1};
 use yew::prelude::*;
 
@@ -8,7 +7,7 @@ pub struct HistoryComponentProps {}
 #[function_component(HistoryComponent)]
 pub fn history_compoenet(props: &HistoryComponentProps) -> Html {
     let history = use_history();
-    let history_cloned = *(history.clone().history);
+    let history_cloned = &*(history.clone().history);
 
     html! {
         <>
