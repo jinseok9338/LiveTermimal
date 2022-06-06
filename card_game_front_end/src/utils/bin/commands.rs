@@ -1,7 +1,7 @@
 use crate::config::config::config::Config;
-use std::{io::Error, fs};
-use web_sys::{Window, window};
-use yew::{function_component, html, use_context, use_state, Children, Properties ContextProvider};
+use std::{fs, io::Error};
+use web_sys::{window, Window};
+use yew::{function_component, html, use_context, Children, ContextProvider, Properties};
 
 pub enum CommandsList {
     Help,
@@ -39,7 +39,7 @@ fn commands_in_text(command: CommandsList) -> Result<String, Error> {
     }
 }
 
-#[derive(Debug, PartialEq, Properties,Clone)]
+#[derive(Debug, PartialEq, Properties, Clone)]
 pub struct CommandsContext {
     config: Config,
     window: Window,
@@ -63,19 +63,16 @@ impl CommandsContext {
         "cd".to_owned(),
     ];
 
-    pub fn new (config: Config, window:Window) -> Self {
-        Self {
-            config,
-            window,
-        }
+    pub fn new(config: Config, window: Window) -> Self {
+        Self { config, window }
     }
 
-    pub fn help(self: &Self, args: Vec<String>) -> Result<String, Error> {
+    pub async fn help(self: &Self, args: Vec<&str>) -> Result<String, Error> {
         todo! {}
     }
 
     //Redirection to repo
-    pub async fn repo(self: &Self, args: Vec<String>) -> Result<String, Error> {
+    pub async fn repo(self: &Self, args: Vec<&str>) -> Result<String, Error> {
         self.window
             .open_with_url(self.config.repo.as_ref())
             .unwrap();
@@ -84,7 +81,7 @@ impl CommandsContext {
     }
 
     //About
-    pub async fn about(self: &Self, args: Vec<String>) -> Result<String, Error> {
+    pub async fn about(self: &Self, args: Vec<&str>) -> Result<String, Error> {
         Ok(format!(
             r#"Hi, I am {name}.
         Welcome to my website!
@@ -98,7 +95,7 @@ impl CommandsContext {
         .to_owned())
     }
 
-    pub async fn resume(self: &Self, args: Vec<String>) -> Result<String, Error> {
+    pub async fn resume(self: &Self, args: Vec<&str>) -> Result<String, Error> {
         self.window
             .open_with_url(self.config.resume_url.as_ref())
             .unwrap();
@@ -106,7 +103,7 @@ impl CommandsContext {
         Ok("Opening resume".to_owned())
     }
 
-    pub async fn donate(self: &Self, args: Vec<String>) -> Result<String, Error> {
+    pub async fn donate(self: &Self, args: Vec<&str>) -> Result<String, Error> {
         Ok(r#"
         thank you for your interest.
         here are the ways you can support my work:
@@ -115,7 +112,7 @@ impl CommandsContext {
         "#.to_owned())
     }
 
-    pub async fn google(self: &Self, args: Vec<String>) -> Result<String, Error> {
+    pub async fn google(self: &Self, args: Vec<&str>) -> Result<String, Error> {
         let query = args.join(" ");
         self.window
             .open_with_url(format!("https://google.com/search?q=${query}", query = query).as_ref())
@@ -123,7 +120,7 @@ impl CommandsContext {
         Ok(format!("Searching google for {query}...", query = query))
     }
 
-    pub async fn duckduckgo(self: &Self, args: Vec<String>) -> Result<String, Error> {
+    pub async fn duckduckgo(self: &Self, args: Vec<&str>) -> Result<String, Error> {
         let query = args.join(" ");
         self.window
             .open_with_url(format!("https://duckduckgo.com/?q=${query}", query = query).as_ref())
@@ -134,7 +131,7 @@ impl CommandsContext {
         ))
     }
 
-    pub async fn bing(self: &Self, args: Vec<String>) -> Result<String, Error> {
+    pub async fn bing(self: &Self, args: Vec<&str>) -> Result<String, Error> {
         let query = args.join(" ");
         self.window
             .open_with_url(format!("https://bing.com/search?q=${query}", query = query).as_ref())
@@ -145,7 +142,7 @@ impl CommandsContext {
         ))
     }
 
-    pub async fn reddit(self: &Self, args: Vec<String>) -> Result<String, Error> {
+    pub async fn reddit(self: &Self, args: Vec<&str>) -> Result<String, Error> {
         let query = args.join(" ");
         self.window
             .open_with_url(format!("https://reddit.com/search/?q=${query}", query = query).as_ref())
@@ -154,26 +151,26 @@ impl CommandsContext {
     }
 
     //Typical linux Commands
-    pub async fn echo(self: &Self, args: Vec<String>) -> Result<String, Error> {
+    pub async fn echo(self: &Self, args: Vec<&str>) -> Result<String, Error> {
         let query = args.join(" ");
         Ok(query)
     }
 
-    pub async fn whoami(self: &Self, args: Vec<String>) -> Result<String, Error> {
+    pub async fn whoami(self: &Self, args: Vec<&str>) -> Result<String, Error> {
         Ok(self.config.ps1_username.to_owned())
     }
 
-    pub async fn ls(self: &Self, args: Vec<String>) -> Result<String, Error> {
+    pub async fn ls(self: &Self, args: Vec<&str>) -> Result<String, Error> {
         todo! {}
         Ok("this is temp ls".to_owned())
     }
 
-    pub async fn cd(self: &Self, args: Vec<String>) -> Result<String, Error> {
+    pub async fn cd(self: &Self, args: Vec<&str>) -> Result<String, Error> {
         todo! {}
         Ok("this is temp cd".to_owned())
     }
 
-    pub async fn banner(self: &Self, args: Vec<String>) -> Result<String, Error> {
+    pub async fn banner(self: &Self, args: Vec<&str>) -> Result<String, Error> {
         Ok(r#"
         █████        ███                       ███████████
         ░░███        ░░░                       ░█░░░███░░░█
@@ -188,6 +185,28 @@ impl CommandsContext {
         Type 'repo' or click <u><a class="text-light-blue dark:text-dark-blue underline" href="${config.repo}" target="_blank">here</a></u> for the Github repository.
         "#.to_owned())
     }
+
+    pub async fn execute_command(
+        self: &Self,
+        command: String,
+        args: Vec<&str>,
+    ) -> Result<String, Error> {
+        match command.as_ref() {
+            "help" => Ok(self.help(args).await.unwrap()),
+            "banner" => Ok(self.banner(args).await.unwrap()),
+            "about" => Ok(self.about(args).await.unwrap()),
+            "bing" => Ok(self.bing(args).await.unwrap()),
+            "repo" => Ok(self.repo(args).await.unwrap()),
+            "resume" => Ok(self.resume(args).await.unwrap()),
+            "donate" => Ok(self.donate(args).await.unwrap()),
+            "google" => Ok(self.google(args).await.unwrap()),
+            "duckduckgo" => Ok(self.duckduckgo(args).await.unwrap()),
+            "reddit" => Ok(self.reddit(args).await.unwrap()),
+            "whoami" => Ok(self.whoami(args).await.unwrap()),
+            "ls" => Ok(self.ls(args).await.unwrap()),
+            "cd" => Ok(self.cd(args).await.unwrap()),
+        }
+    }
 }
 
 #[derive(Debug, PartialEq, Properties)]
@@ -201,7 +220,7 @@ pub fn history_provider(props: &CommandProviderProps) -> Html {
     let config: Config = serde_json::from_str(&data).expect("JSON does not have correct format.");
     let window = window().unwrap();
 
-    let history_ctx = CommandsContext::new(config,window);
+    let history_ctx = CommandsContext::new(config, window);
 
     html! {
         <ContextProvider<CommandsContext> context={history_ctx}>
