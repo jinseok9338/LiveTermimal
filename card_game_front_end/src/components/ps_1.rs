@@ -1,13 +1,10 @@
-use crate::config::config::config::Config;
-use std::fs;
+use crate::utils::bin::commands::use_command;
 use yew::prelude::*;
 
 #[function_component(Ps1)]
 pub fn ps_1() -> Html {
-    let data = fs::read_to_string("./src/config/config.json").expect("Unable to read file");
-
-    let config: Config = serde_json::from_str(&data).expect("JSON does not have correct format.");
-
+    let command_context = use_command();
+    let config = command_context.config;
     html! {
         <div>
             <span className="text-light-yellow dark:text-dark-yellow">

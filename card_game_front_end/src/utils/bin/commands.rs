@@ -41,8 +41,8 @@ fn commands_in_text(command: CommandsList) -> Result<String, Error> {
 
 #[derive(Debug, PartialEq, Properties, Clone)]
 pub struct CommandsContext {
-    config: Config,
-    window: Window,
+    pub config: Config,
+    pub window: Window,
 }
 
 impl CommandsContext {
@@ -68,7 +68,23 @@ impl CommandsContext {
     }
 
     pub async fn help(self: &Self, args: Vec<&str>) -> Result<String, Error> {
-        todo! {}
+        let mut result_string = "".to_owned();
+        for (i, command) in CommandsContext::COMMAND_LIST.into_iter().enumerate() {
+            if i % 7 == 0 {
+                result_string += &(command + "\n");
+            } else {
+                result_string += &(command + " ");
+            }
+        }
+
+        Ok(format!(
+            "Welcome! Here are all the available commands:
+        \n{result_string}\n
+        [tab]: trigger completion.
+        [ctrl+l]/clear: clear terminal.\n
+        Type 'sumfetch' to display summary.",
+            result_string = result_string
+        ))
     }
 
     //Redirection to repo
