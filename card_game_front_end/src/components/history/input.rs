@@ -1,8 +1,9 @@
-use web_sys::HtmlInputElement;
+use web_sys::{HtmlElement, HtmlInputElement, ScrollToOptions};
 use yew::prelude::*;
 
 use crate::components::history::hook::use_history;
 use crate::components::ps_1::Ps1;
+use crate::utils::shell::shell;
 
 #[derive(Properties, PartialEq)]
 pub struct InputProps {
@@ -16,6 +17,7 @@ pub fn input(props: &InputProps) -> Html {
     let history = use_history();
     let cloned_history = history.clone();
     let command = &*cloned_history.command.clone();
+    let container_element = props.container_ref.cast::<HtmlElement>().unwrap();
 
     let on_submit = {
         let cloned_history = history.clone();
@@ -41,8 +43,12 @@ pub fn input(props: &InputProps) -> Html {
             if event.key() == "Enter".to_owned() || event.code() == "13".to_owned() {
                 event.prevent_default();
                 cloned_history.last_command_index.set(0);
-                // await shell(command, setHistory, clearHistory, setCommand);
-                // containerRef.current.scrollTo(0, containerRef.current.scrollHeight);
+                shell();
+                container_element.scroll_to_with_scroll_to_options(
+                    &ScrollToOptions::new()
+                        .left(0.try_into().unwrap())
+                        .top(container_element.scroll_height().try_into().unwrap()),
+                )
             }
 
             if event.key() == "ArrowUp" {
@@ -93,20 +99,13 @@ pub fn input(props: &InputProps) -> Html {
         })
     };
 
-    let oninput = {
+    let onchange = Callback::from(move |input_event: Event| {
         let cloned_history = history.clone();
-
-        Callback::from(move |input_event: Event| {
-            cloned_history.command.set(
-                input_event
-                    .current_target()
-                    .unwrap()
-                    .cast::<HtmlInputElement>()
-                    .unwrap()
-                    .value(),
-            )
-        });
-    };
+        let value = input_event
+            .target_unchecked_into::<HtmlInputElement>()
+            .value();
+        cloned_history.command.set(value)
+    });
 
     html! {
         <div class="flex flex-row space-x-2">
@@ -119,16 +118,16 @@ pub fn input(props: &InputProps) -> Html {
                 id="prompt"
                 type="text"
                 value={command.to_owned()}
-                oninput={oninput}
-                // class={`bg-light-background dark:bg-dark-background focus:outline-none flex-grow ${
-                //                commandExists(command) || command === ''
-                //                  ? 'text-dark-green'
-                //                  : 'text-dark-red'
-                //              }`}
-                autoFocus="true"
+                onchange={onchange}
+                class={"bg-light-background dark:bg-dark-background focus:outline-none flex-grow ${
+                               commandExists(command) || command === ''
+                                 ? 'text-dark-green'
+                                 : 'text-dark-red'
+                             }"}
+                autofocus={true}
                 onkeydown={on_submit}
-                autoComplete="off"
-                spellCheck="false"
+                autocomplete="off"
+                //spell check... later
               />
             </div>
     }

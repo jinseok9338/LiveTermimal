@@ -8,8 +8,9 @@ edition = "2021"
 [dependencies]
 gloo-dialogs = "0.1.1"
 stdweb = "0.4.20"
-web-sys = {version = "0.3.57", features=["HtmlInputElement"]}
+web-sys = {version = "0.3.57", features=["HtmlInputElement","Element","ScrollToOptions","DateTimeValue"]}
 gloo-console = "0.2.1"
+instant = { version = "0.1", features = [ "wasm-bindgen", "inaccurate"]}
 # you can check the latest version here: https://crates.io/crates/yew
 yew = "0.19"
 serde_json = "1.0.66"

@@ -1,30 +1,4 @@
-// export const useHistory = (defaultValue: Array<History>) => {
-//   const [history, setHistory] = React.useState<Array<History>>(defaultValue);
-//   const [command, setCommand] = React.useState<string>('');
-//   const [lastCommandIndex, setLastCommandIndex] = React.useState<number>(0);
-
-//   return {
-//     history,
-//     command,
-//     lastCommandIndex,
-//     setHistory: (value: string) =>
-//       setHistory([
-//         ...history,
-//         {
-//           id: history.length,
-//           date: new Date(),
-//           command,
-//           output: value,
-//         },
-//       ]),
-//     setCommand,
-//     setLastCommandIndex,
-//     clearHistory: () => setHistory([]),
-//   };
-// };
-
 use crate::components::history::interface::History;
-use chrono::prelude::*;
 use yew::{
     function_component, html, use_context, use_state, Children, ContextProvider, Properties,
     UseStateHandle,
@@ -64,7 +38,7 @@ impl HistoryContext {
             command: command.to_owned(),
             id: (*cloned_history).len(),
             output: value,
-            date: Utc::now(),
+            date: instant::Instant::now(),
         };
 
         let mut old_history = (*self.history).clone();
