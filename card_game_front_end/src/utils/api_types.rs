@@ -82,7 +82,7 @@ pub struct Projects {
 }
 
 #[derive(Debug, PartialEq, Clone, Deserialize)]
-struct Owner {
+pub struct Owner {
     pub login: String,
     pub id: u32,
     pub node_id: String,

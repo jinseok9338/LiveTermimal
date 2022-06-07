@@ -1,9 +1,10 @@
 use std::io::Error;
 
-use super::bin::commands::CommandsContext;
+use super::bin::commands::use_command;
 
 pub fn command_exists(command: String) -> Result<bool, Error> {
-    let command_list = CommandsContext::COMMAND_LIST;
+    let command_context = use_command();
+    let command_list = command_context.command_list;
 
     let split_string = command.split(" ").collect::<Vec<&str>>();
     let command = split_string[0];

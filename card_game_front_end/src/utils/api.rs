@@ -21,7 +21,6 @@ pub async fn get_projects() -> Result<Response, Error> {
 pub async fn get_read_me() -> Result<String, Error> {
     let data = fs::read_to_string("./src/config/config.json").expect("Unable to read file");
     let config: Config = serde_json::from_str(&data).expect("JSON does not have correct format.");
-
     let response = reqwest::get(&config.readme_url).await?;
     let response_string = response.text().await.unwrap();
 
@@ -29,16 +28,12 @@ pub async fn get_read_me() -> Result<String, Error> {
 }
 
 pub async fn get_weather(city: String) -> Result<String, Error> {
-    let data = fs::read_to_string("./src/config/config.json").expect("Unable to read file");
-    let config: Config = serde_json::from_str(&data).expect("JSON does not have correct format.");
     let response = reqwest::get(format!("https://wttr.in/${city}?ATm", city = &city)).await?;
     let response_text = response.text().await.unwrap();
     Ok(response_text)
 }
 
 pub async fn get_quotes() -> Result<ReturnQuote, Error> {
-    let data = fs::read_to_string("./src/config/config.json").expect("Unable to read file");
-    let config: Config = serde_json::from_str(&data).expect("JSON does not have correct format.");
     let response = reqwest::get("https://api.quotable.io/random").await?;
 
     let quote_json = response.json::<QuoteJson>().await?;

@@ -21,6 +21,7 @@ fn app() -> Html {
             input.unwrap().focus().unwrap()
         }
     };
+
     html! {
       <CommandContextProvider>
         <HistoryContextProvider default_value ={vec![]}>

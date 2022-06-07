@@ -3,73 +3,41 @@ use std::{fs, io::Error};
 use web_sys::{window, Window};
 use yew::{function_component, html, use_context, Children, ContextProvider, Properties};
 
-pub enum CommandsList {
-    Help,
-    Repo,
-    About,
-    Resume,
-    Donate,
-    Google,
-    Duckduckgo,
-    Bing,
-    Reddit,
-    Echo,
-    Whoami,
-    Ls,
-    Cd,
-    Banner,
-}
-
-fn commands_in_text(command: CommandsList) -> Result<String, Error> {
-    match command {
-        CommandsList::About => Ok("about".to_owned()),
-        CommandsList::Banner => Ok("banner".to_owned()),
-        CommandsList::Bing => Ok("bing".to_owned()),
-        CommandsList::Help => Ok("help".to_owned()),
-        CommandsList::Repo => Ok("repo".to_owned()),
-        CommandsList::Resume => Ok("resume".to_owned()),
-        CommandsList::Donate => Ok("donate".to_owned()),
-        CommandsList::Google => Ok("google".to_owned()),
-        CommandsList::Duckduckgo => Ok("duckduckgo".to_owned()),
-        CommandsList::Reddit => Ok("reddit".to_owned()),
-        CommandsList::Echo => Ok("echo".to_owned()),
-        CommandsList::Whoami => Ok("whoami".to_owned()),
-        CommandsList::Ls => Ok("ls".to_owned()),
-        CommandsList::Cd => Ok("cd".to_owned()),
-    }
-}
-
 #[derive(Debug, PartialEq, Properties, Clone)]
 pub struct CommandsContext {
     pub config: Config,
     pub window: Window,
+    pub command_list: Vec<&'static str>,
 }
 
 impl CommandsContext {
-    pub const COMMAND_LIST: Vec<&'static str> = vec![
-        "about",
-        "banner",
-        "bing",
-        "help",
-        "repo",
-        "resume",
-        "donate",
-        "google",
-        "duckduckgo",
-        "reddit",
-        "echo",
-        "whoami",
-        "ls",
-        "cd",
-    ];
-
     pub fn new(config: Config, window: Window) -> Self {
-        Self { config, window }
+        let command_list: Vec<&'static str> = vec![
+            "about",
+            "banner",
+            "bing",
+            "help",
+            "repo",
+            "resume",
+            "donate",
+            "google",
+            "duckduckgo",
+            "reddit",
+            "echo",
+            "whoami",
+            "ls",
+            "cd",
+        ];
+        Self {
+            config,
+            window,
+            command_list,
+        }
     }
 
     pub fn help(self: &Self, _args: Vec<&str>) -> Result<String, Error> {
         let mut result_string = "".to_owned();
-        for (i, command) in CommandsContext::COMMAND_LIST.into_iter().enumerate() {
+        for (i, command) in self.command_list.to_owned().into_iter().enumerate() {
             if i % 7 == 0 {
                 result_string += &(command.to_owned() + "\n");
             } else {

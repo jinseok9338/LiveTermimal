@@ -1,11 +1,12 @@
 use crate::components::history::hook::use_history;
 
-use super::bin::commands::CommandsContext;
+use super::bin::commands::{use_command, CommandsContext};
 
 pub fn handle_tap_completion() {
     let history = use_history();
     let command_handler = history.clone().command;
-    let existing_commands = CommandsContext::COMMAND_LIST;
+    let command_context = use_command();
+    let existing_commands = command_context.command_list;
 
     let commands = existing_commands
         .into_iter()
