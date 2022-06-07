@@ -27,11 +27,8 @@ pub async fn shell() {
         // execute the command output
         let first_arg_clone = first_arg.clone();
         let args_clone = args.clone();
-        let output = commands_context
-            .execute_command(first_arg_clone, args_clone)
-            .await
-            .unwrap();
-        history.set_history(output)
+        let output = commands_context.execute_command(first_arg_clone, args_clone);
+        history.set_history(output.unwrap())
     }
     command_clone.set("".to_owned())
 }

@@ -174,11 +174,7 @@ impl CommandsContext {
         "#.to_owned())
     }
 
-    pub async fn execute_command(
-        self: &Self,
-        command: String,
-        args: Vec<&str>,
-    ) -> Result<String, Error> {
+    pub fn execute_command(self: &Self, command: String, args: Vec<&str>) -> Result<String, Error> {
         match command.as_str() {
             "help" => Ok(self.help(args).unwrap()),
             "banner" => Ok(self.banner().unwrap()),

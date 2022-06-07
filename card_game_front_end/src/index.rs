@@ -25,7 +25,6 @@ pub fn index(props: &IndexProps) -> Html {
     use_effect_with_deps(
         move |_| {
             cloned_history_props.set_history(commands_context.banner().unwrap().to_owned());
-            log!("banner set");
             || {}
         },
         (),

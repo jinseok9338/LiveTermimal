@@ -4,6 +4,7 @@ use yew::prelude::*;
 use crate::components::history::hook::use_history;
 use crate::components::ps_1::Ps1;
 use crate::utils::shell::shell;
+use gloo_console::log;
 
 #[derive(Properties, PartialEq)]
 pub struct InputProps {
@@ -40,10 +41,13 @@ pub fn input(props: &InputProps) -> Html {
                 todo! {} //handle_tab_completion(command, cloned_history.command.set);
             }
 
-            if event.key() == "Enter".to_owned() || event.code() == "13".to_owned() {
+            if event.key() == "Enter".to_owned()
+                || event.code() == "13".to_owned()
+                || event.key() == "Return".to_owned()
+            {
                 event.prevent_default();
                 cloned_history.last_command_index.set(0);
-                shell();
+                shell().await.unwrap();
                 container_element.scroll_to_with_scroll_to_options(
                     &ScrollToOptions::new()
                         .left(0.try_into().unwrap())
