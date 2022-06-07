@@ -8,7 +8,7 @@ edition = "2021"
 [dependencies]
 gloo-dialogs = "0.1.1"
 stdweb = "0.4.20"
-web-sys = "0.3.57"
+web-sys = {version = "0.3.57", features=["HtmlInputElement"]}
 gloo-console = "0.2.1"
 # you can check the latest version here: https://crates.io/crates/yew
 yew = "0.19"

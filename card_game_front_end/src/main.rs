@@ -17,8 +17,8 @@ fn app() -> Html {
         let input_ref = input_ref.clone();
 
         Callback::from(move |_| {
-            let input = input_ref.cast::<InputElement>();
-            input.unwrap().focus().unwrap()
+            let input = input_ref.cast::<InputElement>().unwrap();
+            input.focus().unwrap()
         })
     };
 
@@ -29,8 +29,8 @@ fn app() -> Html {
               class="text-light-foreground dark:text-dark-foreground min-w-max text-xs md:min-w-full md:text-base"
               onclick={onclick}
             >
-            <main class="bg-light-background dark:bg-dark-background w-full h-full p-2">
-              <Main input_ref ={(&input_ref).clone()}/>
+            <main class="bg-light-background dark:bg-dark-background w-full h-full p-2" >
+              <Main input_ref ={input_ref}/>
             </main>
           </div>
         </HistoryContextProvider>

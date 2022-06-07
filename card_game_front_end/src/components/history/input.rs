@@ -1,3 +1,4 @@
+use web_sys::HtmlInputElement;
 use yew::prelude::*;
 
 use crate::components::history::hook::use_history;
@@ -11,6 +12,7 @@ pub struct InputProps {
 
 #[function_component(Input)]
 pub fn input(props: &InputProps) -> Html {
+    let input_ref = &props.input_ref;
     let history = use_history();
     let cloned_history = history.clone();
     let command = &*cloned_history.command.clone();
@@ -91,12 +93,19 @@ pub fn input(props: &InputProps) -> Html {
         })
     };
 
-    let on_change = {
+    let oninput = {
         let cloned_history = history.clone();
 
-        Callback::from(move |input_event: InputEvent| {
-            cloned_history.command.set(input_event.data().unwrap())
-        })
+        Callback::from(move |input_event: Event| {
+            cloned_history.command.set(
+                input_event
+                    .current_target()
+                    .unwrap()
+                    .cast::<HtmlInputElement>()
+                    .unwrap()
+                    .value(),
+            )
+        });
     };
 
     html! {
@@ -106,11 +115,11 @@ pub fn input(props: &InputProps) -> Html {
               </label>
 
               <input
-                ref={props.input_ref.clone()}
+                ref={input_ref}
                 id="prompt"
                 type="text"
                 value={command.to_owned()}
-                oninput={on_change}
+                oninput={oninput}
                 // class={`bg-light-background dark:bg-dark-background focus:outline-none flex-grow ${
                 //                commandExists(command) || command === ''
                 //                  ? 'text-dark-green'

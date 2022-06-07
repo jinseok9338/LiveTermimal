@@ -1,8 +1,12 @@
+use crate::config::config::config::Colors;
 use crate::config::config::config::Config;
+use crate::config::config::config::DonateURLs;
+use crate::config::config::config::Social;
+use crate::config::config::config::ThemeColors;
+use gloo_console::log;
 use std::{fs, io::Error};
 use web_sys::{window, Window};
 use yew::{function_component, html, use_context, Children, ContextProvider, Properties};
-
 #[derive(Debug, PartialEq, Properties, Clone)]
 pub struct CommandsContext {
     pub config: Config,
@@ -201,8 +205,48 @@ pub struct CommandProviderProps {
 
 #[function_component(CommandContextProvider)]
 pub fn history_provider(props: &CommandProviderProps) -> Html {
-    let data = fs::read_to_string("./src/config/config.json").expect("Unable to read file");
-    let config: Config = serde_json::from_str(&data).expect("JSON does not have correct format.");
+    let config: Config = Config::new({
+        &Config {
+            readme_url: "https://raw.githubusercontent.com/cveinnt/cveinnt/master/README.md"
+                .to_owned(),
+            title: "LiveTerm".to_owned(),
+            name: "John Doe".to_owned(),
+            ascii: "liveterm".to_owned(),
+            social: Social {
+                github: "github".to_owned(),
+                linkedin: "linkedin".to_owned(),
+            },
+            email: "contact@email.com".to_owned(),
+            ps1_hostname: "liveterm".to_owned(),
+            ps1_username: "visitor".to_owned(),
+            repo: "https://github.com/Cveinnt/LiveTerm".to_owned(),
+            resume_url: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Resume.pdf".to_owned(),
+            donate_urls: DonateURLs {
+                paypal: "https://paypal.me/cveinnt".to_owned(),
+                patreon: "https://patreon.com/cveinnt".to_owned(),
+            },
+            colors: ThemeColors {
+                light: Colors {
+                    background: "#FBF1C9".to_owned(),
+                    foreground: "#3C3836".to_owned(),
+                    yellow: "#D79921".to_owned(),
+                    green: "#98971A".to_owned(),
+                    gray: "#7C6F64".to_owned(),
+                    blue: "#458588".to_owned(),
+                    red: "#CA2124".to_owned(),
+                },
+                dark: Colors {
+                    background: "#2E3440".to_owned(),
+                    foreground: "#E5E9F0".to_owned(),
+                    yellow: "#5E81AC".to_owned(),
+                    green: "#A3BE8C".to_owned(),
+                    gray: "#88C0D0".to_owned(),
+                    blue: "#EBCB8B".to_owned(),
+                    red: "#BF616A".to_owned(),
+                },
+            },
+        }
+    });
     let window = window().unwrap();
 
     let history_ctx = CommandsContext::new(config, window);

@@ -16,9 +16,8 @@ pub fn main(props: &MainProps) -> Html {
     let cloned_history_props = history_props.clone();
     let history = &*(cloned_history_props.history.clone());
     let commands_context = use_command();
-
     let container_ref = use_node_ref();
-    let input_ref = props.input_ref.clone().cast::<HtmlInputElement>().unwrap();
+    let input_ref = props.input_ref.clone();
 
     use_effect_with_deps(
         move |_| {
@@ -32,8 +31,9 @@ pub fn main(props: &MainProps) -> Html {
 
     use_effect_with_deps(
         move |_| {
-            input_ref.scroll_into_view();
-            input_ref.focus().unwrap();
+            let input_element = input_ref.cast::<HtmlInputElement>().unwrap();
+            input_element.scroll_into_view();
+            input_element.focus().unwrap();
             //This is Clean Up
             || {}
         },
@@ -46,8 +46,8 @@ pub fn main(props: &MainProps) -> Html {
         <div ref={&container_ref.clone()} className="overflow-y-auto h-full">
           <HistoryComponent />
           <Input
-            input_ref={&props.input_ref.clone()}
-            container_ref={&container_ref.clone()}
+            input_ref={&props.input_ref}
+            container_ref={container_ref}
           />
         </div>
       </div>
