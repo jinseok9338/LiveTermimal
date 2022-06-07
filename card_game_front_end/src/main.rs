@@ -5,7 +5,7 @@ mod utils;
 use crate::components::history::hook::HistoryContextProvider;
 use crate::utils::bin::commands::CommandContextProvider;
 // use gloo_console::log;
-use index::Main;
+use index::Index;
 use web_sys::HtmlInputElement as InputElement;
 use yew::prelude::*;
 
@@ -30,7 +30,7 @@ fn app() -> Html {
               onclick={onclick}
             >
             <main class="bg-light-background dark:bg-dark-background w-full h-full p-2" >
-              <Main input_ref ={input_ref}/>
+              <Index input_ref ={input_ref}/>
             </main>
           </div>
         </HistoryContextProvider>

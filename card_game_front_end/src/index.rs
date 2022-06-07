@@ -6,18 +6,20 @@ use web_sys::HtmlInputElement;
 use yew::prelude::*;
 
 #[derive(Properties, PartialEq)]
-pub struct MainProps {
+pub struct IndexProps {
     pub input_ref: NodeRef,
 }
 
-#[function_component(Main)]
-pub fn main(props: &MainProps) -> Html {
+#[function_component(Index)]
+pub fn index(props: &IndexProps) -> Html {
     let history_props = use_history();
     let cloned_history_props = history_props.clone();
     let history = &*(cloned_history_props.history.clone());
     let commands_context = use_command();
     let container_ref = use_node_ref();
     let input_ref = props.input_ref.clone();
+
+    // useCallback for the banner and it loads the commands...
 
     use_effect_with_deps(
         move |_| {
