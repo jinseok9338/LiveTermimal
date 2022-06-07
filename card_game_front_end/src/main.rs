@@ -16,10 +16,10 @@ fn app() -> Html {
     let onclick = {
         let input_ref = input_ref.clone();
 
-        move |_: String| {
+        Callback::from(move |_| {
             let input = input_ref.cast::<InputElement>();
             input.unwrap().focus().unwrap()
-        }
+        })
     };
 
     html! {
@@ -27,6 +27,7 @@ fn app() -> Html {
         <HistoryContextProvider default_value ={vec![]}>
           <div
               class="text-light-foreground dark:text-dark-foreground min-w-max text-xs md:min-w-full md:text-base"
+              onclick={onclick}
             >
             <main class="bg-light-background dark:bg-dark-background w-full h-full p-2">
               <Main input_ref ={(&input_ref).clone()}/>

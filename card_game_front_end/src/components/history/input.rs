@@ -1,6 +1,6 @@
 use yew::prelude::*;
 
-use crate::components::history::{hook::use_history, interface::History};
+use crate::components::history::hook::use_history;
 use crate::components::ps_1::Ps1;
 
 #[derive(Properties, PartialEq)]

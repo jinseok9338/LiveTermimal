@@ -33,7 +33,7 @@ pub fn main(props: &MainProps) -> Html {
     use_effect_with_deps(
         move |_| {
             input_ref.scroll_into_view();
-            input_ref.focus();
+            input_ref.focus().unwrap();
             //This is Clean Up
             || {}
         },
