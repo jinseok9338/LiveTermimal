@@ -13,7 +13,7 @@ pub fn history_compoenet(props: &HistoryComponentProps) -> Html {
 
     html! {
         <>
-            {history_cloned.into_iter().map(|history| {
+            {history_cloned.to_owned().into_iter().map(|history| {
               html!{<RawHtml history= {history.clone()}/>}
             }).collect::<Html>()}
         </>

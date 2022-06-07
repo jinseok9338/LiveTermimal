@@ -2,6 +2,7 @@ use crate::components::history::history_component::HistoryComponent;
 use crate::components::history::hook::use_history;
 use crate::components::history::input::Input;
 use crate::utils::bin::commands::use_command;
+use gloo_console::log;
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
 
@@ -23,9 +24,8 @@ pub fn index(props: &IndexProps) -> Html {
 
     use_effect_with_deps(
         move |_| {
-            {
-                cloned_history_props.set_history(commands_context.banner().unwrap().to_owned());
-            }
+            cloned_history_props.set_history(commands_context.banner().unwrap().to_owned());
+            log!("banner set");
             || {}
         },
         (),
@@ -46,11 +46,11 @@ pub fn index(props: &IndexProps) -> Html {
         <>
       <div className="p-8 overflow-hidden h-full border-2 rounded border-light-yellow dark:border-dark-yellow">
         <div ref={&container_ref.clone()} className="overflow-y-auto h-full">
-          <HistoryComponent />
-          <Input
-            input_ref={&props.input_ref}
-            container_ref={container_ref}
-          />
+        <HistoryComponent />
+        <Input
+          input_ref={&props.input_ref}
+          container_ref={container_ref}
+        />
         </div>
       </div>
     </>
