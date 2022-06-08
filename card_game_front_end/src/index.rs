@@ -43,8 +43,8 @@ pub fn index(props: &IndexProps) -> Html {
 
     html! {
         <>
-      <div className="p-8 overflow-hidden h-full border-2 rounded border-light-yellow dark:border-dark-yellow">
-        <div ref={&container_ref.clone()} className="overflow-y-auto h-full">
+      <div class="p-8 overflow-hidden h-full border-2 rounded border-light-yellow dark:border-dark-yellow">
+        <div ref={&container_ref.clone()} class="overflow-y-auto h-full">
         <HistoryComponent />
         <Input
           input_ref={&props.input_ref}

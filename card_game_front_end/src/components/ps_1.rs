@@ -7,14 +7,14 @@ pub fn ps_1() -> Html {
     let config = command_context.config;
     html! {
         <div>
-            <span className="text-light-yellow dark:text-dark-yellow">
+            <span class="text-light-yellow dark:text-dark-yellow">
              {config.ps1_username}
            </span>
-            <span className="text-light-gray dark:text-dark-gray">{"@"}</span>
-            <span className="text-light-green dark:text-dark-green">
+            <span class="text-light-gray dark:text-dark-gray">{"@"}</span>
+            <span class="text-light-green dark:text-dark-green">
                {config.ps1_hostname}
              </span>
-             <span className="text-light-gray dark:text-dark-gray">{":$ ~ "}</span>
+             <span class="text-light-gray dark:text-dark-gray">{":$ ~ "}</span>
         </div>
     }
 }

@@ -1,3 +1,5 @@
+const { colors } = require("./src/config/config.json");
+
 module.exports = {
   mode: "all",
   content: [
@@ -6,7 +8,14 @@ module.exports = {
     "./src/**/*.html",
     "./src/**/*.css",
   ],
-  theme: {},
-  variants: {},
-  plugins: [],
+  darkMode: "media", // or 'media' or 'class'
+  theme: {
+    colors: {
+      transparent: "transparent",
+      current: "currentColor",
+      ...colors,
+    },
+    variants: {},
+    plugins: [],
+  },
 };

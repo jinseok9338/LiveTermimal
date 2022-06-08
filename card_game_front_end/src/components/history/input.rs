@@ -47,7 +47,7 @@ pub fn input(props: &InputProps) -> Html {
             {
                 event.prevent_default();
                 cloned_history.last_command_index.set(0);
-                shell().await.unwrap();
+                shell();
                 container_element.scroll_to_with_scroll_to_options(
                     &ScrollToOptions::new()
                         .left(0.try_into().unwrap())
@@ -123,15 +123,12 @@ pub fn input(props: &InputProps) -> Html {
                 type="text"
                 value={command.to_owned()}
                 onchange={onchange}
-                class={"bg-light-background dark:bg-dark-background focus:outline-none flex-grow ${
-                               commandExists(command) || command === ''
-                                 ? 'text-dark-green'
-                                 : 'text-dark-red'
-                             }"}
+                class={"bg-light-background dark:bg-dark-background focus:outline-none flex-grow"}
                 autofocus={true}
                 onkeydown={on_submit}
                 autocomplete="off"
                 //spell check... later
+
               />
             </div>
     }
