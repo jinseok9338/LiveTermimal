@@ -3,7 +3,7 @@ use stdweb::web::error::Error;
 use crate::config::config::config::Config;
 use std::fs;
 
-pub async fn sumfetch(args: Vec<String>) -> Result<String, Error> {
+pub fn sumfetch(args: Vec<String>) -> Result<String, Error> {
     let data = fs::read_to_string("./src/config/config.json").expect("Unable to read file");
     let config: Config = serde_json::from_str(&data).expect("JSON does not have correct format.");
 

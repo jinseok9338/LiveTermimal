@@ -8,14 +8,14 @@ use yew::{
 pub struct HistoryContext {
     pub history: UseStateHandle<Vec<History>>,
     pub command: UseStateHandle<String>,
-    pub last_command_index: UseStateHandle<usize>,
+    pub last_command_index: UseStateHandle<u32>,
 }
 
 impl HistoryContext {
     pub fn new(
         history: UseStateHandle<Vec<History>>,
         command: UseStateHandle<String>,
-        last_command_index: UseStateHandle<usize>,
+        last_command_index: UseStateHandle<u32>,
     ) -> Self {
         Self {
             history,
