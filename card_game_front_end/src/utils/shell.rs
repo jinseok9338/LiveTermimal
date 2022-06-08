@@ -1,11 +1,11 @@
+// move shell to command Struct ...
+use yew::UseStateHandle;
+
 use crate::components::history::hook::use_history;
 
 use super::{bin::commands::use_command, command_exists::command_exists};
 
-pub async fn shell() {
-    let history = use_history();
-    let commands_context = use_command();
-    let command_clone = history.command.clone();
+pub fn shell(command_clone: UseStateHandle<String>) {
     let args: Vec<&str> = (*command_clone.split(" ").collect::<Vec<&str>>()).to_vec();
     let first_arg = args[0].to_lowercase();
     let command_exists = command_exists(first_arg.clone()).unwrap();

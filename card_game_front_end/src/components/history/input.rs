@@ -24,6 +24,7 @@ pub fn input(props: &InputProps) -> Html {
         let history = history_context.history.clone();
         let last_command_index = history_context.last_command_index.clone();
         let container_element = props.container_ref.cast::<HtmlElement>().unwrap();
+        let input_value = input_value.clone();
 
         Callback::from(move |event: KeyboardEvent| {
             if event.key() == "c".to_owned() && event.ctrl_key() {
@@ -45,14 +46,16 @@ pub fn input(props: &InputProps) -> Html {
 
             if event.key() == "Enter".to_owned() {
                 event.prevent_default();
-                log!("Enter logged");
                 last_command_index.set(0);
-                shell();
+                // let args: Vec<&str> = (*command_clone.split(" ").collect::<Vec<&str>>()).to_vec();
+                shell(args); // pass history and command as args... Darn it...
                 container_element.scroll_to_with_scroll_to_options(
                     &ScrollToOptions::new()
                         .left(0.try_into().unwrap())
                         .top(container_element.scroll_height().try_into().unwrap()),
-                )
+                );
+                on_submit_command.set("".to_owned());
+                input_value.set("".to_owned());
             }
 
             if event.key() == "ArrowUp" {
@@ -102,16 +105,27 @@ pub fn input(props: &InputProps) -> Html {
 
     let onchange = {
         let input_value = input_value.clone();
-        log!("onChange");
-        Callback::from(move |input_event: Event| {
-            let value = input_event
-                .target_unchecked_into::<HtmlInputElement>()
-                .value();
-            on_change_command.set(value.clone());
-            input_value.set(value.clone());
-            log!(&(*on_change_command));
+        let input_ref = input_ref.clone();
+        Callback::from(move |_| {
+            let input = input_ref.cast::<HtmlInputElement>();
+            if let Some(input) = input {
+                on_change_command.set(input.value());
+                input_value.set(input.value())
+            }
         })
     };
+
+    // let onchange = {
+    //     let input_node_ref = input_node_ref.clone();
+
+    //     Callback::from(move |_| {
+    //         let input = input_node_ref.cast::<HtmlInputElement>();
+
+    //         if let Some(input) = input {
+    //             input_value_handle.set(input.value());
+    //         }
+    //     })
+    // };
 
     html! {
 
@@ -124,9 +138,10 @@ pub fn input(props: &InputProps) -> Html {
                 ref={input_ref}
                 id="prompt"
                 type="text"
-
-                onchange={onchange}
-                class={"bg-light-background dark:bg-dark-background focus:outline-none flex-grow"}
+                // need to have value soon.. .but it's pretty much hopeless
+                value={(*input_value).clone()}
+                {onchange}
+                class="bg-light-background dark:bg-dark-background focus:outline-none flex-grow"
                 autofocus={true}
                 onkeydown={on_submit}
                 autocomplete="off"
