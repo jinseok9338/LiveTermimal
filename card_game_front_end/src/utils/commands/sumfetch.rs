@@ -34,7 +34,7 @@ pub fn sumfetch(args: Vec<String>) -> Result<String, Error> {
   github = config.social.github,
   linkedin = config.social.linkedin,
   paypal = config.donate_urls.paypal,
-  patreon = config.donate_urls.patreon,
+  patreon = config.donate_urls.patreon, 
   ).to_owned())
     } else {
         Ok(format!(r#"
