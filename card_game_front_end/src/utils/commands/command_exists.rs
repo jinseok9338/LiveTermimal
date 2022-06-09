@@ -1,13 +1,8 @@
 use std::io::Error;
 
-use super::commands::commands::use_command;
-
-pub fn command_exists(command: String) -> Result<bool, Error> {
-    let command_context = use_command();
-    let command_list = command_context.command_list;
-
-    let split_string = command.split(" ").collect::<Vec<&str>>();
-    let command = split_string[0];
+pub fn command_exists(first_arg: String, command_list: Vec<&str>) -> Result<bool, Error> {
+    let split_args = first_arg.split(" ").collect::<Vec<&str>>();
+    let command = split_args[0];
     if command_list.contains(&command) {
         Ok(true)
     } else {
