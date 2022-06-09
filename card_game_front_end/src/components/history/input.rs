@@ -87,8 +87,8 @@ pub fn input(props: &InputProps) -> Html {
                 let commands_history = &*(history_handler);
                 let commands = commands_history
                     .into_iter()
-                    .map(|history| &history.command)
-                    .collect::<Vec<&String>>();
+                    .map(|history| *history.command.clone())
+                    .collect::<Vec<String>>();
 
                 event.prevent_default();
                 let command_length = commands.len() as u32;
@@ -99,7 +99,8 @@ pub fn input(props: &InputProps) -> Html {
                 let index = *(last_command_index_handler) + 1;
                 if index <= command_length.clone().try_into().unwrap() {
                     last_command_index_handler.set(index);
-                    on_submit_command.set(commands[(&command_length - 1) as usize].to_owned())
+                    on_submit_command
+                        .set((*commands[(&command_length - 1) as usize].to_owned()).to_string())
                 }
             }
 
@@ -107,8 +108,8 @@ pub fn input(props: &InputProps) -> Html {
                 let commands_history = &*(history_handler);
                 let commands = commands_history
                     .into_iter()
-                    .map(|history| &history.command)
-                    .collect::<Vec<&String>>();
+                    .map(|history| *history.command.clone())
+                    .collect::<Vec<String>>();
 
                 event.prevent_default();
                 let command_length = commands.len();
@@ -119,7 +120,8 @@ pub fn input(props: &InputProps) -> Html {
                 if index > 0 {
                     last_command_index_handler.set(index);
 
-                    on_submit_command.set(commands[&command_length - index as usize].to_owned())
+                    on_submit_command
+                        .set((*commands[&command_length - index as usize].to_owned()).to_string())
                 } else {
                     last_command_index_handler.set(0);
                     on_submit_command.set("".to_owned());

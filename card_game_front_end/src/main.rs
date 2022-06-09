@@ -24,7 +24,7 @@ fn app() -> Html {
 
     html! {
       <CommandContextProvider>
-        <HistoryContextProvider default_value ={vec![]}>
+        <HistoryContextProvider>
           <div
               class="text-light-foreground dark:text-dark-foreground min-w-max text-xs md:min-w-full md:text-base"
               onclick={onclick}

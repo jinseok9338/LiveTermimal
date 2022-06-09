@@ -30,7 +30,7 @@ pub fn raw_html(props: &RawHtmlProps) -> Html {
     }
 
     html! {
-        <div key={&*(history.command.clone())}>
+        <div key={&**(history.command.clone())}>
         <div class="flex flex-row space-x-2">
           <div class="flex-shrink">
             <Ps1 />

@@ -3,7 +3,7 @@ use crate::components::history::history_context_hook::use_history;
 use crate::components::history::history_function::set_history;
 use crate::components::history::input::Input;
 
-use crate::utils::commands::commands_context_hook::use_command;
+use crate::components::history::interface::History;
 use crate::utils::commands::execute_command::banner;
 use gloo_console::log;
 use web_sys::HtmlInputElement;
@@ -18,20 +18,18 @@ pub struct IndexProps {
 pub fn index(props: &IndexProps) -> Html {
     let history_context = use_history();
     let history_handler = history_context.history.clone();
+    let history_handler_for_focus = history_context.history.clone();
+    let history_for_focus = (*history_handler_for_focus).len();
     let command_handler = history_context.command.clone();
-
-    let commands_context = use_command();
 
     let container_ref = use_node_ref();
     let input_ref = props.input_ref.clone();
 
-    // useCallback for the banner and it loads the commands...
-
     use_effect_with_deps(
         move |_| {
             set_history(
-                history_handler,
-                command_handler,
+                history_handler.clone(),
+                command_handler.clone(),
                 banner().unwrap().to_owned(),
             );
             || {}
@@ -47,7 +45,7 @@ pub fn index(props: &IndexProps) -> Html {
             //This is Clean Up
             || {}
         },
-        [*history_handler.clone()],
+        [history_for_focus], // focus when the length of the histoey size changes
     );
 
     html! {

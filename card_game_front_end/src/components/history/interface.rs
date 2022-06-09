@@ -1,9 +1,9 @@
 use instant::Instant;
-use web_sys::DateTimeValue;
+
 #[derive(Debug, PartialEq, Clone)]
 pub struct History {
-    pub id: usize,
-    pub date: Instant,
-    pub command: String,
-    pub output: String,
+    pub id: Box<usize>,
+    pub date: Box<Instant>,
+    pub command: Box<String>,
+    pub output: Box<String>,
 }

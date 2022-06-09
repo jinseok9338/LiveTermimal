@@ -1,3 +1,4 @@
+use instant::Instant;
 use yew::UseStateHandle;
 
 use super::interface::History;
@@ -14,10 +15,10 @@ pub fn set_history(
 ) {
     let command = &*command_handler;
     let new_history = History {
-        command: command.to_owned(),
-        id: (*command_handler).len(),
-        output: value,
-        date: instant::Instant::now(),
+        command: Box::new(command.to_owned()),
+        id: Box::new((*command_handler).len()),
+        output: Box::new(value),
+        date: Box::new(instant::Instant::now()),
     };
 
     let mut old_history = (*history_handler).clone();
