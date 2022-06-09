@@ -2,8 +2,11 @@ use web_sys::{HtmlElement, HtmlInputElement, ScrollToOptions};
 use yew::prelude::*;
 
 use crate::components::history::history_context_hook::use_history;
+use crate::components::history::history_function::{clear_history, set_history};
 use crate::components::ps_1::Ps1;
-use crate::utils::shell::shell;
+use crate::utils::commands::commands_context_hook::use_command;
+use crate::utils::commands::shell::shell;
+
 use gloo_console::log;
 
 #[derive(Properties, PartialEq)]
@@ -16,27 +19,41 @@ pub struct InputProps {
 pub fn input(props: &InputProps) -> Html {
     let input_ref = &props.input_ref;
     let history_context = use_history();
+    let command_context = use_command();
     let input_value = use_state(|| "".to_owned());
+
+    // history_context
     let on_submit_command = history_context.command.clone();
     let on_change_command = history_context.command.clone();
 
     let on_submit = {
-        let history = history_context.history.clone();
-        let last_command_index = history_context.last_command_index.clone();
         let container_element = props.container_ref.cast::<HtmlElement>().unwrap();
         let input_value = input_value.clone();
 
-        Callback::from(move |event: KeyboardEvent| {
+        // history_context
+        let history_handler = history_context.history.clone();
+        let last_command_index_handler = history_context.last_command_index.clone();
+
+        //command_context
+        let command_list = command_context.command_list.clone();
+        let window = command_context.window;
+        let config = command_context.config;
+
+        move |event: KeyboardEvent| {
             if event.key() == "c".to_owned() && event.ctrl_key() {
                 event.prevent_default();
                 on_submit_command.set("".to_owned());
-                history_context.set_history("".to_owned());
-                last_command_index.set(0);
+                set_history(
+                    history_handler.clone(),
+                    on_submit_command.clone(),
+                    "".to_owned(),
+                );
+                last_command_index_handler.set(0);
             }
 
             if event.key() == "l".to_owned() && event.ctrl_key() {
                 event.prevent_default();
-                history_context.clear_history();
+                clear_history(history_handler.clone());
             }
 
             if event.key() == "Tab".to_owned() {
@@ -46,9 +63,17 @@ pub fn input(props: &InputProps) -> Html {
 
             if event.key() == "Enter".to_owned() {
                 event.prevent_default();
-                last_command_index.set(0);
-                // let args: Vec<&str> = (*command_clone.split(" ").collect::<Vec<&str>>()).to_vec();
-                shell(args); // pass history and command as args... Darn it...
+                last_command_index_handler.set(0);
+                let args: Vec<&str> =
+                    (*on_submit_command.split(" ").collect::<Vec<&str>>()).to_vec();
+
+                shell(
+                    on_submit_command.clone(),
+                    history_handler.clone(),
+                    window.clone(),
+                    config.clone(),
+                    command_list.clone(),
+                ); // pass history and command as args... Darn it...
                 container_element.scroll_to_with_scroll_to_options(
                     &ScrollToOptions::new()
                         .left(0.try_into().unwrap())
@@ -59,7 +84,7 @@ pub fn input(props: &InputProps) -> Html {
             }
 
             if event.key() == "ArrowUp" {
-                let commands_history = &*(history);
+                let commands_history = &*(history_handler);
                 let commands = commands_history
                     .into_iter()
                     .map(|history| &history.command)
@@ -71,15 +96,15 @@ pub fn input(props: &InputProps) -> Html {
                     return;
                 }
 
-                let index = *(last_command_index) + 1;
+                let index = *(last_command_index_handler) + 1;
                 if index <= command_length.clone().try_into().unwrap() {
-                    last_command_index.set(index);
+                    last_command_index_handler.set(index);
                     on_submit_command.set(commands[(&command_length - 1) as usize].to_owned())
                 }
             }
 
             if event.key() == "ArrowDown" {
-                let commands_history = &*(history);
+                let commands_history = &*(history_handler);
                 let commands = commands_history
                     .into_iter()
                     .map(|history| &history.command)
@@ -90,17 +115,17 @@ pub fn input(props: &InputProps) -> Html {
                 if command_length == 0 {
                     return;
                 }
-                let index = *(last_command_index) - 1;
+                let index = *(last_command_index_handler) - 1;
                 if index > 0 {
-                    last_command_index.set(index);
+                    last_command_index_handler.set(index);
 
                     on_submit_command.set(commands[&command_length - index as usize].to_owned())
                 } else {
-                    last_command_index.set(0);
+                    last_command_index_handler.set(0);
                     on_submit_command.set("".to_owned());
                 }
             }
-        })
+        }
     };
 
     let onchange = {
@@ -114,18 +139,6 @@ pub fn input(props: &InputProps) -> Html {
             }
         })
     };
-
-    // let onchange = {
-    //     let input_node_ref = input_node_ref.clone();
-
-    //     Callback::from(move |_| {
-    //         let input = input_node_ref.cast::<HtmlInputElement>();
-
-    //         if let Some(input) = input {
-    //             input_value_handle.set(input.value());
-    //         }
-    //     })
-    // };
 
     html! {
 

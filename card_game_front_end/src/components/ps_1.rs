@@ -1,5 +1,6 @@
-use crate::utils::commands::commands::use_command;
 use yew::prelude::*;
+
+use crate::utils::commands::commands_context_hook::use_command;
 
 #[function_component(Ps1)]
 pub fn ps_1() -> Html {

@@ -3,7 +3,7 @@ mod config;
 mod index;
 mod utils;
 use crate::components::history::history_context_hook::HistoryContextProvider;
-use crate::utils::commands::commands::CommandContextProvider;
+use crate::utils::commands::commands_context_hook::CommandContextProvider;
 // use gloo_console::log;
 use index::Index;
 use web_sys::HtmlInputElement as InputElement;

@@ -1,6 +1,5 @@
+use crate::components::history::history_context_hook::use_history;
 use crate::components::history::raw_html::RawHtml;
-use crate::components::{history::history_context_hook::use_history, ps_1::Ps1};
-use web_sys::Element;
 use yew::prelude::*;
 
 #[derive(Properties, PartialEq)]

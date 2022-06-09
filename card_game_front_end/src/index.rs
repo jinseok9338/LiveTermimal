@@ -1,7 +1,10 @@
 use crate::components::history::history_component::HistoryComponent;
 use crate::components::history::history_context_hook::use_history;
+use crate::components::history::history_function::set_history;
 use crate::components::history::input::Input;
-use crate::utils::commands::commands::use_command;
+
+use crate::utils::commands::commands_context_hook::use_command;
+use crate::utils::commands::execute_command::banner;
 use gloo_console::log;
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
@@ -13,10 +16,12 @@ pub struct IndexProps {
 
 #[function_component(Index)]
 pub fn index(props: &IndexProps) -> Html {
-    let history_props = use_history();
-    let cloned_history_props = history_props.clone();
-    let history = &*(cloned_history_props.history.clone());
+    let history_context = use_history();
+    let history_handler = history_context.history.clone();
+    let command_handler = history_context.command.clone();
+
     let commands_context = use_command();
+
     let container_ref = use_node_ref();
     let input_ref = props.input_ref.clone();
 
@@ -24,7 +29,11 @@ pub fn index(props: &IndexProps) -> Html {
 
     use_effect_with_deps(
         move |_| {
-            cloned_history_props.set_history(commands_context.banner().unwrap().to_owned());
+            set_history(
+                history_handler,
+                command_handler,
+                banner().unwrap().to_owned(),
+            );
             || {}
         },
         (),
@@ -38,7 +47,7 @@ pub fn index(props: &IndexProps) -> Html {
             //This is Clean Up
             || {}
         },
-        [history.clone()],
+        [*history_handler.clone()],
     );
 
     html! {
