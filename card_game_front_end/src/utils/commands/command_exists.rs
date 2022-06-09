@@ -1,6 +1,6 @@
 use std::io::Error;
 
-use super::bin::commands::use_command;
+use super::commands::commands::use_command;
 
 pub fn command_exists(command: String) -> Result<bool, Error> {
     let command_context = use_command();

@@ -1,7 +1,7 @@
 use web_sys::{HtmlElement, HtmlInputElement, ScrollToOptions};
 use yew::prelude::*;
 
-use crate::components::history::hook::use_history;
+use crate::components::history::history_context_hook::use_history;
 use crate::components::ps_1::Ps1;
 use crate::utils::shell::shell;
 use gloo_console::log;

@@ -1,4 +1,4 @@
-use crate::utils::bin::commands::use_command;
+use crate::utils::commands::commands::use_command;
 use yew::prelude::*;
 
 #[function_component(Ps1)]

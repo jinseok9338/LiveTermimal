@@ -1,7 +1,7 @@
 use crate::components::history::history_component::HistoryComponent;
-use crate::components::history::hook::use_history;
+use crate::components::history::history_context_hook::use_history;
 use crate::components::history::input::Input;
-use crate::utils::bin::commands::use_command;
+use crate::utils::commands::commands::use_command;
 use gloo_console::log;
 use web_sys::HtmlInputElement;
 use yew::prelude::*;

@@ -1,6 +1,6 @@
-use crate::components::history::hook::use_history;
+use crate::components::history::history_context_hook::use_history;
 
-use super::bin::commands::{use_command, CommandsContext};
+use super::commands::commands::{use_command, CommandsContext};
 
 pub fn handle_tap_completion() {
     let history = use_history();
