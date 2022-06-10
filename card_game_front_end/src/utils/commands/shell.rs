@@ -4,6 +4,8 @@ use instant::Instant;
 use web_sys::Window;
 use yew::UseStateHandle;
 
+use gloo_console::log;
+
 use crate::{
     components::history::{
         history_function::{clear_history, set_history},
@@ -15,13 +17,13 @@ use crate::{
 use super::{command_exists::command_exists, execute_command::execute_command};
 
 pub fn shell(
+    args: Vec<&str>,
     command_handler: UseStateHandle<String>,
     history_handler: UseStateHandle<Vec<History>>,
     window: Window,
     config: Config,
     command_list: Vec<&'static str>,
 ) {
-    let args: Vec<&str> = (*command_handler.split(" ").collect::<Vec<&str>>()).to_vec();
     let first_arg = args[0].to_lowercase();
     let command_exists = command_exists(first_arg.clone(), command_list.clone()).unwrap();
 

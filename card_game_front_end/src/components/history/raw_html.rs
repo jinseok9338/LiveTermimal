@@ -41,9 +41,8 @@ pub fn raw_html(props: &RawHtmlProps) -> Html {
 
         <p
           ref ={raw_html_ref}
-          class="whitespace-pre-wrap mb-2"
+          class="whitespace-pre-wrap mb-2 leading-normal"
         />
-        <p>{"this is weird"}</p>
       </div>
     }
 }
