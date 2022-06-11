@@ -3,7 +3,8 @@ use reqwest::Error;
 use crate::utils::api::{get_quotes, get_read_me, get_weather};
 use crate::utils::{api::get_projects, api_types::Projects};
 
-pub async fn projects(args: Vec<String>) -> Result<String, Error> {
+#[allow(dead_code)]
+pub async fn projects(_args: Vec<String>) -> Result<String, Error> {
     let response = get_projects().await.unwrap();
     let projects = response.json::<Vec<Projects>>().await?;
 
@@ -13,17 +14,17 @@ pub async fn projects(args: Vec<String>) -> Result<String, Error> {
 
     Ok(projects_string)
 }
-
-pub async fn quote(args: Vec<String>) -> Result<String, Error> {
+#[allow(dead_code)]
+pub async fn quote(_args: Vec<String>) -> Result<String, Error> {
     let response = get_quotes().await.unwrap();
     Ok(response.quote)
 }
-
-pub async fn read_me(args: Vec<String>) -> Result<String, Error> {
+#[allow(dead_code)]
+pub async fn read_me(_args: Vec<String>) -> Result<String, Error> {
     let response = get_read_me().await.unwrap();
     Ok(response)
 }
-
+#[allow(dead_code)]
 pub async fn weather(args: Vec<String>) -> Result<String, Error> {
     let city = args.join("+");
     if city.len() == 0 {

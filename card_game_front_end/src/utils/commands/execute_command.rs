@@ -1,12 +1,10 @@
 use std::io::Error;
 
-use web_sys::{HtmlElement, Window};
+use web_sys::Window;
 
 use crate::config::config::config::Config;
 
 use super::sumfetch::sumfetch;
-use gloo_console::log;
-use std::fs;
 
 pub fn help(_args: Vec<&str>, command_list: Vec<&'static str>) -> Result<String, Error> {
     let mut result_string = "".to_owned();
@@ -150,22 +148,22 @@ pub fn whoami(_args: Vec<&str>, config: Config) -> Result<String, Error> {
 pub fn ls(_args: Vec<&str>) -> Result<String, Error> {
     Ok(r#"
     I
-    am
-    not planning
-    to have
-    more 
-    directory"#
+    don't 
+    know 
+    how 
+    to add file system in 
+    webAssemly"#
         .to_owned())
 }
 
 pub fn cd(_args: Vec<&str>) -> Result<String, Error> {
     Ok(r#"
     I
-    can't
-    move
-    to 
-    other 
-    directory"#
+    don't 
+    know 
+    how 
+    to add file system in 
+    webAssemly"#
         .to_owned())
 }
 
@@ -187,7 +185,7 @@ pub fn banner() -> Result<String, Error> {
         "#.to_owned())
 }
 
-pub fn change_theme(args: Vec<&str>, window: Window) -> Result<String, Error> {
+pub fn change_theme(_args: Vec<&str>, window: Window) -> Result<String, Error> {
     let document = window.document().expect("window should have a document");
     if document
         .query_selector("#theme")

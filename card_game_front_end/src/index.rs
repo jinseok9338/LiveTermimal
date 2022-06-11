@@ -3,9 +3,8 @@ use crate::components::history::history_context_hook::use_history;
 use crate::components::history::history_function::set_history;
 use crate::components::history::input::Input;
 
-use crate::components::history::interface::History;
 use crate::utils::commands::execute_command::banner;
-use gloo_console::log;
+
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
 

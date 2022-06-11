@@ -6,7 +6,7 @@ use yew::prelude::*;
 pub struct HistoryComponentProps {}
 
 #[function_component(HistoryComponent)]
-pub fn history_compoenet(props: &HistoryComponentProps) -> Html {
+pub fn history_compoenet(_props: &HistoryComponentProps) -> Html {
     let history = use_history();
     let history_cloned = &*(history.clone().history);
 

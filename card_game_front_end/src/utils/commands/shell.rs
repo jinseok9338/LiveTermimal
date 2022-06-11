@@ -4,8 +4,6 @@ use instant::Instant;
 use web_sys::Window;
 use yew::UseStateHandle;
 
-use gloo_console::log;
-
 use crate::{
     components::history::{
         history_function::{clear_history, set_history},

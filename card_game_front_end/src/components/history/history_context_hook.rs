@@ -1,5 +1,4 @@
 use crate::components::history::interface::History;
-use instant::Instant;
 use yew::{
     function_component, html, use_context, use_state, Children, ContextProvider, Properties,
     UseStateHandle,

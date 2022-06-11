@@ -3,7 +3,6 @@ use crate::config::config::config::Config;
 use crate::config::config::config::DonateURLs;
 use crate::config::config::config::Social;
 use crate::config::config::config::ThemeColors;
-use gloo_console::log;
 
 use web_sys::{window, Window};
 use yew::{function_component, html, use_context, Children, ContextProvider, Properties};
@@ -57,7 +56,7 @@ pub fn command_provider(props: &CommandProviderProps) -> Html {
             name: "Jason Jin (Jinseok)".to_owned(),
             ascii: "jason".to_owned(),
             social: Social {
-                github: "github".to_owned(),
+                github: "jinseok9338".to_owned(),
                 linkedin: "linkedin".to_owned(),
             },
             email: "jinseok9338@email.com".to_owned(),
