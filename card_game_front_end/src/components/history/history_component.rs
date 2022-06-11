@@ -2,19 +2,18 @@ use crate::components::history::history_context_hook::use_history;
 use crate::components::history::raw_html::RawHtml;
 use yew::prelude::*;
 
-#[derive(Properties, PartialEq)]
-pub struct HistoryComponentProps {}
-
 #[function_component(HistoryComponent)]
-pub fn history_compoenet(_props: &HistoryComponentProps) -> Html {
+pub fn history_compoenet() -> Html {
     let history = use_history();
     let history_cloned = &*(history.clone().history);
 
     html! {
-        <>
-            {history_cloned.to_owned().into_iter().map(|history| {
-              html!{<RawHtml history= {history.clone()}/>}
-            }).collect::<Html>()}
-        </>
+        <ul>
+            {
+            history_cloned.to_owned().into_iter().map(|history| {
+            html!{<RawHtml key={&**(history.command.clone())} history= {history.clone()}/>}
+            }).collect::<Html>()
+        }
+        </ul>
     }
 }

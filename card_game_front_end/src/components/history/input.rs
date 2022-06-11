@@ -4,6 +4,7 @@ use yew::prelude::*;
 use crate::components::history::history_context_hook::use_history;
 use crate::components::history::history_function::{clear_history, set_history};
 use crate::components::ps_1::Ps1;
+use crate::utils::commands::command_exists::command_exists;
 use crate::utils::commands::commands_context_hook::use_command;
 use crate::utils::commands::shell::shell;
 use crate::utils::commands::tap_completion::handle_tap_completion;
@@ -20,10 +21,16 @@ pub struct InputProps {
 pub fn input(props: &InputProps) -> Html {
     let input_ref = &props.input_ref;
     let history_context = use_history();
-    let command_context = use_command();
-    let command_handler = history_context.command.clone();
+    let green_or_grey = use_state_eq(|| "dark:text-dark-gray text-light-gray".to_owned());
 
+    let command_context = use_command();
+    let command_list = command_context.command_list.clone();
+    let command_handler = history_context.command.clone();
+    let current_command = &*(history_context.command.clone());
+    let current_command_value_for_input = &*(history_context.command.clone());
     let container_element = props.container_ref.cast::<HtmlElement>().unwrap();
+
+    let green_or_gray_class = &*green_or_grey.clone();
 
     let on_submit = {
         // history_context
@@ -136,6 +143,19 @@ pub fn input(props: &InputProps) -> Html {
         })
     };
 
+    use_effect_with_deps(
+        move |_| {
+            let green_or_grey = green_or_grey.clone();
+            if command_exists((*&command_handler.clone()).to_string(), command_list).unwrap() {
+                green_or_grey.set("dark:text-dark-green text-light-green".to_owned())
+            } else {
+                green_or_grey.set("dark:text-dark-gray text-light-gray".to_owned())
+            }
+            || {}
+        },
+        [current_command.to_string()],
+    );
+
     html! {
 
         <div class="flex flex-row space-x-2">
@@ -147,9 +167,9 @@ pub fn input(props: &InputProps) -> Html {
                 id="prompt"
                 type="text"
                 // need to have value soon.. .but it's pretty much hopeless
-                value={(*command_handler).clone()}
+                value={current_command_value_for_input.to_string()}
                 {oninput}
-                class="bg-light-background dark:bg-dark-background focus:outline-none flex-grow"
+                class={classes!("bg-light-background", "dark:bg-dark-background", "focus:outline-none", "flex-grow", green_or_gray_class)} // if the command exist show color green
                 autofocus={true}
                 autocomplete="off"
                 onkeydown={on_submit}

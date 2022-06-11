@@ -51,11 +51,11 @@ pub fn index(props: &IndexProps) -> Html {
         <>
       <div class="p-8 overflow-hidden h-full border-2 rounded border-light-yellow dark:border-dark-yellow">
         <div ref={&container_ref.clone()} class="overflow-y-auto h-full">
-        <HistoryComponent />
-        <Input
-          input_ref={&props.input_ref}
-          container_ref={container_ref}
-        />
+            <HistoryComponent />
+            <Input
+            input_ref={&props.input_ref}
+            container_ref={container_ref}
+            />
         </div>
       </div>
     </>
