@@ -3,9 +3,7 @@ use stdweb::web::error::Error;
 use crate::config::config::config::Config;
 use std::fs;
 
-pub fn sumfetch(args: Vec<String>) -> Result<String, Error> {
-    let data = fs::read_to_string("./src/config/config.json").expect("Unable to read file");
-    let config: Config = serde_json::from_str(&data).expect("JSON does not have correct format.");
+pub fn sumfetch(args: Vec<&str>,config:Config) -> Result<String, Error> {
 
     if config.ascii == "cveinnt".to_owned() {
         Ok(format!(r#"
@@ -38,6 +36,7 @@ pub fn sumfetch(args: Vec<String>) -> Result<String, Error> {
   ).to_owned())
     } else {
         Ok(format!(r#"
+
                   ▄▓▓▓▓▓▓▓▓▓▓▓▓▓▓▄                  sumfetch
                ▄▓▓▀ ▄▓▓▀▓▓▓▀▓▓▄ ▀▀▓▓▄              -----------
              ▓▓▀  ▄▓▀   ▐▓▓  ▀▓▓    ▓▓▄             ABOUT

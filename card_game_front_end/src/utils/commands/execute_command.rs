@@ -4,6 +4,8 @@ use web_sys::Window;
 
 use crate::config::config::config::Config;
 
+use super::sumfetch::sumfetch;
+
 pub fn help(_args: Vec<&str>, command_list: Vec<&'static str>) -> Result<String, Error> {
     let mut result_string = "".to_owned();
     for (i, command) in command_list.to_owned().into_iter().enumerate() {
@@ -62,46 +64,80 @@ pub fn donate(_args: Vec<&str>) -> Result<String, Error> {
 }
 
 pub fn google(args: Vec<&str>, window: Window) -> Result<String, Error> {
-    let query = args.join(" ");
-    window
-        .open_with_url(format!("https://google.com/search?q=${query}", query = query).as_ref())
-        .unwrap();
-    Ok(format!("Searching google for {query}...", query = query))
+    let query = args[1..].join(" ");
+    return match query.eq("") {
+        true => Ok(r#"
+        You should provide query
+        like this: google facetime 
+        "#
+        .to_owned()),
+        _ => {
+            window
+                .open_with_url(
+                    format!("https://google.com/search?q={query}", query = query).as_ref(),
+                )
+                .unwrap();
+            Ok(format!("Searching google for {query}...", query = query).to_owned())
+        }
+    };
 }
 
 pub fn duckduckgo(args: Vec<&str>, window: Window) -> Result<String, Error> {
-    let query = args.join(" ");
-    window
-        .open_with_url(format!("https://duckduckgo.com/?q=${query}", query = query).as_ref())
-        .unwrap();
-    Ok(format!(
-        "Searching duckduckgo for {query}...",
-        query = query
-    ))
+    let query = args[1..].join(" ");
+    return match query.eq("") {
+        true => Ok(r#"
+        You should provide query
+        like this: duckduckgo facetime 
+        "#
+        .to_owned()),
+        _ => {
+            window
+                .open_with_url(format!("https://duckduckgo.com/?q={query}", query = query).as_ref())
+                .unwrap();
+            Ok(format!("Searching duckduckgo for {query}...", query = query).to_owned())
+        }
+    };
 }
 
 pub fn bing(args: Vec<&str>, window: Window) -> Result<String, Error> {
-    let query = args.join(" ");
-    window
-        .open_with_url(format!("https://bing.com/search?q=${query}", query = query).as_ref())
-        .unwrap();
-    Ok(format!(
-        "Searching bing for {query}... but seriously Really?",
-        query = query
-    ))
+    let query = args[1..].join(" ");
+    return match query.eq("") {
+        true => Ok(r#"
+        You should provide query
+        like this: bing facetime 
+        "#
+        .to_owned()),
+        _ => {
+            window
+                .open_with_url(format!("https://bing.com/search?q={query}", query = query).as_ref())
+                .unwrap();
+            Ok(format!("Searching bing for {query}...", query = query).to_owned())
+        }
+    };
 }
 
 pub fn reddit(args: Vec<&str>, window: Window) -> Result<String, Error> {
-    let query = args.join(" ");
-    window
-        .open_with_url(format!("https://reddit.com/search/?q=${query}", query = query).as_ref())
-        .unwrap();
-    Ok(format!("Searching reddit for {query}...", query = query))
+    let query = args[1..].join(" ");
+    return match query.eq("") {
+        true => Ok(r#"
+        You should provide query
+        like this: reddit facetime 
+        "#
+        .to_owned()),
+        _ => {
+            window
+                .open_with_url(
+                    format!("https://reddit.com/search/?q={query}", query = query).as_ref(),
+                )
+                .unwrap();
+            Ok(format!("Searching reddit for {query}...", query = query).to_owned())
+        }
+    };
 }
 
 //Typical linux Commands
 pub fn echo(args: Vec<&str>) -> Result<String, Error> {
-    let query = args.join(" ");
+    let query = args[1..].join(" ");
     Ok(query)
 }
 
@@ -158,6 +194,8 @@ pub fn execute_command(
         "whoami" => Ok(whoami(args, config).unwrap()),
         "ls" => Ok(ls(args).unwrap()),
         "cd" => Ok(cd(args).unwrap()),
+        "echo" => Ok(echo(args).unwrap()),
+        "sumfetch" => Ok(sumfetch(args, config).unwrap()),
         &_ => Ok("Unvalid Command...  type 'help' to get started".to_owned()),
     }
 }

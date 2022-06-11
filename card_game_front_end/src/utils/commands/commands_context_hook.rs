@@ -31,6 +31,7 @@ impl CommandsContext {
             "whoami",
             "ls",
             "cd",
+            "sumfetch",
         ];
         Self {
             config,

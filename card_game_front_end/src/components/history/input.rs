@@ -6,6 +6,7 @@ use crate::components::history::history_function::{clear_history, set_history};
 use crate::components::ps_1::Ps1;
 use crate::utils::commands::commands_context_hook::use_command;
 use crate::utils::commands::shell::shell;
+use crate::utils::commands::tap_completion::handle_tap_completion;
 
 use gloo_console::log;
 
@@ -20,7 +21,7 @@ pub fn input(props: &InputProps) -> Html {
     let input_ref = &props.input_ref;
     let history_context = use_history();
     let command_context = use_command();
-    let input_value = use_state(|| "".to_owned());
+    let command_handler = history_context.command.clone();
 
     let container_element = props.container_ref.cast::<HtmlElement>().unwrap();
 
@@ -28,15 +29,13 @@ pub fn input(props: &InputProps) -> Html {
         // history_context
         let history_handler = history_context.history.clone();
         let last_command_index_handler = history_context.last_command_index.clone();
-        let on_submit_command = history_context.command.clone();
 
         //command_context
         let command_list = command_context.command_list.clone();
         let window = command_context.window;
         let config = command_context.config;
-
+        let on_submit_command = history_context.command.clone();
         //input_value_handler
-        let input_value = input_value.clone();
         Callback::from(move |event: KeyboardEvent| {
             if event.key() == "c".to_owned() && event.ctrl_key() {
                 event.prevent_default();
@@ -56,17 +55,15 @@ pub fn input(props: &InputProps) -> Html {
 
             if event.key() == "Tab".to_owned() {
                 event.prevent_default();
-                todo! {} //handle_tab_completion(command, cloned_history.command.set);
+                handle_tap_completion(on_submit_command.clone(), command_list.clone());
             };
 
             if event.key() == "Enter".to_owned() {
                 event.prevent_default();
                 last_command_index_handler.set(0);
-                log!(&*input_value, "Entered");
-                // on_submit_command.set((*input_value).to_string());
 
-                let args: Vec<&str> = ((&*input_value).split(" ").collect::<Vec<&str>>()).to_vec(); // This is the problem...
-                log!(args[0]);
+                let args: Vec<&str> =
+                    ((&*on_submit_command).split(" ").collect::<Vec<&str>>()).to_vec(); // This is the problem...
 
                 shell(
                     args,
@@ -82,7 +79,6 @@ pub fn input(props: &InputProps) -> Html {
                         .top(container_element.scroll_height().try_into().unwrap()),
                 );
                 on_submit_command.set("".to_owned());
-                input_value.set("".to_owned());
             };
 
             if event.key() == "ArrowUp" {
@@ -131,15 +127,12 @@ pub fn input(props: &InputProps) -> Html {
         })
     };
 
-    let onchange = {
+    let oninput = {
         let input_ref = input_ref.clone();
-        let input_value = input_value.clone();
+        let on_onchange_command = history_context.command.clone();
         Callback::from(move |_| {
-            let input = input_ref.cast::<HtmlInputElement>();
-
-            if let Some(input) = input {
-                input_value.set(input.value());
-            }
+            let input = input_ref.cast::<HtmlInputElement>().unwrap();
+            on_onchange_command.set(input.value());
         })
     };
 
@@ -148,22 +141,21 @@ pub fn input(props: &InputProps) -> Html {
         <div class="flex flex-row space-x-2">
               <label htmlFor="prompt" class="flex-shrink">
                 <Ps1 />
-              </label>
-
+              </label >
               <input
-                ref={input_ref}
+                ref={input_ref.clone()}
                 id="prompt"
                 type="text"
                 // need to have value soon.. .but it's pretty much hopeless
-                value={(*input_value).clone()}
-                {onchange}
+                value={(*command_handler).clone()}
+                {oninput}
                 class="bg-light-background dark:bg-dark-background focus:outline-none flex-grow"
                 autofocus={true}
-                onkeydown={on_submit}
                 autocomplete="off"
+                onkeydown={on_submit}
                 //spell check... later
-
               />
+
             </div>
     }
 }
