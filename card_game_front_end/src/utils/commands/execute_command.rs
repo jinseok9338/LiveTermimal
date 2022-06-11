@@ -1,10 +1,12 @@
 use std::io::Error;
 
-use web_sys::Window;
+use web_sys::{HtmlElement, Window};
 
 use crate::config::config::config::Config;
 
 use super::sumfetch::sumfetch;
+use gloo_console::log;
+use std::fs;
 
 pub fn help(_args: Vec<&str>, command_list: Vec<&'static str>) -> Result<String, Error> {
     let mut result_string = "".to_owned();
@@ -146,13 +148,25 @@ pub fn whoami(_args: Vec<&str>, config: Config) -> Result<String, Error> {
 }
 
 pub fn ls(_args: Vec<&str>) -> Result<String, Error> {
-    todo! {}
-    Ok("this is temp ls".to_owned())
+    Ok(r#"
+    I
+    am
+    not planning
+    to have
+    more 
+    directory"#
+        .to_owned())
 }
 
 pub fn cd(_args: Vec<&str>) -> Result<String, Error> {
-    todo! {}
-    Ok("this is temp cd".to_owned())
+    Ok(r#"
+    I
+    can't
+    move
+    to 
+    other 
+    directory"#
+        .to_owned())
 }
 
 pub fn banner() -> Result<String, Error> {
@@ -171,6 +185,31 @@ pub fn banner() -> Result<String, Error> {
     Type 'repo' or click <u><a class="text-light-blue dark:text-dark-blue underline" href="${config.repo}" target="_blank">here</a></u> for the Github repository.
 
         "#.to_owned())
+}
+
+pub fn change_theme(args: Vec<&str>, window: Window) -> Result<String, Error> {
+    let document = window.document().expect("window should have a document");
+    if document
+        .query_selector("#theme")
+        .unwrap()
+        .unwrap()
+        .class_name()
+        == "dark"
+    {
+        document
+            .query_selector("#theme")
+            .unwrap()
+            .unwrap()
+            .set_class_name("");
+        Ok("Theme changed to light theme".to_owned())
+    } else {
+        document
+            .query_selector("#theme")
+            .unwrap()
+            .unwrap()
+            .set_class_name("dark");
+        Ok("Theme changed to dark theme".to_owned())
+    }
 }
 
 pub fn execute_command(
@@ -196,6 +235,7 @@ pub fn execute_command(
         "cd" => Ok(cd(args).unwrap()),
         "echo" => Ok(echo(args).unwrap()),
         "sumfetch" => Ok(sumfetch(args, config).unwrap()),
+        "theme" => Ok(change_theme(args, window).unwrap()),
         &_ => Ok("Unvalid Command...  type 'help' to get started".to_owned()),
     }
 }

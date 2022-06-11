@@ -4,7 +4,7 @@
 
 @font-face {
   font-family: "Hack";
-  src: url(/workspace/CardGame/card_game_front_end/src/style/Hack-NF.ttf);
+  src: url(./Hack-NF.ttf) format("embedded-opentype");
   display: swap;
 }
 

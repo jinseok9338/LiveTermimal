@@ -32,6 +32,7 @@ impl CommandsContext {
             "ls",
             "cd",
             "sumfetch",
+            "theme",
         ];
         Self {
             config,
@@ -50,19 +51,19 @@ pub struct CommandProviderProps {
 pub fn command_provider(props: &CommandProviderProps) -> Html {
     let config: Config = Config::new({
         &Config {
-            readme_url: "https://raw.githubusercontent.com/cveinnt/cveinnt/master/README.md"
+            readme_url: "https://raw.githubusercontent.com/jinseok9338/CardGame/master/README.md"
                 .to_owned(),
-            title: "LiveTerm".to_owned(),
-            name: "John Doe".to_owned(),
-            ascii: "liveterm".to_owned(),
+            title: "JTerm".to_owned(),
+            name: "Jason Jin (Jinseok)".to_owned(),
+            ascii: "jason".to_owned(),
             social: Social {
                 github: "github".to_owned(),
                 linkedin: "linkedin".to_owned(),
             },
-            email: "contact@email.com".to_owned(),
-            ps1_hostname: "liveterm".to_owned(),
+            email: "jinseok9338@email.com".to_owned(),
+            ps1_hostname: "Jason Jin".to_owned(),
             ps1_username: "visitor".to_owned(),
-            repo: "https://github.com/Cveinnt/LiveTerm".to_owned(),
+            repo: "https://github.com/jinseok9338/CardGame".to_owned(),
             resume_url: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Resume.pdf".to_owned(),
             donate_urls: DonateURLs {
                 paypal: "https://paypal.me/cveinnt".to_owned(),
