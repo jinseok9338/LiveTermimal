@@ -32,6 +32,7 @@ impl CommandsContext {
             "cd",
             "sumfetch",
             "theme",
+            "clear",
         ];
         Self {
             config,

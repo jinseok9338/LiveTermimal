@@ -173,7 +173,7 @@ pub fn input(props: &InputProps) -> Html {
                 autofocus={true}
                 autocomplete="off"
                 onkeydown={on_submit}
-                //spell check... later
+                spellcheck="false"
               />
 
             </div>
