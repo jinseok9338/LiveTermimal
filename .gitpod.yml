@@ -3,6 +3,7 @@
 # and commit this file to your remote git repository to share the goodness with others.
 
 tasks:
-  - name: prepare the project
-    init: cd card_game_front_end && npm i -g tailwindcss && rustup target add wasm32-unknown-unknown && cargo install trunk
-    command: cd card_game_front_end && npx tailwindcss -i ./src/style/input.css -o ./output.css --watch
+  - name: tailwind css set up and project set up
+    command: cd card_game_front_end && npm i -g tailwindcss && rustup target add wasm32-unknown-unknown && cargo install trunk &&  npx tailwindcss -i ./src/style/input.css -o ./output.css --watch
+  - name: project up
+    command: cd card_game_front_end

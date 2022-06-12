@@ -167,8 +167,8 @@ pub fn cd(_args: Vec<&str>) -> Result<String, Error> {
         .to_owned())
 }
 
-pub fn banner() -> Result<String, Error> {
-    Ok(r#"
+pub fn banner(config: Config) -> Result<String, Error> {
+    Ok(format!(r#"
 
     █████        ███                       ███████████
     ░░███        ░░░                       ░█░░░███░░░█
@@ -180,9 +180,9 @@ pub fn banner() -> Result<String, Error> {
     ░░░░░░░░░░░ ░░░░░    ░░░░░     ░░░░░░     ░░░░░     ░░░░░░  ░░░░░     ░░░░░ ░░░ ░░░░░
     Type 'help' to see the list of available commands.
     Type 'sumfetch' to display summary.
-    Type 'repo' or click <u><a class="text-light-blue dark:text-dark-blue underline" href="${config.repo}" target="_blank">here</a></u> for the Github repository.
+    Type 'repo' or click <u><a class="text-light-blue dark:text-dark-blue underline" href="{repo}" target="_blank">here</a></u> for the Github repository.
 
-        "#.to_owned())
+        "#,repo = config.repo).to_owned())
 }
 
 pub fn change_theme(_args: Vec<&str>, window: Window) -> Result<String, Error> {
@@ -219,7 +219,7 @@ pub fn execute_command(
 ) -> Result<String, Error> {
     match command.as_str() {
         "help" => Ok(help(args, command_list).unwrap()),
-        "banner" => Ok(banner().unwrap()),
+        "banner" => Ok(banner(config).unwrap()),
         "about" => Ok(about(args, config).unwrap()),
         "bing" => Ok(bing(args, window).unwrap()),
         "repo" => Ok(repo(args, window, config).unwrap()),

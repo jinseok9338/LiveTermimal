@@ -3,6 +3,7 @@ use crate::components::history::history_context_hook::use_history;
 use crate::components::history::history_function::set_history;
 use crate::components::history::input::Input;
 
+use crate::utils::commands::commands_context_hook::use_command;
 use crate::utils::commands::execute_command::banner;
 
 use web_sys::HtmlInputElement;
@@ -24,12 +25,16 @@ pub fn index(props: &IndexProps) -> Html {
     let container_ref = use_node_ref();
     let input_ref = props.input_ref.clone();
 
+    //config context
+    let command_context = use_command();
+    let config = command_context.config.clone();
+
     use_effect_with_deps(
         move |_| {
             set_history(
                 history_handler.clone(),
                 command_handler.clone(),
-                banner().unwrap().to_owned(),
+                banner(config).unwrap().to_owned(),
             );
             || {}
         },
