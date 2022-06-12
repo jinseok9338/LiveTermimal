@@ -5,7 +5,8 @@ bugs to fix:
 1. upArrow and down Arrow doesn't work [Done]
 1. google, duckduckgo bing reddit search url error[Done]
 1. why input field is on the top no matter what [Done] - Wrap the history components in ul tag
-1. add Font
+1. add Font []
+1. Trim off the unnecessary text in weather api[Done]
 
 functions to add:
 
