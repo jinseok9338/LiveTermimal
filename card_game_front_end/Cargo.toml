@@ -14,8 +14,9 @@ instant = { version = "0.1", features = [ "wasm-bindgen", "inaccurate"]}
 # you can check the latest version here: https://crates.io/crates/yew
 yew = "0.19"
 serde_json = "1.0.66"
-serde = "1.0.137"
+serde = { version = "1.0", features = ["derive"] }
 chrono = "0.4"
 reqwest = {version = "0.11.10", features=["json"]}
 futures = "0.3"
-
+wasm-bindgen-futures = "0.4.30"
+reqwasm = "0.5"

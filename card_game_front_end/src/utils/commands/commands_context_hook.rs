@@ -34,6 +34,9 @@ impl CommandsContext {
             "theme",
             "clear",
             "projects",
+            "readme",
+            "weather",
+            "quote",
         ];
         Self {
             config,

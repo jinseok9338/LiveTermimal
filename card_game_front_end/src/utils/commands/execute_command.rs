@@ -4,7 +4,10 @@ use web_sys::Window;
 
 use crate::config::config::config::Config;
 
-use super::{api_commands::projects, sumfetch::sumfetch};
+use super::{
+    api_commands::{projects, quote, read_me, weather},
+    sumfetch::sumfetch,
+};
 
 pub fn help(_args: Vec<&str>, command_list: Vec<&'static str>) -> Result<String, Error> {
     let mut result_string = "".to_owned();
@@ -235,6 +238,9 @@ pub async fn execute_command(
         "sumfetch" => Ok(sumfetch(args, config).unwrap()),
         "theme" => Ok(change_theme(args, window).unwrap()),
         "projects" => Ok(projects(args, config).await.unwrap()),
+        "readme" => Ok(read_me(args, config).await.unwrap()),
+        "weather" => Ok(weather(args).await.unwrap()),
+        "quote" => Ok(quote(args).await.unwrap()),
         &_ => Ok("Unvalid Command...  type 'help' to get started".to_owned()),
     }
 }

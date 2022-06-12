@@ -1,4 +1,4 @@
-use futures::executor::block_on;
+use wasm_bindgen_futures::spawn_local;
 
 use web_sys::{HtmlElement, HtmlInputElement, ScrollToOptions};
 use yew::prelude::*;
@@ -10,8 +10,6 @@ use crate::utils::commands::command_exists::command_exists;
 use crate::utils::commands::commands_context_hook::use_command;
 use crate::utils::commands::shell::shell;
 use crate::utils::commands::tap_completion::handle_tap_completion;
-
-use gloo_console::log;
 
 #[derive(Properties, PartialEq)]
 pub struct InputProps {
@@ -76,19 +74,21 @@ pub fn input(props: &InputProps) -> Html {
                 event.prevent_default();
                 last_command_index_handler.set(0);
 
-                let args: Vec<&str> =
-                    ((&*on_submit_command).split(" ").collect::<Vec<&str>>()).to_vec(); // This is the problem...
+                // This is the problem...
 
-                let future = shell(
-                    args,
-                    future_submit_command.clone(),
-                    future_history_handler.clone(),
-                    window.clone(),
-                    config.clone(),
-                    command_list.clone(),
-                );
-
-                block_on(future);
+                spawn_local(async move {
+                    let args: Vec<&str> =
+                        ((&*future_submit_command).split(" ").collect::<Vec<&str>>()).to_vec();
+                    shell(
+                        args,
+                        future_submit_command.clone(),
+                        future_history_handler.clone(),
+                        window.clone(),
+                        config.clone(),
+                        command_list.clone(),
+                    )
+                    .await;
+                });
 
                 container_element.scroll_to_with_scroll_to_options(
                     &ScrollToOptions::new()
