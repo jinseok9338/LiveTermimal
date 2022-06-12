@@ -89,33 +89,37 @@ pub fn input(props: &InputProps) -> Html {
             };
 
             if event.key() == "ArrowUp" {
-                let commands_history = &*(history_handler);
+                event.prevent_default();
+                let commands_history = &*(history_handler.clone());
+
                 let commands = commands_history
                     .into_iter()
                     .map(|history| *history.command.clone())
                     .collect::<Vec<String>>();
 
-                event.prevent_default();
                 let command_length = commands.len() as u32;
-                if command_length == 0 as u32 {
+
+                if command_length == (0 as u32) {
                     return;
                 };
 
                 let index = *(last_command_index_handler) + 1;
+
                 if index <= command_length.clone().try_into().unwrap() {
                     last_command_index_handler.set(index);
-                    on_submit_command
-                        .set((*commands[(&command_length - 1) as usize].to_owned()).to_string())
+                    on_submit_command.set(
+                        (*commands[(&command_length - &index) as usize].to_owned()).to_string(),
+                    )
                 };
             };
             if event.key() == "ArrowDown" {
-                let commands_history = &*(history_handler);
+                event.prevent_default();
+                let commands_history = &*(history_handler.clone());
                 let commands = commands_history
                     .into_iter()
                     .map(|history| *history.command.clone())
                     .collect::<Vec<String>>();
 
-                event.prevent_default();
                 let command_length = commands.len();
                 if command_length == 0 {
                     return;
