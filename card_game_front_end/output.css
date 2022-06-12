@@ -787,6 +787,11 @@ div#__next > div {
   color: rgb(235 203 139 / var(--tw-text-opacity));
 }
 
+.dark .dark\:text-dark-red {
+  --tw-text-opacity: 1;
+  color: rgb(191 97 106 / var(--tw-text-opacity));
+}
+
 @media (min-width: 768px) {
   .md\:min-h-full {
     min-height: 100%;

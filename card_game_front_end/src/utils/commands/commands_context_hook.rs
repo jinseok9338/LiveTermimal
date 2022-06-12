@@ -64,9 +64,9 @@ pub fn command_provider(props: &CommandProviderProps) -> Html {
                 github: "jinseok9338".to_owned(),
                 linkedin: "linkedin".to_owned(),
             },
-            email: "jinseok9338@email.com".to_owned(),
-            ps1_hostname: "Jason Jin".to_owned(),
-            ps1_username: "visitor".to_owned(),
+            email: "jinseok9338@gmail.com".to_owned(),
+            ps1_hostname: "hostName".to_owned(),
+            ps1_username: "Jason Jin".to_owned(),
             repo: "https://github.com/jinseok9338/CardGame".to_owned(),
             resume_url: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Resume.pdf".to_owned(),
             donate_urls: DonateURLs {

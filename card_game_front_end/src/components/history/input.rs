@@ -161,7 +161,7 @@ pub fn input(props: &InputProps) -> Html {
         move |_| {
             let green_or_grey = green_or_grey.clone();
             if command_exists((*&command_handler.clone()).to_string(), command_list).unwrap() {
-                green_or_grey.set("dark:text-dark-green text-light-green".to_owned())
+                green_or_grey.set("dark:text-dark-red text-light-green".to_owned())
             } else {
                 green_or_grey.set("dark:text-dark-gray text-light-gray".to_owned())
             }

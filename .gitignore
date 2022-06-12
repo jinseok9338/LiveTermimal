@@ -1,4 +1,5 @@
 card_game_front_end/dist/
 card_game_front_end/target/
-card_game_engine/target/
+card_game_backend/target/
 card_game_front_end/output.css
+target/
