@@ -17,6 +17,7 @@ functions to add:
 1. when command exists show green text[Done]
 1. send twitter []
 1. send mail []
+1. text ctrump card game []
 
 Things to do
 
