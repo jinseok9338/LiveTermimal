@@ -1,3 +1,5 @@
+use futures::executor::block_on;
+
 use web_sys::{HtmlElement, HtmlInputElement, ScrollToOptions};
 use yew::prelude::*;
 
@@ -21,6 +23,7 @@ pub struct InputProps {
 pub fn input(props: &InputProps) -> Html {
     let input_ref = &props.input_ref;
     let history_context = use_history();
+    let on_change_history_context = use_history();
     let green_or_grey = use_state_eq(|| "dark:text-dark-gray text-light-gray".to_owned());
 
     let command_context = use_command();
@@ -36,12 +39,11 @@ pub fn input(props: &InputProps) -> Html {
         // history_context
         let history_handler = history_context.history.clone();
         let last_command_index_handler = history_context.last_command_index.clone();
+        let on_submit_command = history_context.command.clone();
 
         //command_context
         let command_list = command_context.command_list.clone();
-        let window = command_context.window;
-        let config = command_context.config;
-        let on_submit_command = history_context.command.clone();
+
         //input_value_handler
         Callback::from(move |event: KeyboardEvent| {
             if event.key() == "c".to_owned() && event.ctrl_key() {
@@ -66,20 +68,28 @@ pub fn input(props: &InputProps) -> Html {
             };
 
             if event.key() == "Enter".to_owned() {
+                let future_submit_command = history_context.command.clone();
+                let future_history_handler = history_context.history.clone();
+                let window = command_context.window.clone();
+                let config = command_context.config.clone();
+                let command_list = command_context.command_list.clone();
                 event.prevent_default();
                 last_command_index_handler.set(0);
 
                 let args: Vec<&str> =
                     ((&*on_submit_command).split(" ").collect::<Vec<&str>>()).to_vec(); // This is the problem...
 
-                shell(
+                let future = shell(
                     args,
-                    on_submit_command.clone(),
-                    history_handler.clone(),
+                    future_submit_command.clone(),
+                    future_history_handler.clone(),
                     window.clone(),
                     config.clone(),
                     command_list.clone(),
                 );
+
+                block_on(future);
+
                 container_element.scroll_to_with_scroll_to_options(
                     &ScrollToOptions::new()
                         .left(0.try_into().unwrap())
@@ -140,7 +150,7 @@ pub fn input(props: &InputProps) -> Html {
 
     let oninput = {
         let input_ref = input_ref.clone();
-        let on_onchange_command = history_context.command.clone();
+        let on_onchange_command = on_change_history_context.command.clone();
         Callback::from(move |_| {
             let input = input_ref.cast::<HtmlInputElement>().unwrap();
             on_onchange_command.set(input.value());

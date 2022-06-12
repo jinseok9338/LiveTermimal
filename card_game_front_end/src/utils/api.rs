@@ -1,14 +1,9 @@
-use std::fs;
-
 use super::api_types::QuoteJson;
 use crate::config::config::config::Config;
 use crate::utils::api_types::ReturnQuote;
 use reqwest::{Error, Response};
 
-pub async fn get_projects() -> Result<Response, Error> {
-    let data = fs::read_to_string("./src/config/config.json").expect("Unable to read file");
-    let config: Config = serde_json::from_str(&data).expect("JSON does not have correct format.");
-
+pub async fn get_projects(config: Config) -> Result<Response, Error> {
     let request_url = format!(
         "https://api.github.com/users/{repo}/repos",
         repo = config.social.github
@@ -18,9 +13,7 @@ pub async fn get_projects() -> Result<Response, Error> {
     Ok(response)
 }
 
-pub async fn get_read_me() -> Result<String, Error> {
-    let data = fs::read_to_string("./src/config/config.json").expect("Unable to read file");
-    let config: Config = serde_json::from_str(&data).expect("JSON does not have correct format.");
+pub async fn get_read_me(config: Config) -> Result<String, Error> {
     let response = reqwest::get(&config.readme_url).await?;
     let response_string = response.text().await.unwrap();
 

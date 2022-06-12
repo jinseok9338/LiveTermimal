@@ -33,6 +33,7 @@ impl CommandsContext {
             "sumfetch",
             "theme",
             "clear",
+            "projects",
         ];
         Self {
             config,

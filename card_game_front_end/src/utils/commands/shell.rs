@@ -14,7 +14,7 @@ use crate::{
 
 use super::{command_exists::command_exists, execute_command::execute_command};
 
-pub fn shell(
+pub async fn shell(
     args: Vec<&str>,
     command_handler: UseStateHandle<String>,
     history_handler: UseStateHandle<Vec<History>>,
@@ -50,7 +50,9 @@ pub fn shell(
             window,
             config,
             command_list.clone(),
-        );
+        )
+        .await;
+
         set_history(history_handler, command_handler.clone(), output.unwrap())
     }
     command_handler.set("".to_owned())
