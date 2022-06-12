@@ -7,7 +7,7 @@ WORKDIR /usr/src/rust_app
 COPY . .
 
 RUN cd card_game_front_end && trunk build --release
-RUN cargo build -- release
+RUN cargo build --release
 
 FROM gcr.io/distroless/cc-debian10
 
@@ -17,4 +17,4 @@ COPY --from=build /usr/src/rust_app/card_game_front_end/dist /usr/local/bin/dist
 
 WORKDIR /usr/local/bin
 
-CMD ["card_game_backend"]
+CMD ["sudo" ,"card_game_backend"]
