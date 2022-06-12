@@ -15,11 +15,13 @@ functions to add:
 1. echo [Done]
 1. theme[Done]
 1. when command exists show green text[Done]
+1. send twitter []
+1. send mail []
 
 Things to do
 
 1. change the repo and info to my info
-1. add text art
-1. async callback for api []
+1. add text art [Done]
+1. async callback for api [Done]
 1. Docker Containerize the app []
 1. bash script for easy set up []
