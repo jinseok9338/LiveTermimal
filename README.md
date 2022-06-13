@@ -25,5 +25,5 @@ Things to do
 1. change the repo and info to my info
 1. add text art [Done]
 1. async callback for api [Done]
-1. Docker Containerize the app [Done]
+1. Docker Containerize the app [Done] docker-compose up -d / docker-compose down -v --remove-orphans
 1. bash script for easy set up []

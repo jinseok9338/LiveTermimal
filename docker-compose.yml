@@ -5,3 +5,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - "80:80"
+
+    volumes:
+      - ./:/usr/src/card_game
+
+    command:
+      - "card_game_backend"
