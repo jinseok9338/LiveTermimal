@@ -4,6 +4,6 @@
 
 tasks:
   - name: tailwind css set up and project set up
-    command: cd card_game_front_end && npm i -g tailwindcss && rustup target add wasm32-unknown-unknown && cargo install trunk &&  npx tailwindcss -i ./src/style/input.css -o ./output.css --watch
+    command: cd card_game_front_end && npm i -g tailwindcss && rustup target add wasm32-unknown-unknown && cargo install trunk &&  npx tailwindcss -i ./src/style/input.css -o ./output_css/output.css --watch
   - name: project up
     command: cd card_game_front_end

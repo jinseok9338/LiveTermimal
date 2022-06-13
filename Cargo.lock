@@ -421,7 +421,6 @@ name = "card_game_front_end"
 version = "0.1.0"
 dependencies = [
  "chrono",
- "common",
  "futures",
  "gloo-console",
  "gloo-dialogs",
@@ -464,10 +463,6 @@ dependencies = [
  "time 0.1.44",
  "winapi",
 ]
-
-[[package]]
-name = "common"
-version = "0.1.0"
 
 [[package]]
 name = "console_error_panic_hook"

@@ -7,6 +7,7 @@ bugs to fix:
 1. why input field is on the top no matter what [Done] - Wrap the history components in ul tag
 1. add Font []
 1. Trim off the unnecessary text in weather api[Done]
+1. echo command with possible attack... [Done] solved with regex ... but was unable to run javascript 
 
 functions to add:
 
@@ -17,7 +18,7 @@ functions to add:
 1. theme[Done]
 1. when command exists show green text[Done]
 1. send twitter []
-1. send mail []
+1. send email []
 1. text trump card game []
 
 Things to do

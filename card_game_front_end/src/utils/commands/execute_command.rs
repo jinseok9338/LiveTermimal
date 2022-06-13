@@ -3,6 +3,9 @@ use std::io::Error;
 use web_sys::Window;
 
 use crate::config::config::config::Config;
+use lazy_static::lazy_static;
+
+use regex::Regex;
 
 use super::{
     api_commands::{projects, quote, read_me, weather},
@@ -138,10 +141,20 @@ pub fn reddit(args: Vec<&str>, window: Window) -> Result<String, Error> {
     };
 }
 
+fn some_helper_function(text: &str) -> bool {
+    lazy_static! {
+        static ref RE: Regex = Regex::new(r"<[\s\S]*>").unwrap();
+    }
+    RE.is_match(text)
+}
+
 //Typical linux Commands
 pub fn echo(args: Vec<&str>) -> Result<String, Error> {
     let query = args[1..].join(" ");
-    Ok(query)
+    match some_helper_function(&query) {
+        true => Ok("You cheeky bastard... You are not allowed to type that".to_string()),
+        false => Ok(query),
+    }
 }
 
 pub fn whoami(_args: Vec<&str>, config: Config) -> Result<String, Error> {
@@ -172,7 +185,7 @@ pub fn cd(_args: Vec<&str>) -> Result<String, Error> {
 
 pub fn banner(config: Config) -> Result<String, Error> {
     Ok(format!(r#"
-
+    <pre>
     █████        ███                       ███████████
     ░░███        ░░░                       ░█░░░███░░░█
     ░███        ████  █████ █████  ██████ ░   ░███  ░   ██████  ████████  █████████████
@@ -184,7 +197,7 @@ pub fn banner(config: Config) -> Result<String, Error> {
     Type 'help' to see the list of available commands.
     Type 'sumfetch' to display summary.
     Type 'repo' or click <u><a class="text-light-blue dark:text-dark-blue underline" href="{repo}" target="_blank">here</a></u> for the Github repository.
-
+    </pre>
         "#,repo = config.repo).to_owned())
 }
 
