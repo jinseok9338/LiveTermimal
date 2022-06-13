@@ -1,0 +1,7 @@
+version: "3.7"
+services:
+  card_game:
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"

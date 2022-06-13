@@ -782,14 +782,14 @@ div#__next > div {
   color: rgb(163 190 140 / var(--tw-text-opacity));
 }
 
-.dark .dark\:text-dark-blue {
-  --tw-text-opacity: 1;
-  color: rgb(235 203 139 / var(--tw-text-opacity));
-}
-
 .dark .dark\:text-dark-red {
   --tw-text-opacity: 1;
   color: rgb(191 97 106 / var(--tw-text-opacity));
+}
+
+.dark .dark\:text-dark-blue {
+  --tw-text-opacity: 1;
+  color: rgb(235 203 139 / var(--tw-text-opacity));
 }
 
 @media (min-width: 768px) {

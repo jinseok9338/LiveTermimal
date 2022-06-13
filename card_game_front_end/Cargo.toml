@@ -21,4 +21,3 @@ wasm-bindgen-futures = "0.4.30"
 reqwasm = "0.5"
 regex = "1"
 lazy_static = "1.4.0"
-common = {path="../common"}
