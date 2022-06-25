@@ -1,4 +1,6 @@
 **_ web based Cli themed card game _**
+
+
 How to see the project
 if you are familiar with docker you can just type
 ```docker-compose up -d``` and start the project 
