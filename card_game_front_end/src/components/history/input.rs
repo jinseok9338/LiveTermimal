@@ -22,9 +22,9 @@ pub fn input(props: &InputProps) -> Html {
     let input_ref = &props.input_ref;
     let history_context = use_history();
     let on_change_history_context = use_history();
-    let green_or_grey = use_state_eq(|| "dark:text-dark-gray text-light-gray".to_owned());
-
     let command_context = use_command();
+
+    let green_or_grey = use_state_eq(|| "dark:text-dark-gray text-light-gray".to_owned());
     let command_list = command_context.command_list.clone();
     let command_handler = history_context.command.clone();
     let current_command = &*(history_context.command.clone());
@@ -44,7 +44,7 @@ pub fn input(props: &InputProps) -> Html {
 
         //input_value_handler
         Callback::from(move |event: KeyboardEvent| {
-            if event.key() == "c".to_owned() && event.ctrl_key() {
+            if event.key() == *"c" && event.ctrl_key() {
                 event.prevent_default();
                 on_submit_command.set("".to_owned());
                 set_history(
@@ -55,17 +55,17 @@ pub fn input(props: &InputProps) -> Html {
                 last_command_index_handler.set(0);
             };
 
-            if event.key() == "l".to_owned() && event.ctrl_key() {
+            if event.key() == *"l" && event.ctrl_key() {
                 event.prevent_default();
                 clear_history(history_handler.clone());
             };
 
-            if event.key() == "Tab".to_owned() {
+            if event.key() == *"Tab" {
                 event.prevent_default();
-                handle_tap_completion(on_submit_command.clone(), command_list.clone());
+                handle_tap_completion(&on_submit_command.clone(), command_list.clone());
             };
 
-            if event.key() == "Enter".to_owned() {
+            if event.key() == *"Enter" {
                 let future_submit_command = history_context.command.clone();
                 let future_history_handler = history_context.history.clone();
                 let window = command_context.window.clone();
@@ -78,7 +78,7 @@ pub fn input(props: &InputProps) -> Html {
 
                 spawn_local(async move {
                     let args: Vec<&str> =
-                        ((&*future_submit_command).split(" ").collect::<Vec<&str>>()).to_vec();
+                        ((*future_submit_command).split(" ").collect::<Vec<&str>>()).to_vec();
                     shell(
                         args,
                         future_submit_command.clone(),
@@ -91,7 +91,7 @@ pub fn input(props: &InputProps) -> Html {
                 });
 
                 container_element.scroll_to_with_scroll_to_options(
-                    &ScrollToOptions::new()
+                    ScrollToOptions::new()
                         .left(0.try_into().unwrap())
                         .top(container_element.scroll_height().try_into().unwrap()),
                 );
@@ -103,22 +103,22 @@ pub fn input(props: &InputProps) -> Html {
                 let commands_history = &*(history_handler.clone());
 
                 let commands = commands_history
-                    .into_iter()
-                    .map(|history| *history.command.clone())
+                    .iter()
+                    .map(|history| history.command.clone())
                     .collect::<Vec<String>>();
 
                 let command_length = commands.len() as u32;
 
-                if command_length == (0 as u32) {
+                if command_length == (0_u32) {
                     return;
                 };
 
                 let index = *(last_command_index_handler) + 1;
 
-                if index <= command_length.clone().try_into().unwrap() {
+                if index <= command_length {
                     last_command_index_handler.set(index);
                     on_submit_command.set(
-                        (*commands[(&command_length - &index) as usize].to_owned()).to_string(),
+                        (*commands[(command_length - index) as usize].to_owned()).to_string(),
                     )
                 };
             };
@@ -126,8 +126,8 @@ pub fn input(props: &InputProps) -> Html {
                 event.prevent_default();
                 let commands_history = &*(history_handler.clone());
                 let commands = commands_history
-                    .into_iter()
-                    .map(|history| *history.command.clone())
+                    .iter()
+                    .map(|history| history.command.clone())
                     .collect::<Vec<String>>();
 
                 let command_length = commands.len();
@@ -139,7 +139,7 @@ pub fn input(props: &InputProps) -> Html {
                     last_command_index_handler.set(index);
 
                     on_submit_command
-                        .set((*commands[&command_length - index as usize].to_owned()).to_string())
+                        .set((*commands[command_length - index as usize].to_owned()).to_string())
                 } else {
                     last_command_index_handler.set(0);
                     on_submit_command.set("".to_owned());
@@ -150,7 +150,7 @@ pub fn input(props: &InputProps) -> Html {
 
     let oninput = {
         let input_ref = input_ref.clone();
-        let on_onchange_command = on_change_history_context.command.clone();
+        let on_onchange_command = on_change_history_context.command;
         Callback::from(move |_| {
             let input = input_ref.cast::<HtmlInputElement>().unwrap();
             on_onchange_command.set(input.value());
@@ -160,7 +160,7 @@ pub fn input(props: &InputProps) -> Html {
     use_effect_with_deps(
         move |_| {
             let green_or_grey = green_or_grey.clone();
-            if command_exists((*&command_handler.clone()).to_string(), command_list).unwrap() {
+            if command_exists(&command_handler, &command_list) {
                 green_or_grey.set("dark:text-dark-red text-light-green".to_owned())
             } else {
                 green_or_grey.set("dark:text-dark-gray text-light-gray".to_owned())

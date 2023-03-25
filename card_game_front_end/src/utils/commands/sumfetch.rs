@@ -1,10 +1,9 @@
-use stdweb::web::error::Error;
-
+#![allow(clippy::all)]
 use crate::config::config::config::Config;
 
-pub fn sumfetch(_args: Vec<&str>, config: Config) -> Result<String, Error> {
-    if config.ascii == "jason".to_owned() {
-        Ok(format!(r#"
+pub fn sumfetch(_args: &[&str], config: Config) -> String {
+    if config.ascii == *"jason" {
+        format!(r#"
 
 /*///////****////***///****///****////////           sumfetch: summary display
 /****/////***********/***********/////**//          -----------
@@ -30,16 +29,16 @@ pub fn sumfetch(_args: Vec<&str>, config: Config) -> Result<String, Error> {
   email = config.email,
   github = config.social.github,
   linkedin = config.social.linkedin,
-  ).to_owned())
+  )
     } else {
-        Ok(format!(r#"
+        format!(r#"
 
                   ▄██████████████▄                  sumfetch
                ▄██▀ ▄██▀███▀██▄ ▀▀██▄              -----------
              ██▀  ▄█▀   ▐██  ▀██    ██▄             ABOUT
            ▄████████████████████████████            {name}
           ██     ███    ▐██    ▐██     ██           <u><a href="{resume_url}" target="_blank">resume</a></u>
-       ▐█▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀█       爵 <u><a href="{repo}" target="_blank">Github repo</a></u>
+       ▐█▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀█        <u><a href="{repo}" target="_blank">Github repo</a></u>
        ▐█                                 ▐█       -----------
        ▐█        > L I V E T E R M        ▐█        CONTACT
        ▐█                                 ▐█        <u><a href="mailto:{email}" target="_blank">{email}</a></u>
@@ -57,6 +56,6 @@ resume_url = config.resume_url,
  github = config.social.github,
  linkedin = config.social.linkedin,
  paypal = config.donate_urls.paypal,
- patreon = config.donate_urls.patreon,).to_owned())
+ patreon = config.donate_urls.patreon,)
     }
 }

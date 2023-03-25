@@ -146,7 +146,7 @@ pub struct Projects {
     pub default_branch: String,
 }
 
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Default, Debug, Clone, Eq,PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Owner {
     pub login: String,
@@ -184,7 +184,7 @@ pub struct Owner {
     pub site_admin: bool,
 }
 
-#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize,Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct License {
     pub key: String,
@@ -195,7 +195,7 @@ pub struct License {
     #[serde(rename = "node_id")]
     pub node_id: String,
 }
-#[derive(Debug, PartialEq, Clone, Deserialize)]
+#[derive(Debug, Eq,PartialEq, Clone, Deserialize)]
 #[allow(non_snake_case)]
 pub struct QuoteJson {
     pub _id: String,
@@ -208,7 +208,7 @@ pub struct QuoteJson {
     pub dateModified: String,
 }
 
-#[derive(Debug, PartialEq, Clone, Deserialize)]
+#[derive(Debug, Eq,PartialEq, Clone, Deserialize)]
 pub struct ReturnQuote {
     pub quote: String,
 }

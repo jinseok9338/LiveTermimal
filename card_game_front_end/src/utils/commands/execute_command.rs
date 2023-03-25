@@ -3,45 +3,45 @@ use std::io::Error;
 use web_sys::Window;
 
 use crate::config::config::config::Config;
-use lazy_static::lazy_static;
 
-use regex::Regex;
+
+
 
 use super::{
     api_commands::{projects, quote, read_me, weather},
-    sumfetch::sumfetch,
+    sumfetch::sumfetch, helper::some_helper_function,
 };
 
-pub fn help(_args: Vec<&str>, command_list: Vec<&'static str>) -> Result<String, Error> {
-    let mut result_string = "".to_owned();
-    for (i, command) in command_list.to_owned().into_iter().enumerate() {
+pub fn help(_args: &[&str], command_list: Vec<&'static str>) -> String {
+    let mut result_string = String::new();
+    for (i, command) in command_list.into_iter().enumerate() {
         if i % 7 == 0 {
-            result_string += &(command.to_owned() + "\n");
+            result_string.push_str(&format!("{command}\n"));
         } else {
-            result_string += &(command.to_owned() + " ");
+            result_string.push_str(&format!("{command} ", ));
         }
     }
 
-    Ok(format!(
+    format!(
         "Welcome! Here are all the available commands:
         \n{result_string}\n
         [tab]: trigger completion.
         [ctrl+l]/clear: clear terminal.\n
-        Type 'sumfetch' to display summary.",
-        result_string = result_string
-    ))
+        Type 'sumfetch' to display summary."
+        
+    )
 }
 
 //Redirection to repo
-pub fn repo(_args: Vec<&str>, window: Window, config: Config) -> Result<String, Error> {
+pub fn repo(_args: &[&str], window: &Window, config: &Config) -> String {
     window.open_with_url(config.repo.as_ref()).unwrap();
 
-    Ok("Opening Github repository...".to_owned())
+    "Opening Github repository...".to_owned()
 }
 
 //About
-pub fn about(_args: Vec<&str>, config: Config) -> Result<String, Error> {
-    Ok(format!(
+pub fn about(_args: &[&str], config: &Config) -> String {
+   format!(
         r#"Hi, I am {name}.
         Welcome to my website!
         More about me:
@@ -51,140 +51,131 @@ pub fn about(_args: Vec<&str>, config: Config) -> Result<String, Error> {
     "#,
         name = config.name
     )
-    .to_owned())
+ 
 }
 
-pub fn resume(_args: Vec<&str>, window: Window, config: Config) -> Result<String, Error> {
+pub fn resume(_args: &[&str], window: &Window, config: &Config) -> String {
     window.open_with_url(config.resume_url.as_ref()).unwrap();
 
-    Ok("Opening resume".to_owned())
+   "Opening resume".to_owned()
 }
 
-pub fn donate(_args: Vec<&str>) -> Result<String, Error> {
-    Ok(r#"
+pub fn donate(_args: &[&str]) -> String {
+    r#"
         thank you for your interest.
         here are the ways you can support my work:
         - <u><a class="text-light-blue dark:text-dark-blue underline" href="${config.donate_urls.paypal}" target="_blank">paypal</a></u>
         - <u><a class="text-light-blue dark:text-dark-blue underline" href="${config.donate_urls.patreon}" target="_blank">patreon</a></u>
-        "#.to_owned())
+        "#.to_owned()
 }
 
-pub fn google(args: Vec<&str>, window: Window) -> Result<String, Error> {
+pub fn google(args: &[&str], window: &Window) -> String {
     let query = args[1..].join(" ");
-    return match query.eq("") {
-        true => Ok(r#"
+    return if query.eq("") {
+        r#"
         You should provide query
         like this: google facetime 
         "#
-        .to_owned()),
-        _ => {
-            window
-                .open_with_url(
-                    format!("https://google.com/search?q={query}", query = query).as_ref(),
-                )
-                .unwrap();
-            Ok(format!("Searching google for {query}...", query = query).to_owned())
-        }
-    };
+        .to_owned()
+    } else {
+        window
+            .open_with_url(format!("https://google.com/search?q={query}").as_ref())
+            .unwrap();
+        format!("Searching google for {query}...")
+    }
 }
 
-pub fn duckduckgo(args: Vec<&str>, window: Window) -> Result<String, Error> {
+pub fn duckduckgo(args: &[&str], window: &Window) -> String {
     let query = args[1..].join(" ");
     return match query.eq("") {
-        true => Ok(r#"
+        true => r#"
         You should provide query
         like this: duckduckgo facetime 
         "#
-        .to_owned()),
+        .to_owned(),
         _ => {
             window
-                .open_with_url(format!("https://duckduckgo.com/?q={query}", query = query).as_ref())
+                .open_with_url(format!("https://duckduckgo.com/?q={query}" ).as_ref())
                 .unwrap();
-            Ok(format!("Searching duckduckgo for {query}...", query = query).to_owned())
+            format!("Searching duckduckgo for {query}...")
         }
     };
 }
 
-pub fn bing(args: Vec<&str>, window: Window) -> Result<String, Error> {
+pub fn bing(args: &[&str], window: &Window) -> String {
     let query = args[1..].join(" ");
-    return match query.eq("") {
-        true => Ok(r#"
+    return if query.eq("") {
+        r#"
         You should provide query
         like this: bing facetime 
         "#
-        .to_owned()),
-        _ => {
-            window
-                .open_with_url(format!("https://bing.com/search?q={query}", query = query).as_ref())
-                .unwrap();
-            Ok(format!("Searching bing for {query}...", query = query).to_owned())
-        }
-    };
+        .to_owned()
+    } else {
+        window
+            .open_with_url(format!("https://bing.com/search?q={query}").as_ref())
+            .unwrap();
+        format!("Searching bing for {query}...")
+    }
 }
 
-pub fn reddit(args: Vec<&str>, window: Window) -> Result<String, Error> {
+pub fn reddit(args: &[&str], window: &Window) -> String {
     let query = args[1..].join(" ");
-    return match query.eq("") {
-        true => Ok(r#"
+    return if query.eq("") {
+        r#"
         You should provide query
         like this: reddit facetime 
         "#
-        .to_owned()),
-        _ => {
-            window
-                .open_with_url(
-                    format!("https://reddit.com/search/?q={query}", query = query).as_ref(),
-                )
-                .unwrap();
-            Ok(format!("Searching reddit for {query}...", query = query).to_owned())
-        }
-    };
+        .to_owned()
+    } else {
+        window
+            .open_with_url(format!("https://reddit.com/search/?q={query}").as_ref())
+            .unwrap();
+        format!("Searching reddit for {query}...")
+    }
 }
 
-fn some_helper_function(text: &str) -> bool {
-    lazy_static! {
-        static ref RE: Regex = Regex::new(r"<[\s\S]*>").unwrap();
-    }
-    RE.is_match(text)
-}
+
 
 //Typical linux Commands
-pub fn echo(args: Vec<&str>) -> Result<String, Error> {
+pub fn echo(args: Vec<&str>) -> String {
     let query = args[1..].join(" ");
-    match some_helper_function(&query) {
-        true => Ok("You cheeky bastard... You are not allowed to type that".to_string()),
-        false => Ok(query),
+    if some_helper_function(&query) {
+        "You cheeky bastard... You are not allowed to type that".to_string()
+    } else {
+        query
     }
 }
 
-pub fn whoami(_args: Vec<&str>, config: Config) -> Result<String, Error> {
-    Ok(config.ps1_username.to_owned())
+pub fn whoami(_args: Vec<&str>, config: &Config) -> String {
+    config.ps1_username.clone()
 }
 
-pub fn ls(_args: Vec<&str>) -> Result<String, Error> {
-    Ok(r#"
+// This will be done in the future
+pub fn ls(_args: &[&str]) -> String {
+    r#"
     I
     don't 
     know 
     how 
     to add file system in 
     webAssemly"#
-        .to_owned())
+        .to_owned()
 }
 
-pub fn cd(_args: Vec<&str>) -> Result<String, Error> {
-    Ok(r#"
+// This will be done in the future
+pub fn cd(_args: &[&str]) ->String {
+    r#"
     I
     don't 
     know 
     how 
     to add file system in 
     webAssemly"#
-        .to_owned())
+        .to_owned()
 }
 
-pub fn banner(config: Config) -> Result<String, Error> {
-    Ok(format!(r#"
+pub fn banner(config: &Config) -> String {
+    format!(r#"
     <pre>
     █████        ███                       ███████████
     ░░███        ░░░                       ░█░░░███░░░█
@@ -196,12 +187,12 @@ pub fn banner(config: Config) -> Result<String, Error> {
     ░░░░░░░░░░░ ░░░░░    ░░░░░     ░░░░░░     ░░░░░     ░░░░░░  ░░░░░     ░░░░░ ░░░ ░░░░░
     Type 'help' to see the list of available commands.
     Type 'sumfetch' to display summary.
-    Type 'repo' or click <u><a class="text-light-blue dark:text-dark-blue underline" href="{repo}" target="_blank">here</a></u> for the Github repository.
+    Type 'repo' or click <u><a class="text-light-blue dark:text-dark-blue underline" href="{0}" target="_blank">here</a></u> for the Github repository.
     </pre>
-        "#,repo = config.repo).to_owned())
+        "#, config.repo)
 }
 
-pub fn change_theme(_args: Vec<&str>, window: Window) -> Result<String, Error> {
+pub fn change_theme(_args: Vec<&str>, window: Window) -> String {
     let document = window.document().expect("window should have a document");
     if document
         .query_selector("#theme")
@@ -215,14 +206,14 @@ pub fn change_theme(_args: Vec<&str>, window: Window) -> Result<String, Error> {
             .unwrap()
             .unwrap()
             .set_class_name("");
-        Ok("Theme changed to light theme".to_owned())
+        "Theme changed to light theme".to_owned()
     } else {
         document
             .query_selector("#theme")
             .unwrap()
             .unwrap()
             .set_class_name("dark");
-        Ok("Theme changed to dark theme".to_owned())
+        "Theme changed to dark theme".to_owned()
     }
 }
 
@@ -234,22 +225,22 @@ pub async fn execute_command(
     command_list: Vec<&'static str>,
 ) -> Result<String, Error> {
     match command.as_str() {
-        "help" => Ok(help(args, command_list).unwrap()),
-        "banner" => Ok(banner(config).unwrap()),
-        "about" => Ok(about(args, config).unwrap()),
-        "bing" => Ok(bing(args, window).unwrap()),
-        "repo" => Ok(repo(args, window, config).unwrap()),
-        "resume" => Ok(resume(args, window, config).unwrap()),
-        "donate" => Ok(donate(args).unwrap()),
-        "google" => Ok(google(args, window).unwrap()),
-        "duckduckgo" => Ok(duckduckgo(args, window).unwrap()),
-        "reddit" => Ok(reddit(args, window).unwrap()),
-        "whoami" => Ok(whoami(args, config).unwrap()),
-        "ls" => Ok(ls(args).unwrap()),
-        "cd" => Ok(cd(args).unwrap()),
-        "echo" => Ok(echo(args).unwrap()),
-        "sumfetch" => Ok(sumfetch(args, config).unwrap()),
-        "theme" => Ok(change_theme(args, window).unwrap()),
+        "help" => Ok(help(&args, command_list)),
+        "banner" => Ok(banner(&config)),
+        "about" => Ok(about(&args, &config)),
+        "bing" => Ok(bing(&args, &window)),
+        "repo" => Ok(repo(&args, &window, &config)),
+        "resume" => Ok(resume(&args, &window, &config)),
+        "donate" => Ok(donate(&args)),
+        "google" => Ok(google(&args, &window)),
+        "duckduckgo" => Ok(duckduckgo(&args, &window)),
+        "reddit" => Ok(reddit(&args, &window)),
+        "whoami" => Ok(whoami(args, &config)),
+        "ls" => Ok(ls(&args)),
+        "cd" => Ok(cd(&args)),
+        "echo" => Ok(echo(args)),
+        "sumfetch" => Ok(sumfetch(&args, config)),
+        "theme" => Ok(change_theme(args, window)),
         "projects" => Ok(projects(args, config).await.unwrap()),
         "readme" => Ok(read_me(args, config).await.unwrap()),
         "weather" => Ok(weather(args).await.unwrap()),

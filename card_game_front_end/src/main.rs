@@ -18,7 +18,7 @@ fn app() -> Html {
 
         Callback::from(move |_| {
             let input = input_ref.cast::<InputElement>().unwrap();
-            input.focus().unwrap()
+            input.focus().unwrap();
         })
     };
 

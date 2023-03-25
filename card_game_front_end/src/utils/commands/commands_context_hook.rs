@@ -53,8 +53,8 @@ pub struct CommandProviderProps {
 
 #[function_component(CommandContextProvider)]
 pub fn command_provider(props: &CommandProviderProps) -> Html {
-    let config: Config = Config::new({
-        &Config {
+    let config: Config = Config {
+      
             readme_url: "https://raw.githubusercontent.com/jinseok9338/CardGame/master/README.md"
                 .to_owned(),
             title: "JTerm".to_owned(),
@@ -66,7 +66,7 @@ pub fn command_provider(props: &CommandProviderProps) -> Html {
             },
             email: "jinseok9338@gmail.com".to_owned(),
             ps1_hostname: "hostName".to_owned(),
-            ps1_username: "Jason Jin".to_owned(),
+            ps1_username: "Jinseok9338".to_owned(),
             repo: "https://github.com/jinseok9338/CardGame".to_owned(),
             resume_url: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Resume.pdf".to_owned(),
             donate_urls: DonateURLs {
@@ -92,9 +92,18 @@ pub fn command_provider(props: &CommandProviderProps) -> Html {
                     blue: "#EBCB8B".to_owned(),
                     red: "#BF616A".to_owned(),
                 },
+                solarized: Colors{
+                    background: "#002B36".to_owned(),
+                    foreground: "#839496".to_owned(),
+                    yellow: "#B58900".to_owned(),
+                    green: "#859900".to_owned(),
+                    gray: "#586E75".to_owned(),
+                    blue: "#268BD2".to_owned(),
+                    red: "#DC322F".to_owned()  
+                }
             },
-        }
-    });
+        
+    };
     let window = window().unwrap();
 
     let history_ctx = CommandsContext::new(config, window);

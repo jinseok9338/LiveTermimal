@@ -1,10 +1,12 @@
-use std::io::Error;
+
+
+use wasm_bindgen::JsValue;
 
 use crate::config::config::config::Config;
 use crate::utils::api::get_projects;
-use crate::utils::api::{get_quotes, get_read_me, get_weather};
+use crate::utils::api::{get_quotes, get_readme, get_weather};
 
-pub async fn projects(_args: Vec<&str>, config: Config) -> Result<String, Error> {
+pub async fn projects(_args: Vec<&str>, config: Config) -> Result<String, JsValue> {
     let projects = get_projects(config).await.unwrap();
 
     let projects_string = projects.into_iter().map(|project|{
@@ -14,19 +16,19 @@ pub async fn projects(_args: Vec<&str>, config: Config) -> Result<String, Error>
     Ok(projects_string)
 }
 
-pub async fn quote(_args: Vec<&str>) -> Result<String, Error> {
+pub async fn quote(_args: Vec<&str>) -> Result<String, JsValue> {
     let response = get_quotes().await.unwrap();
     Ok(response.quote)
 }
 
-pub async fn read_me(_args: Vec<&str>, config: Config) -> Result<String, Error> {
-    let response = get_read_me(config).await.unwrap();
+pub async fn read_me(_args: Vec<&str>, config: Config) -> Result<String, JsValue> {
+    let response = get_readme(&config).await.unwrap();
     Ok(response)
 }
 
-pub async fn weather(args: Vec<&str>) -> Result<String, Error> {
+pub async fn weather(args: Vec<&str>) -> Result<String, JsValue> {
     let city = args[1..].join(" ");
-    if city.len() == 0 as usize {
+    if city.is_empty() {
         return Ok("Usage: weather [city]. Example: weather casablanca".to_owned());
     }
     let response = get_weather(city).await.unwrap();

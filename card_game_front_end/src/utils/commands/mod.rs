@@ -5,3 +5,4 @@ pub mod execute_command;
 pub mod shell;
 pub mod sumfetch;
 pub mod tap_completion;
+pub mod helper;

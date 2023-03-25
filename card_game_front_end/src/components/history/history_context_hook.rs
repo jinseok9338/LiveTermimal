@@ -32,7 +32,7 @@ pub struct HistoryProviderProps {
 
 #[function_component(HistoryContextProvider)]
 pub fn history_provider(props: &HistoryProviderProps) -> Html {
-    let history = use_state(|| vec![].to_owned());
+    let history = use_state(|| vec![]);
     let command = use_state(|| "".to_owned());
     let last_command_index = use_state(|| 0);
 

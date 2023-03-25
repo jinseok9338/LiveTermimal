@@ -1,9 +1,9 @@
 use instant::Instant;
 
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Clone,Eq)]
 pub struct History {
     pub id: Box<usize>,
     pub date: Box<Instant>,
-    pub command: Box<String>,
-    pub output: Box<String>,
+    pub command: String,
+    pub output: String,
 }

@@ -5,37 +5,49 @@ use crate::config::config::config::Config;
 use crate::utils::api_types::ReturnQuote;
 use lazy_static::lazy_static;
 
-use gloo_console::log;
+use serde_wasm_bindgen;
+
+
 use regex::Regex;
-use reqwasm::http::Request;
 
-pub async fn get_projects(config: Config) -> Result<Vec<Projects>, Error> {
+use wasm_bindgen::prelude::*;
+use wasm_bindgen::JsCast;
+use wasm_bindgen_futures::JsFuture;
+use web_sys::{Request, RequestInit, Response};
+
+pub async fn get_projects(config: Config) -> Result<Vec<Projects>, JsValue> {
     let request_url = format!(
-        "https://api.github.com/users/{repo}/repos",
-        repo = config.social.github
+        "https://api.github.com/users/{}/repos",
+        config.social.github
     );
+    let mut opts = RequestInit::new();
+    opts.method("GET");
+    let request = Request::new_with_str_and_init(&request_url, &opts)?;
 
-    let fetched_json: Vec<Projects> = Request::get(&request_url)
-        .send()
-        .await
-        .unwrap()
-        .json()
-        .await
-        .unwrap();
-
-    Ok(fetched_json)
+    let window = web_sys::window().unwrap();
+    let fetch_with_request = window.fetch_with_request(&request);
+    let resp_value = JsFuture::from(fetch_with_request).await?;
+    let resp: Response = resp_value.dyn_into().unwrap();
+    let json_promise = resp.json()?;
+    let json = JsFuture::from(json_promise).await?;
+    let projects: Vec<Projects> = serde_wasm_bindgen::from_value(json)?;
+    Ok(projects)
 }
 
-pub async fn get_read_me(config: Config) -> Result<String, Error> {
-    let fetched_string: String = Request::get(&config.readme_url)
-        .send()
-        .await
-        .unwrap()
-        .text()
-        .await
-        .unwrap();
 
-    Ok(fetched_string)
+pub async fn get_readme(config: &Config) -> Result<String, JsValue> {
+    let mut opts = RequestInit::new();
+    opts.method("GET");
+    let request = Request::new_with_str_and_init(&config.readme_url, &opts)?;
+    
+    let window = web_sys::window().unwrap();
+    let fetch_with_request = window.fetch_with_request(&request);
+    let resp_value = JsFuture::from(fetch_with_request).await?;
+    let resp: Response = resp_value.dyn_into().unwrap();
+    let text_promise = resp.text()?;
+    let text = JsFuture::from(text_promise).await?;
+    let text_str: String = text.as_string().unwrap();
+    Ok(text_str)
 }
 
 fn some_helper_function(text: &str) -> String {
@@ -45,34 +57,42 @@ fn some_helper_function(text: &str) -> String {
     RE.replace_all(text, "").to_string()
 }
 
-pub async fn get_weather(city: String) -> Result<String, Error> {
-    let fetched_string: String = Request::get(&format!("https://wttr.in/{city}", city = &city))
-        .send()
-        .await
-        .unwrap()
-        .text()
-        .await
-        .unwrap();
+pub async fn get_weather(city: String) -> Result<String, JsValue> {
+    let url = format!("https://wttr.in/{}", city);
+    let mut opts = RequestInit::new();
+    opts.method("GET");
+    let request = Request::new_with_str_and_init(&url, &opts)?;
 
-    let trimmed_string = some_helper_function(&fetched_string);
+    let window = web_sys::window().unwrap();
+    let fetch_with_request = window.fetch_with_request(&request);
+    let resp_value = JsFuture::from(fetch_with_request).await?;
+    let resp: Response = resp_value.dyn_into().unwrap();
+    let text_promise = resp.text().expect("Failed to read response text");
+    let text = JsFuture::from(text_promise).await?;
+    let text_str: String = text.as_string().unwrap();
+    let trimmed_string = some_helper_function(&text_str);
 
     Ok(trimmed_string)
 }
 
-pub async fn get_quotes() -> Result<ReturnQuote, Error> {
-    let fetched_json: QuoteJson = Request::get("https://api.quotable.io/random")
-        .send()
-        .await
-        .unwrap()
-        .json()
-        .await
-        .unwrap();
+pub async fn get_quotes() -> Result<ReturnQuote, JsValue> {
+    let mut opts = RequestInit::new();
+    opts.method("GET");
+    let request = Request::new_with_str_and_init("https://api.quotable.io/random", &opts)?;
 
+    let window = web_sys::window().unwrap();
+       let fetch_with_request = window.fetch_with_request(&request);
+    let resp_value = JsFuture::from(fetch_with_request).await?;
+    let resp: Response = resp_value.dyn_into().unwrap();
+    let json_promise = resp.json()?;
+    let json = JsFuture::from(json_promise).await?;
+    let quote: QuoteJson = serde_wasm_bindgen::from_value(json)?;
+  
     Ok(ReturnQuote {
         quote: format!(
             "{content} - {author}",
-            content = fetched_json.content,
-            author = fetched_json.author
+            content = quote.content,
+            author = quote.author
         ),
     })
 }

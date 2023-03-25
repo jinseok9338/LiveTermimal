@@ -20,21 +20,21 @@ pub fn index(props: &IndexProps) -> Html {
     let history_handler = history_context.history.clone();
     let history_handler_for_focus = history_context.history.clone();
     let history_for_focus = (*history_handler_for_focus).len();
-    let command_handler = history_context.command.clone();
-
+    let command_handler = history_context.command;
     let container_ref = use_node_ref();
     let input_ref = props.input_ref.clone();
 
     //config context
     let command_context = use_command();
-    let config = command_context.config.clone();
+    let config = command_context.config;
 
+    // this sets the history to the banner
     use_effect_with_deps(
         move |_| {
             set_history(
                 history_handler.clone(),
                 command_handler.clone(),
-                banner(config).unwrap().to_owned(),
+                banner(&config),
             );
             || {}
         },
