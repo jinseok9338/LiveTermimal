@@ -4,3 +4,4 @@ pub mod history_function;
 pub mod input;
 pub mod interface;
 pub mod raw_html;
+pub mod raw_html_with_children;

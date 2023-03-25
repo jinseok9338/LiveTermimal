@@ -5,7 +5,8 @@ use crate::config::config::config::Social;
 use crate::config::config::config::ThemeColors;
 
 use web_sys::{window, Window};
-use yew::{function_component, html, use_context, Children, ContextProvider, Properties};
+use yew::Html;
+use yew::{function_component, html, Children, ContextProvider, Properties};
 #[derive(Debug, PartialEq, Properties, Clone)]
 pub struct CommandsContext {
     pub config: Config,
@@ -115,6 +116,3 @@ pub fn command_provider(props: &CommandProviderProps) -> Html {
     }
 }
 
-pub fn use_command() -> CommandsContext {
-    use_context::<CommandsContext>().expect("no ctx found")
-}

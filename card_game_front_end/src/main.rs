@@ -4,7 +4,7 @@ mod index;
 mod utils;
 use crate::components::history::history_context_hook::HistoryContextProvider;
 use crate::utils::commands::commands_context_hook::CommandContextProvider;
-// use gloo_console::log;
+
 use index::Index;
 use web_sys::HtmlInputElement as InputElement;
 use yew::prelude::*;
@@ -41,5 +41,5 @@ fn app() -> Html {
 }
 
 fn main() {
-    yew::start_app::<App>();
+  yew::Renderer::<App>::new().render();
 }

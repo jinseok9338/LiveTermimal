@@ -241,7 +241,10 @@ pub async fn execute_command(
         "echo" => Ok(echo(args)),
         "sumfetch" => Ok(sumfetch(&args, config)),
         "theme" => Ok(change_theme(args, window)),
-        "projects" => Ok(projects(args, config).await.unwrap()),
+        "projects" => {
+            // first I
+            Ok(projects(args, config).await.unwrap())
+        },
         "readme" => Ok(read_me(args, config).await.unwrap()),
         "weather" => Ok(weather(args).await.unwrap()),
         "quote" => Ok(quote(args).await.unwrap()),

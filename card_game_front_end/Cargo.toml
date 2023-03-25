@@ -12,14 +12,14 @@ web-sys = {version = "0.3.57", features=["HtmlInputElement","Element","ScrollToO
 gloo-console = "0.2.1"
 instant = { version = "0.1", features = [ "wasm-bindgen", "inaccurate"]}
 # you can check the latest version here: https://crates.io/crates/yew
-yew = "0.19"
+yew = { version = "0.20", features = ["csr"] }
 serde_json = "1.0.66"
 serde = { version = "1.0", features = ["derive"] }
 chrono = "0.4"
 futures = "0.3"
 wasm-bindgen-futures = "0.4.30"
-reqwasm = "0.5"
+
 regex = "1"
 lazy_static = "1.4.0"
-wasm-bindgen = "0.2.84"
+wasm-bindgen = "0.2.79"
 serde-wasm-bindgen = "0.5.0"

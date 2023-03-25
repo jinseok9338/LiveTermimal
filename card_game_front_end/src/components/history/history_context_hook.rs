@@ -1,7 +1,7 @@
 use crate::components::history::interface::History;
 use yew::{
-    function_component, html, use_context, use_state, Children, ContextProvider, Properties,
-    UseStateHandle,
+    function_component, html, use_state, Children, ContextProvider, Properties,
+    UseStateHandle, Html,
 };
 
 #[derive(Debug, PartialEq, Clone)]
@@ -45,6 +45,4 @@ pub fn history_provider(props: &HistoryProviderProps) -> Html {
     }
 }
 
-pub fn use_history() -> HistoryContext {
-    use_context::<HistoryContext>().expect("no ctx found")
-}
+

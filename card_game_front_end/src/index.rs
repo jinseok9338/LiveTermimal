@@ -1,9 +1,11 @@
 use crate::components::history::history_component::HistoryComponent;
-use crate::components::history::history_context_hook::use_history;
+
+use crate::components::history::history_context_hook::HistoryContext;
 use crate::components::history::history_function::set_history;
 use crate::components::history::input::Input;
 
-use crate::utils::commands::commands_context_hook::use_command;
+
+use crate::utils::commands::commands_context_hook::CommandsContext;
 use crate::utils::commands::execute_command::banner;
 
 use web_sys::HtmlInputElement;
@@ -16,7 +18,7 @@ pub struct IndexProps {
 
 #[function_component(Index)]
 pub fn index(props: &IndexProps) -> Html {
-    let history_context = use_history();
+    let history_context = use_context::<HistoryContext>().expect("no ctx found");
     let history_handler = history_context.history.clone();
     let history_handler_for_focus = history_context.history.clone();
     let history_for_focus = (*history_handler_for_focus).len();
@@ -25,15 +27,15 @@ pub fn index(props: &IndexProps) -> Html {
     let input_ref = props.input_ref.clone();
 
     //config context
-    let command_context = use_command();
+    let command_context = use_context::<CommandsContext>().expect("no ctx found");
     let config = command_context.config;
 
     // this sets the history to the banner
     use_effect_with_deps(
         move |_| {
             set_history(
-                history_handler.clone(),
-                command_handler.clone(),
+                &history_handler.clone(),
+                &command_handler.clone(),
                 banner(&config),
             );
             || {}

@@ -3,11 +3,13 @@ use wasm_bindgen_futures::spawn_local;
 use web_sys::{HtmlElement, HtmlInputElement, ScrollToOptions};
 use yew::prelude::*;
 
-use crate::components::history::history_context_hook::use_history;
+
+use crate::components::history::history_context_hook::HistoryContext;
 use crate::components::history::history_function::{clear_history, set_history};
 use crate::components::ps_1::Ps1;
 use crate::utils::commands::command_exists::command_exists;
-use crate::utils::commands::commands_context_hook::use_command;
+
+use crate::utils::commands::commands_context_hook::CommandsContext;
 use crate::utils::commands::shell::shell;
 use crate::utils::commands::tap_completion::handle_tap_completion;
 
@@ -20,9 +22,9 @@ pub struct InputProps {
 #[function_component(Input)]
 pub fn input(props: &InputProps) -> Html {
     let input_ref = &props.input_ref;
-    let history_context = use_history();
-    let on_change_history_context = use_history();
-    let command_context = use_command();
+    let history_context = use_context::<HistoryContext>().expect("no ctx found");
+    let on_change_history_context =  use_context::<HistoryContext>().expect("no ctx found");
+    let command_context = use_context::<CommandsContext>().expect("no ctx found");
 
     let green_or_grey = use_state_eq(|| "dark:text-dark-gray text-light-gray".to_owned());
     let command_list = command_context.command_list.clone();
@@ -48,8 +50,8 @@ pub fn input(props: &InputProps) -> Html {
                 event.prevent_default();
                 on_submit_command.set("".to_owned());
                 set_history(
-                    history_handler.clone(),
-                    on_submit_command.clone(),
+                    &history_handler.clone(),
+                    &on_submit_command.clone(),
                     "".to_owned(),
                 );
                 last_command_index_handler.set(0);
@@ -57,7 +59,7 @@ pub fn input(props: &InputProps) -> Html {
 
             if event.key() == *"l" && event.ctrl_key() {
                 event.prevent_default();
-                clear_history(history_handler.clone());
+                clear_history(&history_handler.clone());
             };
 
             if event.key() == *"Tab" {

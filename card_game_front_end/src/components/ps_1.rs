@@ -1,10 +1,11 @@
 use yew::prelude::*;
 
-use crate::utils::commands::commands_context_hook::use_command;
+use crate::utils::commands::commands_context_hook::CommandsContext;
+
 
 #[function_component(Ps1)]
 pub fn ps_1() -> Html {
-    let command_context = use_command();
+    let command_context =use_context::<CommandsContext>().expect("no ctx found");
     let config = command_context.config;
     html! {
         <div>
