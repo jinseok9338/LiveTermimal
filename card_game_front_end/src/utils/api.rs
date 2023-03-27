@@ -1,12 +1,9 @@
-
-
 use super::api_types::{Projects, QuoteJson};
 use crate::config::config::config::Config;
 use crate::utils::api_types::ReturnQuote;
 use lazy_static::lazy_static;
 
 use serde_wasm_bindgen;
-
 
 use regex::Regex;
 
@@ -15,7 +12,7 @@ use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::JsFuture;
 use web_sys::{Request, RequestInit, Response};
 
-pub async fn get_projects(config: Config) -> Result<Vec<Projects>, JsValue> {
+pub async fn get_projects(config: &Config) -> Result<Vec<Projects>, JsValue> {
     let request_url = format!(
         "https://api.github.com/users/{}/repos",
         config.social.github
@@ -34,12 +31,11 @@ pub async fn get_projects(config: Config) -> Result<Vec<Projects>, JsValue> {
     Ok(projects)
 }
 
-
 pub async fn get_readme(config: &Config) -> Result<String, JsValue> {
     let mut opts = RequestInit::new();
     opts.method("GET");
     let request = Request::new_with_str_and_init(&config.readme_url, &opts)?;
-    
+
     let window = web_sys::window().unwrap();
     let fetch_with_request = window.fetch_with_request(&request);
     let resp_value = JsFuture::from(fetch_with_request).await?;
@@ -81,13 +77,13 @@ pub async fn get_quotes() -> Result<ReturnQuote, JsValue> {
     let request = Request::new_with_str_and_init("https://api.quotable.io/random", &opts)?;
 
     let window = web_sys::window().unwrap();
-       let fetch_with_request = window.fetch_with_request(&request);
+    let fetch_with_request = window.fetch_with_request(&request);
     let resp_value = JsFuture::from(fetch_with_request).await?;
     let resp: Response = resp_value.dyn_into().unwrap();
     let json_promise = resp.json()?;
     let json = JsFuture::from(json_promise).await?;
     let quote: QuoteJson = serde_wasm_bindgen::from_value(json)?;
-  
+
     Ok(ReturnQuote {
         quote: format!(
             "{content} - {author}",

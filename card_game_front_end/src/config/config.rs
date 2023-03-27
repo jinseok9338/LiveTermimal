@@ -17,28 +17,26 @@ pub mod config {
         pub donate_urls: DonateURLs,
     }
 
-
-
-    #[derive(Deserialize, Debug, Clone,Eq, PartialEq)]
+    #[derive(Deserialize, Debug, Clone, Eq, PartialEq)]
     pub struct DonateURLs {
         pub paypal: String,
         pub patreon: String,
     }
 
-    #[derive(Deserialize, Debug, Clone, Eq,PartialEq)]
+    #[derive(Deserialize, Debug, Clone, Eq, PartialEq)]
     pub struct Social {
         pub github: String,
         pub linkedin: String,
     }
 
-    #[derive(Deserialize, Debug, Clone,Eq, PartialEq)]
+    #[derive(Deserialize, Debug, Clone, Eq, PartialEq)]
     pub struct ThemeColors {
         pub light: Colors,
         pub dark: Colors,
         pub solarized: Colors,
     }
 
-    #[derive(Deserialize, Debug, Clone, Eq,PartialEq)]
+    #[derive(Deserialize, Debug, Clone, Eq, PartialEq)]
     pub struct Colors {
         pub background: String,
         pub foreground: String,

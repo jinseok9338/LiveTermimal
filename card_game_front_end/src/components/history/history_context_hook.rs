@@ -1,7 +1,7 @@
 use crate::components::history::interface::History;
 use yew::{
-    function_component, html, use_state, Children, ContextProvider, Properties,
-    UseStateHandle, Html,
+    function_component, html, use_state, Children, ContextProvider, Html, Properties,
+    UseStateHandle,
 };
 
 #[derive(Debug, PartialEq, Clone)]
@@ -44,5 +44,3 @@ pub fn history_provider(props: &HistoryProviderProps) -> Html {
         </ContextProvider<HistoryContext>>
     }
 }
-
-

@@ -1,12 +1,10 @@
-
-
 use wasm_bindgen::JsValue;
 
 use crate::config::config::config::Config;
 use crate::utils::api::get_projects;
 use crate::utils::api::{get_quotes, get_readme, get_weather};
 
-pub async fn projects(_args: Vec<&str>, config: Config) -> Result<String, JsValue> {
+pub async fn projects(_args: Vec<String>, config: &Config) -> Result<String, JsValue> {
     let projects = get_projects(config).await.unwrap();
 
     let projects_string = projects.into_iter().map(|project|{
@@ -16,17 +14,17 @@ pub async fn projects(_args: Vec<&str>, config: Config) -> Result<String, JsValu
     Ok(projects_string)
 }
 
-pub async fn quote(_args: Vec<&str>) -> Result<String, JsValue> {
+pub async fn quote(_args: Vec<String>) -> Result<String, JsValue> {
     let response = get_quotes().await.unwrap();
     Ok(response.quote)
 }
 
-pub async fn read_me(_args: Vec<&str>, config: Config) -> Result<String, JsValue> {
+pub async fn read_me(_args: Vec<String>, config: &Config) -> Result<String, JsValue> {
     let response = get_readme(&config).await.unwrap();
     Ok(response)
 }
 
-pub async fn weather(args: Vec<&str>) -> Result<String, JsValue> {
+pub async fn weather(args:Vec<String>) -> Result<String, JsValue> {
     let city = args[1..].join(" ");
     if city.is_empty() {
         return Ok("Usage: weather [city]. Example: weather casablanca".to_owned());

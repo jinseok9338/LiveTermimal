@@ -1,9 +1,10 @@
+use std::sync::Arc;
+
 use crate::components::history::history_component::HistoryComponent;
 
 use crate::components::history::history_context_hook::HistoryContext;
 use crate::components::history::history_function::set_history;
 use crate::components::history::input::Input;
-
 
 use crate::utils::commands::commands_context_hook::CommandsContext;
 use crate::utils::commands::execute_command::banner;
@@ -29,6 +30,14 @@ pub fn index(props: &IndexProps) -> Html {
     //config context
     let command_context = use_context::<CommandsContext>().expect("no ctx found");
     let config = command_context.config;
+    let command_list = command_context.command_list;
+    // convert Vec<&str> to Vec<String>
+    let command_list = command_list
+        .iter()
+        .map(|command| command.to_string())
+        .collect::<Vec<String>>();
+
+        let command_list = Arc::new(command_list);
 
     // this sets the history to the banner
     use_effect_with_deps(
@@ -60,6 +69,7 @@ pub fn index(props: &IndexProps) -> Html {
         <div ref={&container_ref.clone()} class="overflow-y-auto h-full">
             <HistoryComponent />
             <Input
+            command_list = {&command_list}
             input_ref={&props.input_ref}
             container_ref={container_ref}
             />

@@ -1,5 +1,4 @@
-
-use crate::components::history::{raw_html::RawHtml, history_context_hook::HistoryContext};
+use crate::components::history::{history_context_hook::HistoryContext, raw_html::RawHtml};
 use yew::prelude::*;
 
 #[function_component(HistoryComponent)]

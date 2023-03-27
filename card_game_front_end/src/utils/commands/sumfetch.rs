@@ -1,9 +1,10 @@
 #![allow(clippy::all)]
 use crate::config::config::config::Config;
 
-pub fn sumfetch(_args: &[&str], config: Config) -> String {
+pub fn sumfetch(_args: Vec<String>, config: &Config) -> String {
     if config.ascii == *"jason" {
-        format!(r#"
+        format!(
+            r#"
 
 /*///////****////***///****///****////////           sumfetch: summary display
 /****/////***********/***********/////**//          -----------
@@ -22,16 +23,17 @@ pub fn sumfetch(_args: &[&str], config: Config) -> String {
 /////********█████        █████░░░*****//!          
 ///****////****██       #  ██░░░**////****          
 "#,
- name = config.name,
- ps1_hostname= config.ps1_hostname,
- resume_url = config.resume_url,
-  repo = config.repo,
-  email = config.email,
-  github = config.social.github,
-  linkedin = config.social.linkedin,
-  )
+            name = config.name,
+            ps1_hostname = config.ps1_hostname,
+            resume_url = config.resume_url,
+            repo = config.repo,
+            email = config.email,
+            github = config.social.github,
+            linkedin = config.social.linkedin,
+        )
     } else {
-        format!(r#"
+        format!(
+            r#"
 
                   ▄██████████████▄                  sumfetch
                ▄██▀ ▄██▀███▀██▄ ▀▀██▄              -----------
@@ -49,13 +51,14 @@ pub fn sumfetch(_args: &[&str], config: Config) -> String {
                ▀██▄▄ ▀██▄██▄███▄▄██▀                <u><a href="{paypal}" target="_blank">{paypal}</a></u>
                    ▀███████████▀▀                   <u><a href="{patreon}" target="_blank">{patreon}</a></u>
 "#,
-name = config.name,
-resume_url = config.resume_url,
- repo = config.repo,
- email = config.email,
- github = config.social.github,
- linkedin = config.social.linkedin,
- paypal = config.donate_urls.paypal,
- patreon = config.donate_urls.patreon,)
+            name = config.name,
+            resume_url = config.resume_url,
+            repo = config.repo,
+            email = config.email,
+            github = config.social.github,
+            linkedin = config.social.linkedin,
+            paypal = config.donate_urls.paypal,
+            patreon = config.donate_urls.patreon,
+        )
     }
 }
