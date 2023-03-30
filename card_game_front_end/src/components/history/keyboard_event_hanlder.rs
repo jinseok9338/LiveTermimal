@@ -15,7 +15,7 @@ use super::interface::History;
 pub fn handle_enter(
     history_handler: &UseStateHandle<Vec<History>>,
     last_command_index_handler: &UseStateHandle<u32>,
-    command_handler: &'static UseStateHandle<String>,
+    command_handler:  Arc<UseStateHandle<String>>,
     command_list: Vec<String>,
     container_element: &HtmlElement,
     window: &Window,
@@ -30,6 +30,9 @@ pub fn handle_enter(
     let window = window.clone();
     let config = config.clone();
     let args = args.clone();
+
+    let command_handler = command_handler.clone();
+    let history_handler = history_handler.clone();
 
     let future = async move {
         shell(

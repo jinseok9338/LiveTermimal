@@ -1,3 +1,4 @@
+use std::rc::Rc;
 use std::sync::Arc;
 
 use wasm_bindgen::JsCast;
@@ -29,6 +30,7 @@ fn on_submit_callback(
     config: &Config,
     args: Arc<Vec<String>>,
 ) -> Callback<KeyboardEvent> {
+    
     let history_handler = history_handler.clone();
     let last_command_index_handler = last_command_index_handler.clone();
     let command_handler = command_handler.clone();
@@ -36,7 +38,7 @@ fn on_submit_callback(
     let container_element = container_element.clone();
     let window = window.clone();
     let config = config.clone();
-    let args = args.clone();
+    let args = Arc::clone(&args);
    
 
     Callback::from(
@@ -56,11 +58,21 @@ fn on_submit_callback(
                 handle_tap_completion(&command_handler, command_list.to_vec());
             }
             ("Enter", _) => {
+
+                let history_handler = history_handler.clone();
+                let last_command_index_handler = last_command_index_handler.clone();
+                let command_handler = command_handler.clone();
+                
+                let container_element = container_element.clone();
+                let window = window.clone();
+                let config = config.clone();
+                let args = Arc::clone(&args);
+
                 event.prevent_default();
                 handle_enter(
                     &history_handler,
                     &last_command_index_handler,
-                    &command_handler,
+                    command_handler,
                     command_list.to_vec(),
                     &container_element,
                     &window,
@@ -115,13 +127,14 @@ pub fn input(props: &InputProps) -> Html {
     let args = Arc::new(args);
 
 
-    let green_or_grey = use_state_eq(|| "dark:text-dark-gray text-light-gray".to_owned());
+    let green_or_grey = use_state_eq(|| "dark:text-dark-gray text-light-gray");
 
     fn on_input_callback(
         input_ref: &HtmlElement,
         history_context: &HistoryContext,
     ) -> Callback<InputEvent> {
         let input_ref = input_ref.clone();
+        let history_context = history_context.clone();
         Callback::from(move |_| {
             let input = input_ref
                 .dyn_ref::<web_sys::Element>()
@@ -133,52 +146,52 @@ pub fn input(props: &InputProps) -> Html {
 
     let command_list = props.command_list.clone();
     
-
+    let green_or_grey_clone = green_or_grey.clone();
+    let history_context = history_context.clone();
+    let history_context_clone = history_context.clone();
+    
     use_effect_with_deps(
         move |_| {
             if command_exists(&history_context.command, (&command_list).to_vec()) {
-                green_or_grey.set("dark:text-dark-red text-light-green".to_owned())
+                green_or_grey_clone.set("dark:text-dark-red text-light-green")
             } else {
-                green_or_grey.set("dark:text-dark-gray text-light-gray".to_owned())
+                green_or_grey_clone.set("dark:text-dark-gray text-light-gray")
             }
             || {}
         },
-        [&history_context.command],
+        [&history_context_clone.command],
     );
-
+    
     let command_list = Arc::clone(&props.command_list);
-    let history_command = Arc::new(history_context.command.clone());
+    let history_command = Arc::new(history_context_clone.command.clone());
     let last_command_index = history_context.last_command_index.clone();
-
+    let green_or_grey_clone = green_or_grey.clone();
+    
     html! {
-
         <div class="flex flex-row space-x-2">
-              <label htmlFor="prompt" class="flex-shrink">
+            <label htmlFor="prompt" class="flex-shrink">
                 <Ps1 />
-              </label >
-              <input
+            </label>
+            <input
                 ref={input_ref.clone()}
                 id="prompt"
                 type="text"
-
-                // value={**history_command.clone()}
-                oninput = {on_input_callback(input_ref.cast::<HtmlElement>().unwrap().as_ref(), &history_context)}
-                class={classes!("bg-light-background", "dark:bg-dark-background", "focus:outline-none", "flex-grow", *green_or_grey)}
+                oninput={on_input_callback(input_ref.cast::<HtmlElement>().unwrap().as_ref(), &history_context_clone)}
+                class={classes!("bg-light-background", "dark:bg-dark-background", "focus:outline-none", "flex-grow", *green_or_grey_clone)}
                 autofocus={true}
                 autocomplete="off"
                 onkeydown={on_submit_callback(
-                    &history_context.history,
+                    &history_context_clone.history,
                     &last_command_index,
                     history_command,
-                    command_list, // this nee
+                    command_list,
                     &container_element,
                     &command_context.window,
                     &command_context.config,
                     args
                 )}
                 spellcheck="false"
-              />
-
-            </div>
+            />
+        </div>
     }
 }
