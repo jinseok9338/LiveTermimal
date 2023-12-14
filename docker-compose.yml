@@ -11,5 +11,3 @@ services:
     volumes:
       - ./:/usr/src/card_game
 
-    command:
-      - "card_game_backend"
