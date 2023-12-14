@@ -7,7 +7,7 @@ WORKDIR /usr/src/card_game
 COPY . .
 
 RUN cd card_game_front_end && trunk build --release
-RUN cargo build --release
+RUN cargo build --release 
 
 FROM gcr.io/distroless/cc-debian10
 
