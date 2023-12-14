@@ -9,8 +9,8 @@ use index::Index;
 use web_sys::HtmlInputElement as InputElement;
 use yew::prelude::*;
 
-#[function_component(App)]
-fn app() -> Html {
+#[function_component]
+fn App() -> Html {
     let input_ref = use_node_ref();
 
     let onclick = {
@@ -41,5 +41,5 @@ fn app() -> Html {
 }
 
 fn main() {
-    yew::start_app::<App>();
+    yew::Renderer::<App>::new().render();
 }

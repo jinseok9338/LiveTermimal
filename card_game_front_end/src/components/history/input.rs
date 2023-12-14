@@ -3,11 +3,11 @@ use wasm_bindgen_futures::spawn_local;
 use web_sys::{HtmlElement, HtmlInputElement, ScrollToOptions};
 use yew::prelude::*;
 
-use crate::components::history::history_context_hook::use_history;
+use crate::components::history::history_context_hook::HistoryContext;
 use crate::components::history::history_function::{clear_history, set_history};
 use crate::components::ps_1::Ps1;
 use crate::utils::commands::command_exists::command_exists;
-use crate::utils::commands::commands_context_hook::use_command;
+use crate::utils::commands::commands_context_hook::CommandsContext;
 use crate::utils::commands::shell::shell;
 use crate::utils::commands::tap_completion::handle_tap_completion;
 
@@ -20,11 +20,11 @@ pub struct InputProps {
 #[function_component(Input)]
 pub fn input(props: &InputProps) -> Html {
     let input_ref = &props.input_ref;
-    let history_context = use_history();
-    let on_change_history_context = use_history();
+    let history_context = use_context::<HistoryContext>().unwrap();
+    let on_change_history_context = use_context::<HistoryContext>().unwrap();
     let green_or_grey = use_state_eq(|| "dark:text-dark-gray text-light-gray".to_owned());
 
-    let command_context = use_command();
+    let command_context = use_context::<CommandsContext>().unwrap();
     let command_list = command_context.command_list.clone();
     let command_handler = history_context.command.clone();
     let current_command = &*(history_context.command.clone());
@@ -157,18 +157,15 @@ pub fn input(props: &InputProps) -> Html {
         })
     };
 
-    use_effect_with_deps(
-        move |_| {
-            let green_or_grey = green_or_grey.clone();
-            if command_exists((*&command_handler.clone()).to_string(), command_list).unwrap() {
-                green_or_grey.set("dark:text-dark-red text-light-green".to_owned())
-            } else {
-                green_or_grey.set("dark:text-dark-gray text-light-gray".to_owned())
-            }
-            || {}
-        },
-        [current_command.to_string()],
-    );
+    use_effect_with([current_command.to_string()], move |_| {
+        let green_or_grey = green_or_grey.clone();
+        if command_exists((*&command_handler.clone()).to_string(), command_list).unwrap() {
+            green_or_grey.set("dark:text-dark-red text-light-green".to_owned())
+        } else {
+            green_or_grey.set("dark:text-dark-gray text-light-gray".to_owned())
+        }
+        || {}
+    });
 
     html! {
 

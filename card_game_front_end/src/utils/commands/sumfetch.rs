@@ -1,4 +1,4 @@
-use stdweb::web::error::Error;
+use std::fmt::Error;
 
 use crate::config::config::config::Config;
 

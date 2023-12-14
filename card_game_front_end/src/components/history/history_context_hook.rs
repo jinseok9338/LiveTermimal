@@ -1,6 +1,6 @@
 use crate::components::history::interface::History;
 use yew::{
-    function_component, html, use_context, use_state, Children, ContextProvider, Properties,
+    function_component, html, use_state, Children, ContextProvider, Html, Properties,
     UseStateHandle,
 };
 
@@ -43,8 +43,4 @@ pub fn history_provider(props: &HistoryProviderProps) -> Html {
             {props.children.clone()}
         </ContextProvider<HistoryContext>>
     }
-}
-
-pub fn use_history() -> HistoryContext {
-    use_context::<HistoryContext>().expect("no ctx found")
 }

@@ -17,16 +17,13 @@ pub fn raw_html(props: &RawHtmlProps) -> Html {
     {
         let raw_html_ref = raw_html_ref.clone();
 
-        use_effect_with_deps(
-            move |_| {
-                let html_element = raw_html_ref
-                    .cast::<Element>()
-                    .expect("raw_html_refnot attached to div element");
-                html_element.set_inner_html(&history.output);
-                move || {}
-            },
-            (),
-        );
+        use_effect_with((), move |_| {
+            let html_element = raw_html_ref
+                .cast::<Element>()
+                .expect("raw_html_refnot attached to div element");
+            html_element.set_inner_html(&history.output);
+            move || {}
+        });
     }
 
     html! {
