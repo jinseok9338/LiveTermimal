@@ -1,3 +1,3 @@
 [workspace]
-members = ["card_game_front_end","card_game_backend"]
-default-members =["card_game_backend"]
+members = ["front_end"]
+default-members =["front_end"]

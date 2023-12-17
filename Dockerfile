@@ -7,10 +7,10 @@ RUN cargo install trunk wasm-bindgen-cli
 WORKDIR /usr/src/card_game
 COPY . .
 
-RUN cd card_game_front_end && trunk build --release
+RUN cd front_end && trunk build --release
 
 FROM nginx:latest
-COPY --from=build /usr/src/card_game/card_game_front_end/dist /usr/share/nginx/html
+COPY --from=build /usr/src/card_game/front_end/dist /usr/share/nginx/html
 
 EXPOSE 80
 
