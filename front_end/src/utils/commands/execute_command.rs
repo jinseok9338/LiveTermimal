@@ -33,14 +33,18 @@ pub fn help(_args: Vec<&str>, command_list: Vec<&'static str>) -> Result<String,
 }
 
 //Redirection to repo
-pub fn repo(_args: Vec<&str>, window: Window, config: Config) -> Result<String, Error> {
+pub fn repo(
+    _args: Vec<&str>,
+    window: Window,
+    config: &'static Config<'static>,
+) -> Result<String, Error> {
     window.open_with_url(config.repo.as_ref()).unwrap();
 
     Ok("Opening Github repository...".to_owned())
 }
 
 //About
-pub fn about(_args: Vec<&str>, config: Config) -> Result<String, Error> {
+pub fn about(_args: Vec<&str>, config: &'static Config<'static>) -> Result<String, Error> {
     Ok(format!(
         r#"Hi, I am {name}.
         Welcome to my website!
@@ -54,7 +58,11 @@ pub fn about(_args: Vec<&str>, config: Config) -> Result<String, Error> {
     .to_owned())
 }
 
-pub fn resume(_args: Vec<&str>, window: Window, config: Config) -> Result<String, Error> {
+pub fn resume(
+    _args: Vec<&str>,
+    window: Window,
+    config: &'static Config<'static>,
+) -> Result<String, Error> {
     window.open_with_url(config.resume_url.as_ref()).unwrap();
 
     Ok("Opening resume".to_owned())
@@ -157,7 +165,7 @@ pub fn echo(args: Vec<&str>) -> Result<String, Error> {
     }
 }
 
-pub fn whoami(_args: Vec<&str>, config: Config) -> Result<String, Error> {
+pub fn whoami(_args: Vec<&str>, config: &'static Config<'static>) -> Result<String, Error> {
     Ok(config.ps1_username.to_owned())
 }
 
@@ -183,7 +191,7 @@ pub fn cd(_args: Vec<&str>) -> Result<String, Error> {
         .to_owned())
 }
 
-pub fn banner(config: Config) -> Result<String, Error> {
+pub fn banner(config: &'static Config<'static>) -> Result<String, Error> {
     Ok(format!(r#"
     <pre>
     █████        ███                       ███████████
@@ -230,7 +238,7 @@ pub async fn execute_command(
     command: String,
     args: Vec<&str>,
     window: Window,
-    config: Config,
+    config: &'static Config<'static>,
     command_list: Vec<&'static str>,
 ) -> Result<String, Error> {
     match command.as_str() {

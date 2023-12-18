@@ -9,7 +9,7 @@ use gloo_console::log;
 use regex::Regex;
 use reqwasm::http::Request;
 
-pub async fn get_projects(config: Config) -> Result<Vec<Projects>, Error> {
+pub async fn get_projects(config: &'static Config<'static>) -> Result<Vec<Projects>, Error> {
     let request_url = format!(
         "https://api.github.com/users/{repo}/repos",
         repo = config.social.github
@@ -26,7 +26,7 @@ pub async fn get_projects(config: Config) -> Result<Vec<Projects>, Error> {
     Ok(fetched_json)
 }
 
-pub async fn get_read_me(config: Config) -> Result<String, Error> {
+pub async fn get_read_me(config: &'static Config<'static>) -> Result<String, Error> {
     let fetched_string: String = Request::get(&config.readme_url)
         .send()
         .await

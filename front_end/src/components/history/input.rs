@@ -1,13 +1,13 @@
 use wasm_bindgen_futures::spawn_local;
 
-use web_sys::{HtmlElement, HtmlInputElement, ScrollToOptions};
+use web_sys::{window, HtmlElement, HtmlInputElement, ScrollToOptions};
 use yew::prelude::*;
 
 use crate::components::history::history_context_hook::HistoryContext;
 use crate::components::history::history_function::{clear_history, set_history};
 use crate::components::ps_1::Ps1;
 use crate::utils::commands::command_exists::command_exists;
-use crate::utils::commands::commands_context_hook::CommandsContext;
+use crate::utils::commands::commands_context_hook::{COMMAND_LIST, CONFIG};
 use crate::utils::commands::shell::shell;
 use crate::utils::commands::tap_completion::handle_tap_completion;
 
@@ -24,8 +24,6 @@ pub fn input(props: &InputProps) -> Html {
     let on_change_history_context = use_context::<HistoryContext>().unwrap();
     let green_or_grey = use_state_eq(|| "dark:text-dark-gray text-light-gray".to_owned());
 
-    let command_context = use_context::<CommandsContext>().unwrap();
-    let command_list = command_context.command_list.clone();
     let command_handler = history_context.command.clone();
     let current_command = &*(history_context.command.clone());
     let current_command_value_for_input = &*(history_context.command.clone());
@@ -40,7 +38,6 @@ pub fn input(props: &InputProps) -> Html {
         let on_submit_command = history_context.command.clone();
 
         //command_context
-        let command_list = command_context.command_list.clone();
 
         //input_value_handler
         Callback::from(move |event: KeyboardEvent| {
@@ -62,15 +59,14 @@ pub fn input(props: &InputProps) -> Html {
 
             if event.key() == "Tab".to_owned() {
                 event.prevent_default();
-                handle_tap_completion(on_submit_command.clone(), command_list.clone());
+                handle_tap_completion(on_submit_command.clone(), COMMAND_LIST.to_vec());
             };
 
             if event.key() == "Enter".to_owned() {
                 let future_submit_command = history_context.command.clone();
                 let future_history_handler = history_context.history.clone();
-                let window = command_context.window.clone();
-                let config = command_context.config.clone();
-                let command_list = command_context.command_list.clone();
+                let window = window().unwrap();
+
                 event.prevent_default();
                 last_command_index_handler.set(0);
 
@@ -83,9 +79,8 @@ pub fn input(props: &InputProps) -> Html {
                         args,
                         future_submit_command.clone(),
                         future_history_handler.clone(),
-                        window.clone(),
-                        config.clone(),
-                        command_list.clone(),
+                        window,
+                        &CONFIG,
                     )
                     .await;
                 });
@@ -159,7 +154,12 @@ pub fn input(props: &InputProps) -> Html {
 
     use_effect_with([current_command.to_string()], move |_| {
         let green_or_grey = green_or_grey.clone();
-        if command_exists((*&command_handler.clone()).to_string(), command_list).unwrap() {
+        if command_exists(
+            (*&command_handler.clone()).to_string(),
+            COMMAND_LIST.to_vec(),
+        )
+        .unwrap()
+        {
             green_or_grey.set("dark:text-dark-red text-light-green".to_owned())
         } else {
             green_or_grey.set("dark:text-dark-gray text-light-gray".to_owned())
@@ -168,25 +168,22 @@ pub fn input(props: &InputProps) -> Html {
     });
 
     html! {
-
         <div class="flex flex-row space-x-2">
-              <label htmlFor="prompt" class="flex-shrink">
-                <Ps1 />
-              </label >
-              <input
+            <label htmlFor="prompt" class="flex-shrink"><Ps1 /></label>
+            <input
                 ref={input_ref.clone()}
                 id="prompt"
                 type="text"
                 // need to have value soon.. .but it's pretty much hopeless
-                value={current_command_value_for_input.to_string()}
+                 value={current_command_value_for_input.to_string()}
                 {oninput}
-                class={classes!("bg-light-background", "dark:bg-dark-background", "focus:outline-none", "flex-grow", green_or_gray_class)} // if the command exist show color green
-                autofocus={true}
+                class={classes!("bg-light-background", "dark:bg-dark-background", "focus:outline-none", "flex-grow", green_or_gray_class)}
+                // if the command exist show color green
+                 autofocus=true
                 autocomplete="off"
                 onkeydown={on_submit}
                 spellcheck="false"
-              />
-
-            </div>
+            />
+        </div>
     }
 }

@@ -9,11 +9,9 @@ pub fn history_compoenet() -> Html {
 
     html! {
         <ul>
-            {
-            history_cloned.to_owned().into_iter().map(|history| {
+            { history_cloned.to_owned().into_iter().map(|history| {
             html!{<RawHtml key={&**(history.command.clone())} history= {history.clone()}/>}
-            }).collect::<Html>()
-        }
+            }).collect::<Html>() }
         </ul>
     }
 }

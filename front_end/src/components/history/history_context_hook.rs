@@ -39,8 +39,6 @@ pub fn history_provider(props: &HistoryProviderProps) -> Html {
     let history_ctx = HistoryContext::new(history, command, last_command_index);
 
     html! {
-        <ContextProvider<HistoryContext> context={history_ctx}>
-            {props.children.clone()}
-        </ContextProvider<HistoryContext>>
+        <ContextProvider<HistoryContext> context={history_ctx}>{ props.children.clone() }</ContextProvider<HistoryContext>>
     }
 }
