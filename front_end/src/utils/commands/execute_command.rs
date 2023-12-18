@@ -13,22 +13,25 @@ use super::{
 };
 
 pub fn help(_args: Vec<&str>, command_list: Vec<&'static str>) -> Result<String, Error> {
-    let mut result_string = "".to_owned();
-    for (i, command) in command_list.to_owned().into_iter().enumerate() {
-        if i % 7 == 0 {
-            result_string += &(command.to_owned() + "\n");
-        } else {
-            result_string += &(command.to_owned() + " ");
+    let mut result_string = String::new();
+
+    for (i, command) in command_list.iter().enumerate() {
+        if i % 7 == 0 && i != 0 {
+            result_string.push_str("<br>");
+        }
+
+        result_string.push_str(&format!("<span>{}</span>", command));
+        if i % 7 != 6 {
+            result_string.push(' ');
         }
     }
 
     Ok(format!(
-        "Welcome! Here are all the available commands:
-        \n{result_string}\n
-        [tab]: trigger completion.
-        [ctrl+l]/clear: clear terminal.\n
-        Type 'sumfetch' to display summary.",
-        result_string = result_string
+        "Welcome! Here are all the available commands:<br>{}
+        <br>[tab]: trigger completion.<br>
+        [ctrl+l]/clear: clear terminal.<br>
+        <span class='animate-ping'>Type 'sumfetch' to display summary.<span>",
+        result_string
     ))
 }
 
