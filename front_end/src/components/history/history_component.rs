@@ -8,7 +8,7 @@ pub fn history_compoenet() -> Html {
     let history_cloned = &*(history.clone().history);
 
     html! {
-        <ul>
+        <ul name="history_list">
             { history_cloned.to_owned().into_iter().map(|history| {
             html!{<RawHtml key={&**(history.command.clone())} history= {history.clone()}/>}
             }).collect::<Html>() }
