@@ -1,9 +1,9 @@
 use std::fmt::Error;
 
-use crate::config::config::config::Config;
+use crate::config::command_config::config::Config;
 
 pub fn sumfetch(_args: Vec<&str>, config: &'static Config<'static>) -> Result<String, Error> {
-    if config.ascii == "jason".to_owned() {
+    if config.ascii == "jason" {
         Ok(format!(r#"
 
 /*///////****////***///****///****////////           sumfetch: summary display

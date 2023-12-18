@@ -14,9 +14,9 @@ pub fn set_history(
 ) {
     let command = &*command_handler;
     let new_history = History {
-        command: Box::new(command.to_owned()),
+        command: command.to_owned(),
         id: Box::new((*command_handler).len()),
-        output: Box::new(value),
+        output: value,
         date: Box::new(instant::Instant::now()),
     };
 

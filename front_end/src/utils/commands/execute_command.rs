@@ -2,13 +2,12 @@ use std::io::Error;
 
 use web_sys::Window;
 
-use crate::config::config::config::Config;
+use crate::config::command_config::config::Config;
 use lazy_static::lazy_static;
 
 use regex::Regex;
 
 use super::{
-    add_element::add_script,
     api_commands::{projects, quote, read_me, weather},
     sumfetch::sumfetch,
 };

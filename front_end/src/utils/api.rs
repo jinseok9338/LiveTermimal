@@ -1,11 +1,9 @@
 use std::io::Error;
 
 use super::api_types::{Projects, QuoteJson};
-use crate::config::config::config::Config;
+use crate::config::command_config::config::Config;
 use crate::utils::api_types::ReturnQuote;
 use lazy_static::lazy_static;
-
-use gloo_console::log;
 use regex::Regex;
 use reqwasm::http::Request;
 
@@ -27,7 +25,7 @@ pub async fn get_projects(config: &'static Config<'static>) -> Result<Vec<Projec
 }
 
 pub async fn get_read_me(config: &'static Config<'static>) -> Result<String, Error> {
-    let fetched_string: String = Request::get(&config.readme_url)
+    let fetched_string: String = Request::get(config.readme_url)
         .send()
         .await
         .unwrap()

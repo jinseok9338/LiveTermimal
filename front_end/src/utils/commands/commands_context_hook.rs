@@ -1,8 +1,8 @@
-use crate::config::config::config::Colors;
-use crate::config::config::config::Config;
-use crate::config::config::config::DonateURLs;
-use crate::config::config::config::Social;
-use crate::config::config::config::ThemeColors;
+use crate::config::command_config::config::Colors;
+use crate::config::command_config::config::Config;
+use crate::config::command_config::config::DonateURLs;
+use crate::config::command_config::config::Social;
+use crate::config::command_config::config::ThemeColors;
 
 pub const COMMAND_LIST: [&str; 21] = [
     "about",

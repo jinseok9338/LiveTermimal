@@ -8,15 +8,15 @@ pub fn add_script() -> Element {
     let script = document.create_element("script").unwrap();
 
     //script should be just alert("Hello world")
-    script.set_inner_html(&format!(
+    script.set_inner_html(
         r#"
     alert("Hello")
-    "#
-    ));
+    "#,
+    );
     // and append it to the body
     body.append_child(&script).unwrap();
 
-    return script;
+    script
 }
 
 pub fn add_loading() -> Node {
@@ -41,8 +41,7 @@ pub fn add_loading() -> Node {
         return child;
     }
     let element = elements.item(elements.length() - 1).unwrap();
-    let child = element.append_child(&loading).unwrap();
-    return child;
+    element.append_child(&loading).unwrap()
 }
 
 pub fn remove_loading(loading: Node) {

@@ -4,6 +4,6 @@ use instant::Instant;
 pub struct History {
     pub id: Box<usize>,
     pub date: Box<Instant>,
-    pub command: Box<String>,
-    pub output: Box<String>,
+    pub command: String,
+    pub output: String,
 }
