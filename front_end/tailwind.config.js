@@ -15,6 +15,24 @@ module.exports = {
       current: "currentColor",
       ...colors,
     },
+    extend: {
+      keyframes: {
+        twinkle: {
+          '0%, 100%': {
+            opacity: '1', // Fully opaque
+            color: 'rgba(0, 128, 128, 1)',
+          },
+          '50%': {
+            opacity: '0.5', // Semi-transparent
+            color: 'rgba(0, 128, 128, 0.5)',
+          },
+        }
+      },
+
+      animation: {
+        twinkle: 'twinkle 2s ease-in-out infinite',
+      }
+    },
     variants: {},
     plugins: [],
   },

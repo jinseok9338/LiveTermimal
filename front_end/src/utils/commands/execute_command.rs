@@ -30,7 +30,7 @@ pub fn help(_args: Vec<&str>, command_list: Vec<&'static str>) -> Result<String,
         "Welcome! Here are all the available commands:<br>{}
         <br>[tab]: trigger completion.<br>
         [ctrl+l]/clear: clear terminal.<br>
-        <span class='animate-ping'>Type 'sumfetch' to display summary.<span>",
+        <span class='font-bold'>Type 'sumfetch' to display summary.<span>",
         result_string
     ))
 }
@@ -196,7 +196,9 @@ pub fn cd(_args: Vec<&str>) -> Result<String, Error> {
 
 pub fn banner(config: &'static Config<'static>) -> Result<String, Error> {
     Ok(format!(r#"
-    <pre>
+    <span class="font-bold text-3xl">Welcome To</span>
+    </pre>
+    <pre class="animate-twinkle w-32">
     █████        ███                       ███████████
     ░░███        ░░░                       ░█░░░███░░░█
     ░███        ████  █████ █████  ██████ ░   ░███  ░   ██████  ████████  █████████████
@@ -205,6 +207,7 @@ pub fn banner(config: &'static Config<'static>) -> Result<String, Error> {
     ░███      █ ░███  ░░███ ███  ░███░░░      ░███    ░███░░░   ░███      ░███ ░███ ░███
     ███████████ █████  ░░█████   ░░██████     █████   ░░██████  █████     █████░███ █████
     ░░░░░░░░░░░ ░░░░░    ░░░░░     ░░░░░░     ░░░░░     ░░░░░░  ░░░░░     ░░░░░ ░░░ ░░░░░
+    </pre>
     Type 'help' to see the list of available commands.
     Type 'sumfetch' to display summary.
     Type 'repo' or click <u><a class="text-light-blue dark:text-dark-blue underline" href="{repo}" target="_blank">here</a></u> for the Github repository.
