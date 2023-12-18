@@ -28,18 +28,11 @@ pub fn raw_html(props: &RawHtmlProps) -> Html {
 
     html! {
         <div>
-        <div class="flex flex-row space-x-2">
-          <div class="flex-shrink">
-            <Ps1 />
-          </div>
-
-          <div class="flex-grow">{&*(history.command.clone())}</div>
+            <div class="flex flex-row space-x-2">
+                <div class="flex-shrink"><Ps1 /></div>
+                <div class="flex-grow" >{ &*(history.command.clone()) }</div>
+            </div>
+            <div ref={raw_html_ref} name="raw_html" class="whitespace-pre-wrap mb-2 leading-normal" />
         </div>
-
-        <p
-          ref ={raw_html_ref}
-          class="whitespace-pre-wrap mb-2 leading-normal"
-        />
-      </div>
     }
 }

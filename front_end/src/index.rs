@@ -3,7 +3,7 @@ use crate::components::history::history_context_hook::HistoryContext;
 use crate::components::history::history_function::set_history;
 use crate::components::history::input::Input;
 
-use crate::utils::commands::commands_context_hook::CommandsContext;
+use crate::utils::commands::commands_context_hook::CONFIG;
 use crate::utils::commands::execute_command::banner;
 
 use web_sys::HtmlInputElement;
@@ -26,14 +26,12 @@ pub fn index(props: &IndexProps) -> Html {
     let input_ref = props.input_ref.clone();
 
     //config context
-    let command_context = use_context::<CommandsContext>().unwrap();
-    let config = command_context.config.clone();
 
     use_effect_with((), move |_| {
         set_history(
             history_handler.clone(),
             command_handler.clone(),
-            banner(config).unwrap().to_owned(),
+            banner(&CONFIG).unwrap().to_owned(),
         );
         || {}
     });
@@ -52,15 +50,14 @@ pub fn index(props: &IndexProps) -> Html {
 
     html! {
         <>
-      <div class="p-8 overflow-hidden h-full border-2 rounded border-light-yellow dark:border-dark-yellow">
-        <div ref={&container_ref.clone()} class="overflow-y-auto h-full">
-            <HistoryComponent />
-            <Input
-            input_ref={&props.input_ref}
-            container_ref={container_ref}
-            />
-        </div>
-      </div>
-    </>
+            <div
+                class="p-8 overflow-hidden h-full border-2 rounded border-light-yellow dark:border-dark-yellow"
+            >
+                <div ref={&container_ref.clone()} class="overflow-y-auto h-full">
+                    <HistoryComponent />
+                    <Input input_ref={&props.input_ref} container_ref={container_ref} />
+                </div>
+            </div>
+        </>
     }
 }

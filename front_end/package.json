@@ -1,0 +1,11 @@
+{
+  "name": "front_end",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "tailwind-watch": "npx tailwindcss -i ./src/style/input.css -o ./output_css/output.css --watch",
+    "tailwind-build": "npx tailwindcss -i ./src/style/input.css -o ./output_css/output.css"
+  },
+  "author": "",
+  "license": "ISC"
+}

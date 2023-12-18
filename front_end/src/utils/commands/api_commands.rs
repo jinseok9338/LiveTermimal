@@ -1,10 +1,14 @@
 use std::io::Error;
 
+use web_sys::Node;
+
 use crate::config::config::config::Config;
 use crate::utils::api::get_projects;
 use crate::utils::api::{get_quotes, get_read_me, get_weather};
 
-pub async fn projects(_args: Vec<&str>, config: Config) -> Result<String, Error> {
+use super::add_element::{add_loading, remove_loading};
+
+pub async fn projects(_args: Vec<&str>, config: &'static Config<'static>) -> Result<String, Error> {
     let projects = get_projects(config).await.unwrap();
 
     let projects_string = projects.into_iter().map(|project|{
@@ -19,16 +23,28 @@ pub async fn quote(_args: Vec<&str>) -> Result<String, Error> {
     Ok(response.quote)
 }
 
-pub async fn read_me(_args: Vec<&str>, config: Config) -> Result<String, Error> {
+pub async fn read_me(_args: Vec<&str>, config: &'static Config<'static>) -> Result<String, Error> {
     let response = get_read_me(config).await.unwrap();
     Ok(response)
 }
 
 pub async fn weather(args: Vec<&str>) -> Result<String, Error> {
+    let loading = web_sys::window()
+        .unwrap()
+        .document()
+        .unwrap()
+        .create_element("p")
+        .unwrap();
+    loading.set_text_content(Some("Loading..."));
+
+    // append to last element of the id raw_html
+
+    let loading: Node = add_loading();
     let city = args[1..].join(" ");
     if city.len() == 0 as usize {
         return Ok("Usage: weather [city]. Example: weather casablanca".to_owned());
     }
     let response = get_weather(city).await.unwrap();
+    remove_loading(loading);
     Ok(response)
 }

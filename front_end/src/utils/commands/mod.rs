@@ -1,3 +1,4 @@
+pub mod add_element;
 pub mod api_commands;
 pub mod command_exists;
 pub mod commands_context_hook;

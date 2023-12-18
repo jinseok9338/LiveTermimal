@@ -11,18 +11,20 @@ use crate::{
     config::config::config::Config,
 };
 
-use super::{command_exists::command_exists, execute_command::execute_command};
+use super::{
+    command_exists::command_exists, commands_context_hook::COMMAND_LIST,
+    execute_command::execute_command,
+};
 
 pub async fn shell(
     args: Vec<&str>,
     command_handler: UseStateHandle<String>,
     history_handler: UseStateHandle<Vec<History>>,
     window: Window,
-    config: Config,
-    command_list: Vec<&'static str>,
+    config: &'static Config<'static>,
 ) {
     let first_arg = args[0].to_lowercase();
-    let command_exists = command_exists(first_arg.clone(), command_list.clone()).unwrap();
+    let command_exists = command_exists(first_arg.clone(), COMMAND_LIST.to_vec()).unwrap();
 
     if (&first_arg) == "clear" {
         clear_history(history_handler);
@@ -48,7 +50,7 @@ pub async fn shell(
             args_clone,
             window,
             config,
-            command_list.clone(),
+            COMMAND_LIST.to_vec(),
         )
         .await;
 

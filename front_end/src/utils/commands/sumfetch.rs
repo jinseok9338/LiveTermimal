@@ -2,7 +2,7 @@ use std::fmt::Error;
 
 use crate::config::config::config::Config;
 
-pub fn sumfetch(_args: Vec<&str>, config: Config) -> Result<String, Error> {
+pub fn sumfetch(_args: Vec<&str>, config: &'static Config<'static>) -> Result<String, Error> {
     if config.ascii == "jason".to_owned() {
         Ok(format!(r#"
 

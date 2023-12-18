@@ -8,39 +8,47 @@ use lazy_static::lazy_static;
 use regex::Regex;
 
 use super::{
+    add_element::add_script,
     api_commands::{projects, quote, read_me, weather},
     sumfetch::sumfetch,
 };
 
 pub fn help(_args: Vec<&str>, command_list: Vec<&'static str>) -> Result<String, Error> {
-    let mut result_string = "".to_owned();
-    for (i, command) in command_list.to_owned().into_iter().enumerate() {
-        if i % 7 == 0 {
-            result_string += &(command.to_owned() + "\n");
-        } else {
-            result_string += &(command.to_owned() + " ");
+    let mut result_string = String::new();
+
+    for (i, command) in command_list.iter().enumerate() {
+        if i % 7 == 0 && i != 0 {
+            result_string.push_str("<br>");
+        }
+
+        result_string.push_str(&format!("<span>{}</span>", command));
+        if i % 7 != 6 {
+            result_string.push(' ');
         }
     }
 
     Ok(format!(
-        "Welcome! Here are all the available commands:
-        \n{result_string}\n
-        [tab]: trigger completion.
-        [ctrl+l]/clear: clear terminal.\n
-        Type 'sumfetch' to display summary.",
-        result_string = result_string
+        "Welcome! Here are all the available commands:<br>{}
+        <br>[tab]: trigger completion.<br>
+        [ctrl+l]/clear: clear terminal.<br>
+        <span class='font-bold'>Type 'sumfetch' to display summary.<span>",
+        result_string
     ))
 }
 
 //Redirection to repo
-pub fn repo(_args: Vec<&str>, window: Window, config: Config) -> Result<String, Error> {
+pub fn repo(
+    _args: Vec<&str>,
+    window: Window,
+    config: &'static Config<'static>,
+) -> Result<String, Error> {
     window.open_with_url(config.repo.as_ref()).unwrap();
 
     Ok("Opening Github repository...".to_owned())
 }
 
 //About
-pub fn about(_args: Vec<&str>, config: Config) -> Result<String, Error> {
+pub fn about(_args: Vec<&str>, config: &'static Config<'static>) -> Result<String, Error> {
     Ok(format!(
         r#"Hi, I am {name}.
         Welcome to my website!
@@ -54,7 +62,11 @@ pub fn about(_args: Vec<&str>, config: Config) -> Result<String, Error> {
     .to_owned())
 }
 
-pub fn resume(_args: Vec<&str>, window: Window, config: Config) -> Result<String, Error> {
+pub fn resume(
+    _args: Vec<&str>,
+    window: Window,
+    config: &'static Config<'static>,
+) -> Result<String, Error> {
     window.open_with_url(config.resume_url.as_ref()).unwrap();
 
     Ok("Opening resume".to_owned())
@@ -157,7 +169,7 @@ pub fn echo(args: Vec<&str>) -> Result<String, Error> {
     }
 }
 
-pub fn whoami(_args: Vec<&str>, config: Config) -> Result<String, Error> {
+pub fn whoami(_args: Vec<&str>, config: &'static Config<'static>) -> Result<String, Error> {
     Ok(config.ps1_username.to_owned())
 }
 
@@ -183,9 +195,13 @@ pub fn cd(_args: Vec<&str>) -> Result<String, Error> {
         .to_owned())
 }
 
-pub fn banner(config: Config) -> Result<String, Error> {
+pub fn banner(config: &'static Config<'static>) -> Result<String, Error> {
+    // add script tag to the body
+    // let script = add_script();
     Ok(format!(r#"
-    <pre>
+    <span class="font-bold text-3xl">Welcome To</span>
+    </pre>
+    <pre class="animate-twinkle w-32">
     █████        ███                       ███████████
     ░░███        ░░░                       ░█░░░███░░░█
     ░███        ████  █████ █████  ██████ ░   ░███  ░   ██████  ████████  █████████████
@@ -194,6 +210,7 @@ pub fn banner(config: Config) -> Result<String, Error> {
     ░███      █ ░███  ░░███ ███  ░███░░░      ░███    ░███░░░   ░███      ░███ ░███ ░███
     ███████████ █████  ░░█████   ░░██████     █████   ░░██████  █████     █████░███ █████
     ░░░░░░░░░░░ ░░░░░    ░░░░░     ░░░░░░     ░░░░░     ░░░░░░  ░░░░░     ░░░░░ ░░░ ░░░░░
+    </pre>
     Type 'help' to see the list of available commands.
     Type 'sumfetch' to display summary.
     Type 'repo' or click <u><a class="text-light-blue dark:text-dark-blue underline" href="{repo}" target="_blank">here</a></u> for the Github repository.
@@ -230,7 +247,7 @@ pub async fn execute_command(
     command: String,
     args: Vec<&str>,
     window: Window,
-    config: Config,
+    config: &'static Config<'static>,
     command_list: Vec<&'static str>,
 ) -> Result<String, Error> {
     match command.as_str() {

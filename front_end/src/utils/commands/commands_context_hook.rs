@@ -4,105 +4,67 @@ use crate::config::config::config::DonateURLs;
 use crate::config::config::config::Social;
 use crate::config::config::config::ThemeColors;
 
-use web_sys::{window, Window};
-use yew::Html;
-use yew::{function_component, html, Children, ContextProvider, Properties};
-#[derive(Debug, PartialEq, Properties, Clone)]
-pub struct CommandsContext {
-    pub config: Config,
-    pub window: Window,
-    pub command_list: Vec<&'static str>,
-}
+pub const COMMAND_LIST: [&str; 21] = [
+    "about",
+    "banner",
+    "bing",
+    "help",
+    "repo",
+    "resume",
+    "donate",
+    "google",
+    "duckduckgo",
+    "reddit",
+    "echo",
+    "whoami",
+    "ls",
+    "cd",
+    "sumfetch",
+    "theme",
+    "clear",
+    "projects",
+    "readme",
+    "weather",
+    "quote",
+];
 
-impl CommandsContext {
-    pub fn new(config: Config, window: Window) -> Self {
-        let command_list: Vec<&'static str> = vec![
-            "about",
-            "banner",
-            "bing",
-            "help",
-            "repo",
-            "resume",
-            "donate",
-            "google",
-            "duckduckgo",
-            "reddit",
-            "echo",
-            "whoami",
-            "ls",
-            "cd",
-            "sumfetch",
-            "theme",
-            "clear",
-            "projects",
-            "readme",
-            "weather",
-            "quote",
-        ];
-        Self {
-            config,
-            window,
-            command_list,
-        }
-    }
-}
+pub const CONFIG: Config = Config {
+    readme_url: "https://raw.githubusercontent.com/jinseok9338/CardGame/master/README.md",
 
-#[derive(Debug, PartialEq, Properties)]
-pub struct CommandProviderProps {
-    pub children: Children,
-}
-
-#[function_component(CommandContextProvider)]
-pub fn command_provider(props: &CommandProviderProps) -> Html {
-    let config: Config = Config::new({
-        &Config {
-            readme_url: "https://raw.githubusercontent.com/jinseok9338/CardGame/master/README.md"
-                .to_owned(),
-            title: "JTerm".to_owned(),
-            name: "Jason Jin (Jinseok)".to_owned(),
-            ascii: "jason".to_owned(),
-            social: Social {
-                github: "jinseok9338".to_owned(),
-                linkedin: "linkedin".to_owned(),
-            },
-            email: "jinseok9338@gmail.com".to_owned(),
-            ps1_hostname: "hostName".to_owned(),
-            ps1_username: "Jason Jin".to_owned(),
-            repo: "https://github.com/jinseok9338/CardGame".to_owned(),
-            resume_url: "https://upload.wikimedia.org/wikipedia/commons/c/cc/Resume.pdf".to_owned(),
-            donate_urls: DonateURLs {
-                paypal: "https://paypal.me/cveinnt".to_owned(),
-                patreon: "https://patreon.com/cveinnt".to_owned(),
-            },
-            colors: ThemeColors {
-                light: Colors {
-                    background: "#FBF1C9".to_owned(),
-                    foreground: "#3C3836".to_owned(),
-                    yellow: "#D79921".to_owned(),
-                    green: "#98971A".to_owned(),
-                    gray: "#7C6F64".to_owned(),
-                    blue: "#458588".to_owned(),
-                    red: "#CA2124".to_owned(),
-                },
-                dark: Colors {
-                    background: "#2E3440".to_owned(),
-                    foreground: "#E5E9F0".to_owned(),
-                    yellow: "#5E81AC".to_owned(),
-                    green: "#A3BE8C".to_owned(),
-                    gray: "#88C0D0".to_owned(),
-                    blue: "#EBCB8B".to_owned(),
-                    red: "#BF616A".to_owned(),
-                },
-            },
-        }
-    });
-    let window = window().unwrap();
-
-    let history_ctx = CommandsContext::new(config, window);
-
-    html! {
-        <ContextProvider<CommandsContext> context={history_ctx}>
-            {props.children.clone()}
-        </ContextProvider<CommandsContext>>
-    }
-}
+    title: "JTerm",
+    name: "Jason Jin (Jinseok)",
+    ascii: "jason",
+    social: Social {
+        github: "jinseok9338",
+        linkedin: "linkedin",
+    },
+    email: "jinseok9338@gmail.com",
+    ps1_hostname: "hostName",
+    ps1_username: "Jason Jin",
+    repo: "https://github.com/jinseok9338/CardGame",
+    resume_url: "https://jinseokseo.tiiny.site/",
+    donate_urls: DonateURLs {
+        paypal: "https://paypal.me",
+        patreon: "https://patreon.com",
+    },
+    colors: ThemeColors {
+        light: Colors {
+            background: "#FBF1C9",
+            foreground: "#3C3836",
+            yellow: "#D79921",
+            green: "#98971A",
+            gray: "#7C6F64",
+            blue: "#458588",
+            red: "#CA2124",
+        },
+        dark: Colors {
+            background: "#2E3440",
+            foreground: "#E5E9F0",
+            yellow: "#5E81AC",
+            green: "#A3BE8C",
+            gray: "#88C0D0",
+            blue: "#EBCB8B",
+            red: "#BF616A",
+        },
+    },
+};
