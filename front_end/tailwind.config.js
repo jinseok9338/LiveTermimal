@@ -23,8 +23,8 @@ module.exports = {
             color: 'rgba(0, 128, 128, 1)',
           },
           '50%': {
-            opacity: '0.5', // Semi-transparent
-            color: 'rgba(0, 128, 128, 0.5)',
+            opacity: '0.7', // Semi-transparent
+            color: 'rgba(0, 128, 128, 0.7)',
           },
         }
       },

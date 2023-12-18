@@ -8,6 +8,7 @@ use lazy_static::lazy_static;
 use regex::Regex;
 
 use super::{
+    add_element::add_script,
     api_commands::{projects, quote, read_me, weather},
     sumfetch::sumfetch,
 };
@@ -195,6 +196,8 @@ pub fn cd(_args: Vec<&str>) -> Result<String, Error> {
 }
 
 pub fn banner(config: &'static Config<'static>) -> Result<String, Error> {
+    // add script tag to the body
+    // let script = add_script();
     Ok(format!(r#"
     <span class="font-bold text-3xl">Welcome To</span>
     </pre>
