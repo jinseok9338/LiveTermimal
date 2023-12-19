@@ -1,23 +1,23 @@
 use gloo_console::log;
 use web_sys::{window, Element, Node};
 
-pub fn add_script() -> Element {
-    let window = window().unwrap();
-    let document = window.document().unwrap();
-    let body = document.body().unwrap();
-    let script = document.create_element("script").unwrap();
+// pub fn add_script() -> Element {
+//     let window = window().unwrap();
+//     let document = window.document().unwrap();
+//     let body = document.body().unwrap();
+//     let script = document.create_element("script").unwrap();
 
-    //script should be just alert("Hello world")
-    script.set_inner_html(&format!(
-        r#"
-    alert("Hello")
-    "#
-    ));
-    // and append it to the body
-    body.append_child(&script).unwrap();
+//     //script should be just alert("Hello world")
+//     script.set_inner_html(
+//         r#"
+//     alert("Hello")
+//     "#,
+//     );
+//     // and append it to the body
+//     body.append_child(&script).unwrap();
 
-    return script;
-}
+//     script
+// }
 
 pub fn add_loading() -> Node {
     let window = web_sys::window().unwrap();
@@ -41,8 +41,7 @@ pub fn add_loading() -> Node {
         return child;
     }
     let element = elements.item(elements.length() - 1).unwrap();
-    let child = element.append_child(&loading).unwrap();
-    return child;
+    element.append_child(&loading).unwrap()
 }
 
 pub fn remove_loading(loading: Node) {

@@ -2,7 +2,7 @@ use std::io::Error;
 
 use web_sys::Node;
 
-use crate::config::config::config::Config;
+use crate::config::command_config::config::Config;
 use crate::utils::api::get_projects;
 use crate::utils::api::{get_quotes, get_read_me, get_weather};
 
@@ -41,7 +41,7 @@ pub async fn weather(args: Vec<&str>) -> Result<String, Error> {
 
     let loading: Node = add_loading();
     let city = args[1..].join(" ");
-    if city.len() == 0 as usize {
+    if city.is_empty() {
         return Ok("Usage: weather [city]. Example: weather casablanca".to_owned());
     }
     let response = get_weather(city).await.unwrap();

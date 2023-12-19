@@ -8,7 +8,7 @@ use crate::{
         history_function::{clear_history, set_history},
         interface::History,
     },
-    config::config::config::Config,
+    config::command_config::config::Config,
 };
 
 use super::{
@@ -25,10 +25,9 @@ pub async fn shell(
 ) {
     let first_arg = args[0].to_lowercase();
     let command_exists = command_exists(first_arg.clone(), COMMAND_LIST.to_vec()).unwrap();
-
     if (&first_arg) == "clear" {
         clear_history(history_handler);
-    } else if *command_handler == "".to_owned() {
+    } else if command_handler.is_empty() {
         set_history(history_handler, command_handler.clone(), "".to_owned())
     } else if !command_exists {
         let first_arg_clone = first_arg.clone();
