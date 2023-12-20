@@ -48,6 +48,7 @@ pub fn input(props: &InputProps) -> Html {
                     history_handler.clone(),
                     on_submit_command.clone(),
                     "".to_owned(),
+                    None,
                 );
                 last_command_index_handler.set(0);
             };

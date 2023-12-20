@@ -2,7 +2,7 @@ use web_sys::Element;
 use yew::prelude::*;
 
 use super::interface::History;
-use crate::components::ps_1::Ps1;
+use crate::components::{history::interface::handle_operation, ps_1::Ps1};
 
 #[derive(Properties, PartialEq)]
 pub struct RawHtmlProps {
@@ -22,6 +22,10 @@ pub fn raw_html(props: &RawHtmlProps) -> Html {
                 .cast::<Element>()
                 .expect("raw_html_refnot attached to div element");
             html_element.set_inner_html(&history.output);
+            if let Some(operation) = history.operation {
+                handle_operation(operation);
+            }
+
             move || {}
         });
     }

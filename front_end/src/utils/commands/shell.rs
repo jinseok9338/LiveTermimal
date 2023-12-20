@@ -28,7 +28,12 @@ pub async fn shell(
     if (&first_arg) == "clear" {
         clear_history(history_handler);
     } else if command_handler.is_empty() {
-        set_history(history_handler, command_handler.clone(), "".to_owned())
+        set_history(
+            history_handler,
+            command_handler.clone(),
+            "".to_owned(),
+            None,
+        )
     } else if !command_exists {
         let first_arg_clone = first_arg.clone();
         set_history(
@@ -39,6 +44,7 @@ pub async fn shell(
                 command = first_arg_clone
             )
             .to_owned(),
+            None,
         )
     } else {
         // execute the command output
@@ -53,7 +59,14 @@ pub async fn shell(
         )
         .await;
 
-        set_history(history_handler, command_handler.clone(), output.unwrap())
+        let (output_string, operation) = output.unwrap();
+
+        set_history(
+            history_handler,
+            command_handler.clone(),
+            output_string,
+            operation,
+        )
     }
     command_handler.set("".to_owned())
 }
