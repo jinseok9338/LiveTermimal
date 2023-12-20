@@ -1,14 +1,17 @@
 use std::io::Error;
 
+use gloo_console::log;
 use web_sys::Window;
 
 use crate::config::command_config::config::Config;
+use crate::utils::commands::add_element::add_script;
 use lazy_static::lazy_static;
 
 use regex::Regex;
 
 use super::{
     api_commands::{projects, quote, read_me, weather},
+    commands_string::{add_string_stream, check_js_validity},
     sumfetch::sumfetch,
 };
 
@@ -214,6 +217,33 @@ pub fn banner(config: &'static Config<'static>) -> Result<String, Error> {
     Type 'sumfetch' to display summary.
     Type 'repo' or click <u><a class="text-light-blue dark:text-dark-blue underline" href="{repo}" target="_blank">here</a></u> for the Github repository.
     </pre>
+        "#,repo = config.repo).to_owned())
+}
+
+pub fn welcome_string(config: &'static Config<'static>) -> Result<String, Error> {
+    add_script();
+    Ok(format!(r#"
+    <span class="font-bold text-3xl">Welcome To</span>
+    </pre>
+    <pre class="animate-twinkle w-32">
+    █████        ███                       ███████████
+    ░░███        ░░░                       ░█░░░███░░░█
+    ░███        ████  █████ █████  ██████ ░   ░███  ░   ██████  ████████  █████████████
+    ░███       ░░███ ░░███ ░░███  ███░░███    ░███     ███░░███░░███░░███░░███░░███░░███
+    ░███        ░███  ░███  ░███ ░███████     ░███    ░███████  ░███ ░░░  ░███ ░███ ░███
+    ░███      █ ░███  ░░███ ███  ░███░░░      ░███    ░███░░░   ░███      ░███ ░███ ░███
+    ███████████ █████  ░░█████   ░░██████     █████   ░░██████  █████     █████░███ █████
+    ░░░░░░░░░░░ ░░░░░    ░░░░░     ░░░░░░     ░░░░░     ░░░░░░  ░░░░░     ░░░░░ ░░░ ░░░░░
+    
+    </pre>
+
+    <pre>
+    Type 'help' to see the list of available commands.
+    Type 'sumfetch' to display summary.
+    Type 'repo' or click <u><a class="text-light-blue dark:text-dark-blue underline" href="{repo}" target="_blank">here</a></u> for the Github repository.
+    <div name="stream>"></div>
+    </pre>
+ 
         "#,repo = config.repo).to_owned())
 }
 
