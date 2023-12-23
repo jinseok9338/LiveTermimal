@@ -3,7 +3,6 @@ use std::io::Error;
 use gloo_console::log;
 use web_sys::Window;
 
-use crate::utils::commands::add_element::add_script;
 use crate::{components::history::interface::Operation, config::command_config::config::Config};
 use lazy_static::lazy_static;
 
@@ -11,7 +10,7 @@ use regex::Regex;
 
 use super::{
     api_commands::{projects, quote, read_me, weather},
-    commands_string::{add_string_stream, check_js_validity},
+    commands_string::check_js_validity,
     sumfetch::sumfetch,
 };
 
@@ -266,6 +265,9 @@ pub fn banner(config: &'static Config<'static>) -> ShellCommandReturnType {
 }
 
 pub fn welcome_string(config: &'static Config<'static>) -> ShellCommandReturnType {
+    let check_js_validity = check_js_validity("console.log('hello')");
+    log!("check_js_validity: {:?}", check_js_validity);
+
     let result_string = format!(
         r#"
     <span class="font-bold text-3xl">Welcome To</span>

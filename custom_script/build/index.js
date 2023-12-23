@@ -3672,12 +3672,9 @@ var z = Object.freeze({
 // index.ts
 function isValidJavaScript(jsCode) {
   const mySchema = z.string();
-  let code = mySchema.safeParse(jsCode);
-  if (!code.success) {
-    throw Error("This is not a valid string");
-  }
+  let code = mySchema.parse(jsCode);
   try {
-    new Function(code.data);
+    new Function(code);
     return true;
   } catch (err) {
     return false;

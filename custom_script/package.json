@@ -1,0 +1,19 @@
+{
+  "name": "custom_javascript",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "clean": "rm -rf dist && echo 'Done.'",
+    "test": "bun build ./index.ts --outdir ./src/__generated__ --splitting && echo 'Done.' && wasm-pack test --safari",
+    "build": "bun build ./index.ts --outdir ../front_end/src/utils/commands/javascript --splitting && echo 'Done'"
+  },
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "zod": "^3.22.4"
+  }
+}

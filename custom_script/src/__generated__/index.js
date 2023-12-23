@@ -3673,11 +3673,11 @@ var z = Object.freeze({
 function isValidJavaScript(jsCode) {
   const mySchema = z.string();
   let code = mySchema.safeParse(jsCode);
-  if (!code.success) {
-    throw Error("This is not a valid string");
+  if (code.success) {
+    throw Error("This is not a valid javascript code");
   }
   try {
-    new Function(code.data);
+    new Function(jsCode);
     return true;
   } catch (err) {
     return false;

@@ -1,10 +1,14 @@
-use std::process::Command;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen(module = "/src/utils/commands/javascript/index.js")]
 extern "C" {
-    fn isValidJavaScript(jsCode: &str) -> bool;
+
     fn addStringStream(streamString: &str);
+}
+
+#[wasm_bindgen(module = "/src/utils/commands/javascript/index.js")]
+extern "C" {
+    fn isValidJavaScript(jsCode: &str) -> bool;
 }
 
 #[wasm_bindgen]
