@@ -10,7 +10,7 @@ use regex::Regex;
 
 use super::{
     api_commands::{projects, quote, read_me, weather},
-    commands_string::check_js_validity,
+    commands_context_hook::COMMAND_LIST_DESCRIPTION,
     sumfetch::sumfetch,
 };
 
@@ -18,23 +18,13 @@ pub type ShellCommandReturnType = Result<(String, Option<Operation>), Error>;
 
 pub fn help(_args: Vec<&str>, command_list: Vec<&'static str>) -> ShellCommandReturnType {
     let mut result_string = String::new();
-
-    for (i, command) in command_list.iter().enumerate() {
-        if i % 7 == 0 && i != 0 {
-            result_string.push_str("<br>");
-        }
-
-        result_string.push_str(&format!("<span>{}</span>", command));
-        if i % 7 != 6 {
-            result_string.push(' ');
-        }
+    for (_i, command) in COMMAND_LIST_DESCRIPTION.iter().enumerate() {
+        result_string.push_str(&format!("{}", command));
     }
 
     let result_string = format!(
-        "Welcome! Here are all the available commands:<br>{}
-        <br>[tab]: trigger completion.<br>
-        [ctrl+l]/clear: clear terminal.<br>
-        <span class='font-bold'>Type 'sumfetch' to display summary.<span>",
+        "Welcome! Here are all the available commands:<br/><br/>{}
+        <br>[tab]: trigger completion.<br>[ctrl+l]/clear: clear terminal.<br><span class='font-bold'>Type 'sumfetch' to display summary.<span>",
         result_string
     );
 

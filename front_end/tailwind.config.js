@@ -17,6 +17,7 @@ module.exports = {
       transparent: "transparent",
       current: "currentColor",
       ...colors,
+      "description": "#7f7f7f",
     },
     extend: {
       keyframes: {

@@ -37,3 +37,7 @@ div#__next>div {
 ::-webkit-scrollbar-thumb:hover {
   background: #ff8037;
 }
+
+.description {
+  text-align: left;
+}
