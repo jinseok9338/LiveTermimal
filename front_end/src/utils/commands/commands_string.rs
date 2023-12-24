@@ -1,14 +1,9 @@
 use wasm_bindgen::prelude::*;
 
-#[wasm_bindgen(module = "/src/utils/commands/javascript/index.js")]
-extern "C" {
-
-    fn addStringStream(streamString: &str);
-}
-
-#[wasm_bindgen(module = "/src/utils/commands/javascript/index.js")]
+#[wasm_bindgen(module = "/src/generated/index.js")]
 extern "C" {
     fn isValidJavaScript(jsCode: &str) -> bool;
+    fn addStringStream(streamString: &str);
 }
 
 #[wasm_bindgen]

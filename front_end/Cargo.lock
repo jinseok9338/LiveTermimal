@@ -100,7 +100,6 @@ name = "card_game_front_end"
 version = "0.1.0"
 dependencies = [
  "chrono",
- "custom_script",
  "futures",
  "gloo-console 0.3.0",
  "gloo-dialogs 0.2.0",
@@ -161,14 +160,6 @@ name = "core-foundation-sys"
 version = "0.8.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "06ea2b9bc92be3c2baa9334a323ebca2d6f074ff852cd1d7b11064035cd3868f"
-
-[[package]]
-name = "custom_script"
-version = "0.1.0"
-dependencies = [
- "wasm-bindgen",
- "wasm-bindgen-test",
-]
 
 [[package]]
 name = "equivalent"

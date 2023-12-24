@@ -2,28 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+
 @font-face {
   font-family: "Hack";
-  src: url(fonts/Hack-NF.ttf) format("truetype");
-  display: swap;
+  src: url("../../public/fonts/Hack-NF.ttf");
 }
 
-@font-face {
-  font-family: "Hermit", monospace;
-  src: url(fonts/Hermit-Regular.otf) format("otf");
-}
-
-html {
-  font-family: "Hermit", "Courier New", Courier, monospace;
-}
 
 html,
 body,
-body > div:first-child,
+body>div:first-child,
 div#__next,
-div#__next > div {
+div#__next>div {
   height: 100%;
   overflow: auto;
+  font-family: "Hack";
 }
 
 ::-webkit-scrollbar {

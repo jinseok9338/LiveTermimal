@@ -265,9 +265,6 @@ pub fn banner(config: &'static Config<'static>) -> ShellCommandReturnType {
 }
 
 pub fn welcome_string(config: &'static Config<'static>) -> ShellCommandReturnType {
-    let check_js_validity = check_js_validity("console.log('hello')");
-    log!("check_js_validity: {:?}", check_js_validity);
-
     let result_string = format!(
         r#"
     <span class="font-bold text-3xl">Welcome To</span>
@@ -320,6 +317,7 @@ pub fn change_theme(_args: Vec<&str>, window: Window) -> ShellCommandReturnType 
             .unwrap()
             .unwrap()
             .set_class_name("dark");
+
         let result_string = "Theme changed to dark theme".to_owned();
         let operation = None;
         Ok((result_string, operation))
