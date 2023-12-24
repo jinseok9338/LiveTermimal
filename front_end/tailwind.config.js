@@ -10,10 +10,14 @@ module.exports = {
   ],
   darkMode: "class", // or 'media' or 'class'
   theme: {
+    fontFamily: {
+      "hack": ["HackNerd", "monospace"],
+    },
     colors: {
       transparent: "transparent",
       current: "currentColor",
       ...colors,
+      "description": "#7f7f7f",
     },
     extend: {
       keyframes: {

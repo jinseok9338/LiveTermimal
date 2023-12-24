@@ -1,23 +1,61 @@
 use gloo_console::log;
 use web_sys::{window, Element, Node};
 
-// pub fn add_script() -> Element {
-//     let window = window().unwrap();
-//     let document = window.document().unwrap();
-//     let body = document.body().unwrap();
-//     let script = document.create_element("script").unwrap();
+pub fn add_script() -> Element {
+    let string = "
+    async function readStreamInChunks(reader,p) {
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) {
+                break;
+            }
+            // Decode the value and append it to the paragraph
+            let textChunk = new TextDecoder(\"utf-8\").decode(value);
+            p.textContent += textChunk;
+            await new Promise(resolve => setTimeout(resolve, 200)); // delay between chunks
+        }
+    }
+    
+    function add_stream(){
+        let string = \"hello this is the world I am not a person I used to be\";
+        let p = document.createElement('p');
+        let stream_list = document.getElementsByName('stream');
+        if (stream_list.length === 0) {
+            console.log(\"There is no stream element\");
+            return;
+        }
+        stream_list[stream_list.length - 1].appendChild(p);
+        // Create a new ReadableStream from the string
+        let stream = new ReadableStream({
+            start(controller) {
+                // Split the string into words and enqueue each word separately
+                string.split(' ').forEach(word => {
+                    controller.enqueue(new TextEncoder().encode(word + ' '));
+                });
+                controller.close();
+            }
+        });
+    
+        // Read the stream
+        let reader = stream.getReader();
+        readStreamInChunks(reader,p);
+    }
 
-//     //script should be just alert("Hello world")
-//     script.set_inner_html(
-//         r#"
-//     alert("Hello")
-//     "#,
-//     );
-//     // and append it to the body
-//     body.append_child(&script).unwrap();
+    add_stream();
+    ";
 
-//     script
-// }
+    let window = window().unwrap();
+    let document = window.document().unwrap();
+    let body = document.body().unwrap();
+    let script = document.create_element("script").unwrap();
+
+    //script should be just alert("Hello world")
+    script.set_inner_html(string);
+    // and append it to the body
+    body.append_child(&script).unwrap();
+
+    script
+}
 
 pub fn add_loading() -> Node {
     let window = web_sys::window().unwrap();
@@ -28,10 +66,9 @@ pub fn add_loading() -> Node {
     loading.set_attribute("style", "color: lime").unwrap();
     loading.set_text_content(Some("Loading..."));
     let elements = document.get_elements_by_name("raw_html");
-    log!(&elements);
+
     // if elements is empty, create div whose name is raw_html
     if elements.length() == 0 {
-        log!("elements is empty");
         let history_list = document
             .get_elements_by_name("history_list")
             .item(0)

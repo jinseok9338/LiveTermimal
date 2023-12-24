@@ -2,9 +2,11 @@ use std::fmt::Error;
 
 use crate::config::command_config::config::Config;
 
-pub fn sumfetch(_args: Vec<&str>, config: &'static Config<'static>) -> Result<String, Error> {
+use super::execute_command::ShellCommandReturnType;
+
+pub fn sumfetch(_args: Vec<&str>, config: &'static Config<'static>) -> ShellCommandReturnType {
     if config.ascii == "jason" {
-        Ok(format!(r#"
+        let result_string =  format!(r#"
 
 /*///////****////***///****///****////////           sumfetch: summary display
 /****/////***********/***********/////**//          -----------
@@ -30,9 +32,12 @@ pub fn sumfetch(_args: Vec<&str>, config: &'static Config<'static>) -> Result<St
   email = config.email,
   github = config.social.github,
   linkedin = config.social.linkedin,
-  ).to_owned())
+  ).to_owned();
+        let operation = None;
+        Ok((result_string, operation))
     } else {
-        Ok(format!(r#"
+        let result_string =
+        format!(r#"
 
                   ▄██████████████▄                  sumfetch
                ▄██▀ ▄██▀███▀██▄ ▀▀██▄              -----------
@@ -57,6 +62,8 @@ resume_url = config.resume_url,
  github = config.social.github,
  linkedin = config.social.linkedin,
  paypal = config.donate_urls.paypal,
- patreon = config.donate_urls.patreon,).to_owned())
+ patreon = config.donate_urls.patreon,).to_owned();
+        let operation = None;
+        Ok((result_string, operation))
     }
 }

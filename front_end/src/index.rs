@@ -4,7 +4,8 @@ use crate::components::history::history_function::set_history;
 use crate::components::history::input::Input;
 
 use crate::utils::commands::commands_context_hook::CONFIG;
-use crate::utils::commands::execute_command::banner;
+use crate::utils::commands::commands_string::add_string_stream;
+use crate::utils::commands::execute_command::{banner, welcome_string};
 
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
@@ -28,11 +29,14 @@ pub fn index(props: &IndexProps) -> Html {
     //config context
 
     use_effect_with((), move |_| {
+        let (output_string, operation) = welcome_string(&CONFIG).unwrap();
         set_history(
             history_handler.clone(),
             command_handler.clone(),
-            banner(&CONFIG).unwrap().to_owned(),
+            output_string,
+            operation,
         );
+
         || {}
     });
 

@@ -11,6 +11,7 @@ pub fn set_history(
     history_handler: UseStateHandle<Vec<History>>,
     command_handler: UseStateHandle<String>,
     value: String,
+    operation: Option<super::interface::Operation>,
 ) {
     let command = &*command_handler;
     let new_history = History {
@@ -18,6 +19,7 @@ pub fn set_history(
         id: Box::new((*command_handler).len()),
         output: value,
         date: Box::new(instant::Instant::now()),
+        operation,
     };
 
     let mut old_history = (*history_handler).clone();

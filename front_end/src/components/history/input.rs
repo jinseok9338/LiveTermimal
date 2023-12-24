@@ -7,7 +7,7 @@ use crate::components::history::history_context_hook::HistoryContext;
 use crate::components::history::history_function::{clear_history, set_history};
 use crate::components::ps_1::Ps1;
 use crate::utils::commands::command_exists::command_exists;
-use crate::utils::commands::commands_context_hook::{COMMAND_LIST, CONFIG};
+use crate::utils::commands::commands_context_hook::{COMMAND_LIST_VEC, CONFIG};
 use crate::utils::commands::shell::shell;
 use crate::utils::commands::tap_completion::handle_tap_completion;
 
@@ -48,6 +48,7 @@ pub fn input(props: &InputProps) -> Html {
                     history_handler.clone(),
                     on_submit_command.clone(),
                     "".to_owned(),
+                    None,
                 );
                 last_command_index_handler.set(0);
             };
@@ -59,7 +60,7 @@ pub fn input(props: &InputProps) -> Html {
 
             if event.key() == *"Tab".to_owned() {
                 event.prevent_default();
-                handle_tap_completion(on_submit_command.clone(), COMMAND_LIST.to_vec());
+                handle_tap_completion(on_submit_command.clone(), COMMAND_LIST_VEC.to_vec());
             };
 
             if event.key() == *"Enter".to_owned() {
@@ -153,7 +154,12 @@ pub fn input(props: &InputProps) -> Html {
 
     use_effect_with([current_command.to_string()], move |_| {
         let green_or_grey = green_or_grey.clone();
-        if command_exists((command_handler.clone()).to_string(), COMMAND_LIST.to_vec()).unwrap() {
+        if command_exists(
+            (command_handler.clone()).to_string(),
+            COMMAND_LIST_VEC.to_vec(),
+        )
+        .unwrap()
+        {
             green_or_grey.set("dark:text-dark-red text-light-green".to_owned())
         } else {
             green_or_grey.set("dark:text-dark-gray text-light-gray".to_owned())

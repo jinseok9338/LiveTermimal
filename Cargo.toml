@@ -1,3 +1,0 @@
-[workspace]
-members = ["front_end"]
-default-members =["front_end"]
