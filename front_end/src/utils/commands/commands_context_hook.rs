@@ -4,8 +4,7 @@ use crate::config::command_config::config::DonateURLs;
 use crate::config::command_config::config::Social;
 use crate::config::command_config::config::ThemeColors;
 
-pub const COMMAND_LIST_DESCRIPTION: [&str; 14] = [
-    "<div class='flex'><p class='text-description font-bold'>about</p> <p class='description'> - This is summary of Jinseok Seo's profile</p></div>",
+pub const COMMAND_LIST_DESCRIPTION: [&str; 13] = [
     "<div class='flex'><p class='text-description font-bold'>banner</p> <p class='description'> - This shows the banner</p></div>",
     "<div class='flex'><p class='text-description font-bold'>help</p> <p class='description'> - This will show help </p></div>",
     "<div class='flex'><p class='text-description font-bold'>repo</p> <p class='description'> - This will show repo </p></div>",
@@ -20,9 +19,9 @@ pub const COMMAND_LIST_DESCRIPTION: [&str; 14] = [
     "<div class='flex'><p class='text-description font-bold'>weather</p> <p class='description'> - This will show the weather of the city or country </p></div>",
     "<div class='flex'><p class='text-description font-bold'>quote</p> <p class='description'> - This will show random quote </p></div>",
 ];
-pub const COMMAND_LIST_VEC: [&str; 14] = [
-    "about", "banner", "help", "repo", "resume", "google", "echo", "whoami", "sumfetch", "theme",
-    "clear", "projects", "weather", "quote",
+pub const COMMAND_LIST_VEC: [&str; 13] = [
+    "banner", "help", "repo", "resume", "google", "echo", "whoami", "sumfetch", "theme", "clear",
+    "projects", "weather", "quote",
 ];
 
 pub const CONFIG: Config = Config {
