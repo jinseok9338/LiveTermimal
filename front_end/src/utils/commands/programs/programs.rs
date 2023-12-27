@@ -20,7 +20,7 @@ pub fn render_child(child: &Box<OutputComponent>) -> Html {
         OutputComponent::Legacy(ref props) => {
             html! { <LegacyComponent legacy_output={props.legacy_output.clone()} /> }
         }
-        OutputComponent::Welcome(ref props) => {
+        OutputComponent::Welcome(ref _props) => {
             html! { <WelcomeComponent /> }
         }
     }

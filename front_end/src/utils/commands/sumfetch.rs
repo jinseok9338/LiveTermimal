@@ -34,11 +34,10 @@ pub fn sumfetch(_args: Vec<&str>, config: &'static Config<'static>) -> ShellComm
   github = config.social.github,
   linkedin = config.social.linkedin,
   ).to_owned();
-        let operation = None;
         let output_component = Box::new(OutputComponent::Legacy(LegacyProps {
             legacy_output: result_string,
         }));
-        Ok((output_component, operation))
+        Ok(output_component)
     } else {
         let result_string =
         format!(r#"
@@ -67,11 +66,10 @@ resume_url = config.resume_url,
  linkedin = config.social.linkedin,
  paypal = config.donate_urls.paypal,
  patreon = config.donate_urls.patreon,).to_owned();
-        let operation = None;
         let output_component = Box::new(OutputComponent::Legacy(LegacyProps {
             legacy_output: result_string,
         }));
 
-        Ok((output_component, operation))
+        Ok(output_component)
     }
 }

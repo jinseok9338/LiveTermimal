@@ -27,14 +27,13 @@ pub fn index(props: &IndexProps) -> Html {
     let input_ref = props.input_ref.clone();
 
     use_effect_with((), move |_| {
-        let (output_component, operation) = welcome_command(&CONFIG).unwrap();
+        let output_component = welcome_command(&CONFIG).unwrap();
 
         let command = &*command_handler;
         set_history(
             history_handler.clone(),
             command.to_owned(),
             output_component,
-            operation,
         );
 
         || {}

@@ -34,7 +34,7 @@ pub async fn shell(
         let output_component = Box::new(OutputComponent::Legacy(LegacyProps {
             legacy_output: "".to_owned(),
         }));
-        set_history(history_handler, "".to_owned(), output_component, None)
+        set_history(history_handler, "".to_owned(), output_component)
     } else if !command_exists {
         let first_arg_clone = first_arg.clone();
         let output_component = Box::new(OutputComponent::Legacy(LegacyProps {
@@ -44,20 +44,15 @@ pub async fn shell(
             )
             .to_owned(),
         }));
-        set_history(history_handler, command.to_owned(), output_component, None)
+        set_history(history_handler, command.to_owned(), output_component)
     } else {
         // execute the command output
         let first_arg_clone = first_arg.clone();
         let args_clone = args.clone();
         let output = execute_command(first_arg_clone, args_clone, window, config).await;
-        let (output_component, operation) = output.unwrap();
+        let output_component = output.unwrap();
 
-        set_history(
-            history_handler,
-            command.to_owned(),
-            output_component,
-            operation,
-        )
+        set_history(history_handler, command.to_owned(), output_component)
     }
     command_handler.set("".to_owned())
 }

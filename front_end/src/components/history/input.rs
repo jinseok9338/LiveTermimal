@@ -49,12 +49,7 @@ pub fn input(props: &InputProps) -> Html {
                 let output_component = Box::new(OutputComponent::Legacy(LegacyProps {
                     legacy_output: "".to_owned(),
                 }));
-                set_history(
-                    history_handler.clone(),
-                    "".to_owned(),
-                    output_component,
-                    None,
-                );
+                set_history(history_handler.clone(), "".to_owned(), output_component);
                 last_command_index_handler.set(0);
             };
 
