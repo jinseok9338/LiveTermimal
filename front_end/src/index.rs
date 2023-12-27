@@ -22,25 +22,26 @@ pub fn index(props: &IndexProps) -> Html {
     let history_for_focus = (*history_handler_for_focus).len();
     let command_handler = history_context.command.clone();
     let is_program_running = history_context.is_running.clone();
+    let is_prgram_running_clone = is_program_running.clone();
+    let is_program_running_dep = *is_prgram_running_clone;
 
     let container_ref = use_node_ref();
     let input_ref = props.input_ref.clone();
 
     use_effect_with((), move |_| {
-        let (output_component, operation) = welcome_command(&CONFIG).unwrap();
+        let output_component = welcome_command(&CONFIG).unwrap();
 
         let command = &*command_handler;
         set_history(
             history_handler.clone(),
             command.to_owned(),
             output_component,
-            operation,
         );
 
         || {}
     });
 
-    use_effect_with([history_for_focus], move |_| {
+    use_effect_with((history_for_focus, is_program_running_dep), move |_| {
         let input_element = input_ref.cast::<HtmlInputElement>();
         match input_element {
             Some(element) => {

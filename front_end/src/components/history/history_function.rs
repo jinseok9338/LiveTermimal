@@ -13,14 +13,12 @@ pub fn set_history(
     history_handler: UseStateHandle<Vec<History>>,
     command: String,
     value: Box<OutputComponent>,
-    operation: Option<super::interface::Operation>,
 ) {
     let new_history = History {
         command: command.to_owned(),
         id: Box::new(command.len()),
         output: value,
         date: Box::new(instant::Instant::now()),
-        operation,
     };
 
     let mut old_history = (*history_handler).clone();
