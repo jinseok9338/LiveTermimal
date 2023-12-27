@@ -70,9 +70,6 @@ pub fn input(props: &InputProps) -> Html {
 
                 event.prevent_default();
                 last_command_index_handler.set(0);
-
-                // This is the problem...
-
                 spawn_local(async move {
                     let args: Vec<&str> =
                         ((future_submit_command).split(' ').collect::<Vec<&str>>()).to_vec();

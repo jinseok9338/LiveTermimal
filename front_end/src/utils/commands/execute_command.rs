@@ -9,7 +9,8 @@ use regex::Regex;
 use super::{
     api_commands::{projects, quote, read_me, weather},
     programs::{
-        help::HelpProps, legacy::LegacyProps, programs::OutputComponent, welcome::WelcomeProps,
+        help::HelpProps, legacy::LegacyProps, open_repo::OpenRepoProps, programs::OutputComponent,
+        welcome::WelcomeProps,
     },
     sumfetch::sumfetch,
 };
@@ -26,16 +27,8 @@ pub fn help(_args: Vec<&str>) -> ShellCommandReturnType {
 }
 
 //Redirection to repo
-pub fn repo(
-    _args: Vec<&str>,
-    window: Window,
-    config: &'static Config<'static>,
-) -> ShellCommandReturnType {
-    window.open_with_url(config.repo.as_ref()).unwrap();
-    let result_string = "Opening Github repository...".to_owned();
-    let output_component = Box::new(OutputComponent::Legacy(LegacyProps {
-        legacy_output: result_string,
-    }));
+pub fn repo(_args: Vec<&str>, config: &'static Config<'static>) -> ShellCommandReturnType {
+    let output_component = Box::new(OutputComponent::OpenRepo(OpenRepoProps { config }));
     Ok(output_component)
 }
 
@@ -208,7 +201,7 @@ pub async fn execute_command(
         "help" => Ok(help(args).unwrap()),
         "banner" => Ok(banner(config).unwrap()),
         "about" => Ok(about(args, config).unwrap()),
-        "repo" => Ok(repo(args, window, config).unwrap()),
+        "repo" => Ok(repo(args, config).unwrap()),
         "resume" => Ok(resume(args, window, config).unwrap()),
         "google" => Ok(google(args, window).unwrap()),
         "whoami" => Ok(whoami(args, config).unwrap()),
