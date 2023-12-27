@@ -1,6 +1,4 @@
 use std::io::Error;
-
-use gloo_console::log;
 use web_sys::Window;
 
 use crate::{components::history::interface::Operation, config::command_config::config::Config};
@@ -16,7 +14,7 @@ use super::{
 
 pub type ShellCommandReturnType = Result<(String, Option<Operation>), Error>;
 
-pub fn help(_args: Vec<&str>, command_list: Vec<&'static str>) -> ShellCommandReturnType {
+pub fn help(_args: Vec<&str>) -> ShellCommandReturnType {
     let mut result_string = String::new();
     for (_i, command) in COMMAND_LIST_DESCRIPTION.iter().enumerate() {
         result_string.push_str(&format!("{}", command));
@@ -319,10 +317,9 @@ pub async fn execute_command(
     args: Vec<&str>,
     window: Window,
     config: &'static Config<'static>,
-    command_list: Vec<&'static str>,
 ) -> Result<(String, Option<Operation>), Error> {
     match command.as_str() {
-        "help" => Ok(help(args, command_list).unwrap()),
+        "help" => Ok(help(args).unwrap()),
         "banner" => Ok(banner(config).unwrap()),
         "about" => Ok(about(args, config).unwrap()),
         "bing" => Ok(bing(args, window).unwrap()),

@@ -44,12 +44,8 @@ pub fn input(props: &InputProps) -> Html {
             if event.key() == *"c" && event.ctrl_key() {
                 event.prevent_default();
                 on_submit_command.set("".to_owned());
-                set_history(
-                    history_handler.clone(),
-                    on_submit_command.clone(),
-                    "".to_owned(),
-                    None,
-                );
+
+                set_history(history_handler.clone(), "".to_owned(), "".to_owned(), None);
                 last_command_index_handler.set(0);
             };
 

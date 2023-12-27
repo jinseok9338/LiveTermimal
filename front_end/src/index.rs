@@ -30,9 +30,10 @@ pub fn index(props: &IndexProps) -> Html {
 
     use_effect_with((), move |_| {
         let (output_string, operation) = welcome_string(&CONFIG).unwrap();
+        let command = &*command_handler;
         set_history(
             history_handler.clone(),
-            command_handler.clone(),
+            command.to_owned(),
             output_string,
             operation,
         );

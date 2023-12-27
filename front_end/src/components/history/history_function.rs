@@ -9,14 +9,13 @@ pub fn clear_history(history_handler: UseStateHandle<Vec<History>>) {
 
 pub fn set_history(
     history_handler: UseStateHandle<Vec<History>>,
-    command_handler: UseStateHandle<String>,
+    command: String,
     value: String,
     operation: Option<super::interface::Operation>,
 ) {
-    let command = &*command_handler;
     let new_history = History {
         command: command.to_owned(),
-        id: Box::new((*command_handler).len()),
+        id: Box::new(command.len()),
         output: value,
         date: Box::new(instant::Instant::now()),
         operation,
