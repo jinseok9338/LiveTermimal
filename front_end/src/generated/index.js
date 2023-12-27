@@ -7,14 +7,9 @@ function isValidJavaScript(jsCode) {
     return false;
   }
 }
-function addStringStream(streamString) {
+function addStringStream(streamString, el) {
   let p = document.createElement("pre");
-  let stream_list = document.getElementsByName("raw_html");
-  if (stream_list.length === 0) {
-    console.log("there is no raw html");
-    return;
-  }
-  stream_list[stream_list.length - 1].appendChild(p);
+  el.appendChild(p);
   let stream = new ReadableStream({
     start(controller) {
       streamString.split(" ").forEach((word) => {

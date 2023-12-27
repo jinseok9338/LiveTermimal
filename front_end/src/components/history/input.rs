@@ -8,6 +8,8 @@ use crate::components::history::history_function::{clear_history, set_history};
 use crate::components::ps_1::Ps1;
 use crate::utils::commands::command_exists::command_exists;
 use crate::utils::commands::commands_context_hook::{COMMAND_LIST_VEC, CONFIG};
+use crate::utils::commands::programs::legacy::LegacyProps;
+use crate::utils::commands::programs::programs::OutputComponent;
 use crate::utils::commands::shell::shell;
 use crate::utils::commands::tap_completion::handle_tap_completion;
 
@@ -44,10 +46,13 @@ pub fn input(props: &InputProps) -> Html {
             if event.key() == *"c" && event.ctrl_key() {
                 event.prevent_default();
                 on_submit_command.set("".to_owned());
+                let output_component = Box::new(OutputComponent::Legacy(LegacyProps {
+                    legacy_output: "".to_owned(),
+                }));
                 set_history(
                     history_handler.clone(),
-                    on_submit_command.clone(),
                     "".to_owned(),
+                    output_component,
                     None,
                 );
                 last_command_index_handler.set(0);
@@ -174,11 +179,9 @@ pub fn input(props: &InputProps) -> Html {
                 ref={input_ref.clone()}
                 id="prompt"
                 type="text"
-                // need to have value soon.. .but it's pretty much hopeless
                  value={current_command_value_for_input.to_string()}
                 {oninput}
                 class={classes!("bg-light-background", "dark:bg-dark-background", "focus:outline-none", "flex-grow", green_or_gray_class)}
-                // if the command exist show color green
                  autofocus=true
                 autocomplete="off"
                 onkeydown={on_submit}

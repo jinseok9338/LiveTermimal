@@ -4,11 +4,12 @@ use yew::{
     UseStateHandle,
 };
 
-#[derive(Debug, PartialEq, Clone)]
+#[derive(PartialEq, Clone)]
 pub struct HistoryContext {
     pub history: UseStateHandle<Vec<History>>,
     pub command: UseStateHandle<String>,
     pub last_command_index: UseStateHandle<u32>,
+    pub is_running: UseStateHandle<bool>,
 }
 
 impl HistoryContext {
@@ -16,11 +17,13 @@ impl HistoryContext {
         history: UseStateHandle<Vec<History>>,
         command: UseStateHandle<String>,
         last_command_index: UseStateHandle<u32>,
+        is_running: UseStateHandle<bool>,
     ) -> Self {
         Self {
             history,
             command,
             last_command_index,
+            is_running,
         }
     }
 }
@@ -35,8 +38,9 @@ pub fn history_provider(props: &HistoryProviderProps) -> Html {
     let history = use_state(|| vec![].to_owned());
     let command = use_state(|| "".to_owned());
     let last_command_index = use_state(|| 0);
+    let is_running_handler: UseStateHandle<bool> = use_state(|| false);
 
-    let history_ctx = HistoryContext::new(history, command, last_command_index);
+    let history_ctx = HistoryContext::new(history, command, last_command_index, is_running_handler);
 
     html! {
         <ContextProvider<HistoryContext> context={history_ctx}>{ props.children.clone() }</ContextProvider<HistoryContext>>
