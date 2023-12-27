@@ -8,7 +8,9 @@ use regex::Regex;
 
 use super::{
     api_commands::{projects, quote, read_me, weather},
-    programs::{help::HelpProps, legacy::LegacyProps, programs::OutputComponent},
+    programs::{
+        help::HelpProps, legacy::LegacyProps, programs::OutputComponent, welcome::WelcomeProps,
+    },
     sumfetch::sumfetch,
 };
 
@@ -180,36 +182,10 @@ pub fn banner(config: &'static Config<'static>) -> ShellCommandReturnType {
     Ok((output_component, operation))
 }
 
-pub fn welcome_string(_config: &'static Config<'static>) -> ShellCommandReturnType {
-    let result_string = format!(
-        r#"
-    <span class="font-bold text-3xl">Welcome To</span>
-    </pre>
-    <pre class="animate-twinkle w-32">
-    █████        ███                       ███████████
-    ░░███        ░░░                       ░█░░░███░░░█
-    ░███        ████  █████ █████  ██████ ░   ░███  ░   ██████  ████████  █████████████
-    ░███       ░░███ ░░███ ░░███  ███░░███    ░███     ███░░███░░███░░███░░███░░███░░███
-    ░███        ░███  ░███  ░███ ░███████     ░███    ░███████  ░███ ░░░  ░███ ░███ ░███
-    ░███      █ ░███  ░░███ ███  ░███░░░      ░███    ░███░░░   ░███      ░███ ░███ ░███
-    ███████████ █████  ░░█████   ░░██████     █████   ░░██████  █████     █████░███ █████
-    ░░░░░░░░░░░ ░░░░░    ░░░░░     ░░░░░░     ░░░░░     ░░░░░░  ░░░░░     ░░░░░ ░░░ ░░░░░
-    </pre>"#
-    )
-    .to_owned();
-
-    let operation_string = r"
-    Hello, fellow users! Welcome to my portfolio website. This was made with Rust and WebAssembly.
-    I hope you enjoy the experience. There are plenty of commands you can try such as sumfetch, repo, and more. 
-    If you don't know where to begin, type help to see the list of commands. Or type 'sumfetch' to display summary.
-    Any feedback is appreciated.
-    "
-        .to_owned();
-
-    let operation = Some(Operation::StreamString(operation_string));
-    let output_component: Box<OutputComponent> = Box::new(OutputComponent::Legacy(LegacyProps {
-        legacy_output: result_string,
-    }));
+pub fn welcome_command(_config: &'static Config<'static>) -> ShellCommandReturnType {
+    let output_component: Box<OutputComponent> =
+        Box::new(OutputComponent::Welcome(WelcomeProps {}));
+    let operation = None;
     Ok((output_component, operation))
 }
 

@@ -10,16 +10,9 @@ export function isValidJavaScript(jsCode: string) {
 
 
 // document should exist in the global scope
-export function addStringStream(streamString: string) {
+export function addStringStream(streamString: string, el: HTMLElement) {
   let p = document.createElement("pre");
-
-  // add class
-  let stream_list = document.getElementsByName("raw_html");
-  if (stream_list.length === 0) {
-    console.log("there is no raw html");
-    return;
-  }
-  stream_list[stream_list.length - 1].appendChild(p);
+  el.appendChild(p);
   // Create a new ReadableStream from the string
   let stream = new ReadableStream({
     start(controller) {

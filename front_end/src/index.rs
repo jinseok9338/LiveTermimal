@@ -4,7 +4,7 @@ use crate::components::history::history_function::set_history;
 use crate::components::history::input::Input;
 
 use crate::utils::commands::commands_context_hook::CONFIG;
-use crate::utils::commands::execute_command::welcome_string;
+use crate::utils::commands::execute_command::welcome_command;
 
 use web_sys::HtmlInputElement;
 use yew::prelude::*;
@@ -26,10 +26,8 @@ pub fn index(props: &IndexProps) -> Html {
     let container_ref = use_node_ref();
     let input_ref = props.input_ref.clone();
 
-    //config context
-
     use_effect_with((), move |_| {
-        let (output_component, operation) = welcome_string(&CONFIG).unwrap();
+        let (output_component, operation) = welcome_command(&CONFIG).unwrap();
 
         let command = &*command_handler;
         set_history(
