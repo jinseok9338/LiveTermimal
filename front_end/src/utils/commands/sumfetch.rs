@@ -1,8 +1,9 @@
-use std::fmt::Error;
-
 use crate::config::command_config::config::Config;
 
-use super::execute_command::ShellCommandReturnType;
+use super::{
+    execute_command::ShellCommandReturnType,
+    programs::{legacy::LegacyProps, programs::OutputComponent},
+};
 
 pub fn sumfetch(_args: Vec<&str>, config: &'static Config<'static>) -> ShellCommandReturnType {
     if config.ascii == "jason" {
@@ -34,7 +35,10 @@ pub fn sumfetch(_args: Vec<&str>, config: &'static Config<'static>) -> ShellComm
   linkedin = config.social.linkedin,
   ).to_owned();
         let operation = None;
-        Ok((result_string, operation))
+        let output_component = Box::new(OutputComponent::Legacy(LegacyProps {
+            legacy_output: result_string,
+        }));
+        Ok((output_component, operation))
     } else {
         let result_string =
         format!(r#"
@@ -64,6 +68,10 @@ resume_url = config.resume_url,
  paypal = config.donate_urls.paypal,
  patreon = config.donate_urls.patreon,).to_owned();
         let operation = None;
-        Ok((result_string, operation))
+        let output_component = Box::new(OutputComponent::Legacy(LegacyProps {
+            legacy_output: result_string,
+        }));
+
+        Ok((output_component, operation))
     }
 }

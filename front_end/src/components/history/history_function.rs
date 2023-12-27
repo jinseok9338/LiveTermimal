@@ -1,5 +1,7 @@
 use yew::UseStateHandle;
 
+use crate::utils::commands::programs::programs::OutputComponent;
+
 use super::interface::History;
 
 pub fn clear_history(history_handler: UseStateHandle<Vec<History>>) {
@@ -10,7 +12,7 @@ pub fn clear_history(history_handler: UseStateHandle<Vec<History>>) {
 pub fn set_history(
     history_handler: UseStateHandle<Vec<History>>,
     command: String,
-    value: String,
+    value: Box<OutputComponent>,
     operation: Option<super::interface::Operation>,
 ) {
     let new_history = History {

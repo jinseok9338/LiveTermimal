@@ -9,8 +9,7 @@ pub fn history_component() -> Html {
     html! {
         <ul name="history_list">
             { history_cloned.iter().enumerate().map(|(index, history)| {
-                let is_last = index == history_cloned.len() - 1;
-                html!{<RawHtml key={index} history={history.clone()} is_last={is_last} />}
+                html!{<RawHtml key={index} history={history.clone()}  />}
             }).collect::<Html>() }
         </ul>
     }

@@ -8,25 +8,19 @@ use regex::Regex;
 
 use super::{
     api_commands::{projects, quote, read_me, weather},
-    commands_context_hook::COMMAND_LIST_DESCRIPTION,
+    programs::{help::HelpProps, legacy::LegacyProps, programs::OutputComponent},
     sumfetch::sumfetch,
 };
 
-pub type ShellCommandReturnType = Result<(String, Option<Operation>), Error>;
+pub type ShellCommandReturnType = Result<(Box<OutputComponent>, Option<Operation>), Error>;
 
 pub fn help(_args: Vec<&str>) -> ShellCommandReturnType {
-    let mut result_string = String::new();
-    for (_i, command) in COMMAND_LIST_DESCRIPTION.iter().enumerate() {
-        result_string.push_str(&format!("{}", command));
-    }
+    let args: Vec<&str> = _args;
+    // convert Vec<&str> to Vec<String>
+    let args: Vec<String> = args.iter().map(|&s| s.to_string()).collect();
+    let output_component = Box::new(OutputComponent::Help(HelpProps { args }));
 
-    let result_string = format!(
-        "Welcome! Here are all the available commands:<br/><br/>{}
-        <br>[tab]: trigger completion.<br>[ctrl+l]/clear: clear terminal.<br><span class='font-bold'>Type 'sumfetch' to display summary.<span>",
-        result_string
-    );
-
-    Ok((result_string, None))
+    Ok((output_component, None))
 }
 
 //Redirection to repo
@@ -38,7 +32,10 @@ pub fn repo(
     window.open_with_url(config.repo.as_ref()).unwrap();
     let result_string = "Opening Github repository...".to_owned();
     let operation = None;
-    Ok((result_string, operation))
+    let output_component = Box::new(OutputComponent::Legacy(LegacyProps {
+        legacy_output: result_string,
+    }));
+    Ok((output_component, operation))
 }
 
 //About
@@ -56,7 +53,11 @@ pub fn about(_args: Vec<&str>, config: &'static Config<'static>) -> ShellCommand
     .to_owned();
     let operation = None;
 
-    Ok((result_string, operation))
+    let output_component = Box::new(OutputComponent::Legacy(LegacyProps {
+        legacy_output: result_string,
+    }));
+
+    Ok((output_component, operation))
 }
 
 pub fn resume(
@@ -66,9 +67,12 @@ pub fn resume(
 ) -> ShellCommandReturnType {
     window.open_with_url(config.resume_url.as_ref()).unwrap();
 
-    let result_stirng = "Opening resume".to_owned();
+    let result_string = "Opening resume".to_owned();
     let operation = None;
-    Ok((result_stirng, operation))
+    let output_component = Box::new(OutputComponent::Legacy(LegacyProps {
+        legacy_output: result_string,
+    }));
+    Ok((output_component, operation))
 }
 
 pub fn donate(_args: Vec<&str>) -> ShellCommandReturnType {
@@ -80,18 +84,23 @@ pub fn donate(_args: Vec<&str>) -> ShellCommandReturnType {
         "#.to_owned();
 
     let operation = None;
-    Ok((result_string, operation))
+    let output_component = Box::new(OutputComponent::Legacy(LegacyProps {
+        legacy_output: result_string,
+    }));
+    Ok((output_component, operation))
 }
 
 pub fn google(args: Vec<&str>, window: Window) -> ShellCommandReturnType {
     let query = args[1..].join(" ");
     return match query.eq("") {
         true => Ok((
-            r#"
-        You should provide query
-        like this: google facetime 
-        "#
-            .to_owned(),
+            Box::new(OutputComponent::Legacy(LegacyProps {
+                legacy_output: r#"
+                You should provide query
+                like this: google facetime 
+                "#
+                .to_owned(),
+            })),
             None,
         )),
         _ => {
@@ -103,77 +112,10 @@ pub fn google(args: Vec<&str>, window: Window) -> ShellCommandReturnType {
             let result_string =
                 format!("Searching google for {query}...", query = query).to_owned();
             let operation = None;
-            Ok((result_string, operation))
-        }
-    };
-}
-
-pub fn duckduckgo(args: Vec<&str>, window: Window) -> ShellCommandReturnType {
-    let query = args[1..].join(" ");
-    return match query.eq("") {
-        true => Ok((
-            r#"
-        You should provide query
-        like this: duckduckgo facetime 
-        "#
-            .to_owned(),
-            None,
-        )),
-        _ => {
-            window
-                .open_with_url(format!("https://duckduckgo.com/?q={query}", query = query).as_ref())
-                .unwrap();
-            let result_string =
-                format!("Searching duckduckgo for {query}...", query = query).to_owned();
-            let operation = None;
-            Ok((result_string, operation))
-        }
-    };
-}
-
-pub fn bing(args: Vec<&str>, window: Window) -> ShellCommandReturnType {
-    let query = args[1..].join(" ");
-    return match query.eq("") {
-        true => Ok((
-            r#"
-        You should provide query
-        like this: bing facetime 
-        "#
-            .to_owned(),
-            None,
-        )),
-        _ => {
-            window
-                .open_with_url(format!("https://bing.com/search?q={query}", query = query).as_ref())
-                .unwrap();
-            let result_string = format!("Searching bing for {query}...", query = query).to_owned();
-            let operation = None;
-            Ok((result_string, operation))
-        }
-    };
-}
-
-pub fn reddit(args: Vec<&str>, window: Window) -> ShellCommandReturnType {
-    let query = args[1..].join(" ");
-    return match query.eq("") {
-        true => Ok((
-            r#"
-        You should provide query
-        like this: reddit facetime 
-        "#
-            .to_owned(),
-            None,
-        )),
-        _ => {
-            window
-                .open_with_url(
-                    format!("https://reddit.com/search/?q={query}", query = query).as_ref(),
-                )
-                .unwrap();
-            let result_string =
-                format!("Searching reddit for {query}...", query = query).to_owned();
-            let operation = None;
-            Ok((result_string, operation))
+            let output_component = Box::new(OutputComponent::Legacy(LegacyProps {
+                legacy_output: result_string,
+            }));
+            Ok((output_component, operation))
         }
     };
 }
@@ -190,43 +132,26 @@ pub fn echo(args: Vec<&str>) -> ShellCommandReturnType {
     let query = args[1..].join(" ");
     match some_helper_function(&query) {
         true => Ok((
-            "You cheeky bastard... You are not allowed to type that".to_string(),
+            Box::new(OutputComponent::Legacy(LegacyProps {
+                legacy_output: "You cheeky bastard... You are not allowed to type that".to_string(),
+            })),
             None,
         )),
-        false => Ok((query, None)),
+        false => Ok((
+            Box::new(OutputComponent::Legacy(LegacyProps {
+                legacy_output: query,
+            })),
+            None,
+        )),
     }
 }
 
 pub fn whoami(_args: Vec<&str>, config: &'static Config<'static>) -> ShellCommandReturnType {
-    Ok((config.ps1_username.to_owned(), None))
-}
-
-pub fn ls(_args: Vec<&str>) -> ShellCommandReturnType {
-    Ok((
-        r#"
-    I
-    don't 
-    know 
-    how 
-    to add file system in 
-    webAssemly"#
-            .to_owned(),
-        None,
-    ))
-}
-
-pub fn cd(_args: Vec<&str>) -> ShellCommandReturnType {
-    Ok((
-        r#"
-    I
-    don't 
-    know 
-    how 
-    to add file system in 
-    webAssemly"#
-            .to_owned(),
-        None,
-    ))
+    let result_string = config.ps1_username.to_owned();
+    let output_component = Box::new(OutputComponent::Legacy(LegacyProps {
+        legacy_output: result_string,
+    }));
+    Ok((output_component, None))
 }
 
 pub fn banner(config: &'static Config<'static>) -> ShellCommandReturnType {
@@ -248,11 +173,14 @@ pub fn banner(config: &'static Config<'static>) -> ShellCommandReturnType {
     Type 'repo' or click <u><a class="text-light-blue dark:text-dark-blue underline" href="{repo}" target="_blank">here</a></u> for the Github repository.
     </pre>
         "#,repo = config.repo).to_owned();
+    let output_component: Box<OutputComponent> = Box::new(OutputComponent::Legacy(LegacyProps {
+        legacy_output: result_string,
+    }));
     let operation = None;
-    Ok((result_string, operation))
+    Ok((output_component, operation))
 }
 
-pub fn welcome_string(config: &'static Config<'static>) -> ShellCommandReturnType {
+pub fn welcome_string(_config: &'static Config<'static>) -> ShellCommandReturnType {
     let result_string = format!(
         r#"
     <span class="font-bold text-3xl">Welcome To</span>
@@ -279,7 +207,10 @@ pub fn welcome_string(config: &'static Config<'static>) -> ShellCommandReturnTyp
         .to_owned();
 
     let operation = Some(Operation::StreamString(operation_string));
-    Ok((result_string, operation))
+    let output_component: Box<OutputComponent> = Box::new(OutputComponent::Legacy(LegacyProps {
+        legacy_output: result_string,
+    }));
+    Ok((output_component, operation))
 }
 
 pub fn change_theme(_args: Vec<&str>, window: Window) -> ShellCommandReturnType {
@@ -298,7 +229,11 @@ pub fn change_theme(_args: Vec<&str>, window: Window) -> ShellCommandReturnType 
             .set_class_name("");
         let result_string = "Theme changed to light theme".to_owned();
         let operation = None;
-        Ok((result_string, operation))
+        let output_component: Box<OutputComponent> =
+            Box::new(OutputComponent::Legacy(LegacyProps {
+                legacy_output: result_string,
+            }));
+        Ok((output_component, operation))
     } else {
         document
             .query_selector("#theme")
@@ -308,7 +243,11 @@ pub fn change_theme(_args: Vec<&str>, window: Window) -> ShellCommandReturnType 
 
         let result_string = "Theme changed to dark theme".to_owned();
         let operation = None;
-        Ok((result_string, operation))
+        let output_component: Box<OutputComponent> =
+            Box::new(OutputComponent::Legacy(LegacyProps {
+                legacy_output: result_string,
+            }));
+        Ok((output_component, operation))
     }
 }
 
@@ -317,21 +256,16 @@ pub async fn execute_command(
     args: Vec<&str>,
     window: Window,
     config: &'static Config<'static>,
-) -> Result<(String, Option<Operation>), Error> {
+) -> Result<(Box<OutputComponent>, Option<Operation>), Error> {
     match command.as_str() {
         "help" => Ok(help(args).unwrap()),
         "banner" => Ok(banner(config).unwrap()),
         "about" => Ok(about(args, config).unwrap()),
-        "bing" => Ok(bing(args, window).unwrap()),
         "repo" => Ok(repo(args, window, config).unwrap()),
         "resume" => Ok(resume(args, window, config).unwrap()),
         "donate" => Ok(donate(args).unwrap()),
         "google" => Ok(google(args, window).unwrap()),
-        "duckduckgo" => Ok(duckduckgo(args, window).unwrap()),
-        "reddit" => Ok(reddit(args, window).unwrap()),
         "whoami" => Ok(whoami(args, config).unwrap()),
-        "ls" => Ok(ls(args).unwrap()),
-        "cd" => Ok(cd(args).unwrap()),
         "echo" => Ok(echo(args).unwrap()),
         "sumfetch" => Ok(sumfetch(args, config).unwrap()),
         "theme" => Ok(change_theme(args, window).unwrap()),
@@ -340,7 +274,9 @@ pub async fn execute_command(
         "weather" => Ok(weather(args).await.unwrap()),
         "quote" => Ok(quote(args).await.unwrap()),
         &_ => Ok((
-            "Unvalid Command...  type 'help' to get started".to_owned(),
+            Box::new(OutputComponent::Legacy(LegacyProps {
+                legacy_output: "Unvalid Command...  type 'help' to get started".to_owned(),
+            })),
             None,
         )),
     }
