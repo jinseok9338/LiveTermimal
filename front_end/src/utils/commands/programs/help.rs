@@ -30,6 +30,9 @@ pub fn help(props: &HelpProps) -> Html {
     if arg.is_none() {
         result = html! {
             <div class="whitespace-pre-wrap mb-2 leading-normal">
+            <div class="flex"><p class="font-bold">{"Welcome to LiveTerm"}</p></div>
+            <div class="flex"><p class="font-bold">{"Here are all the commands"}</p></div>
+            <br/>
             { for COMMAND_LIST.iter().map(|(command, description)| html! {
                     <div class="flex"><p class="text-description font-bold">{command}</p><p class="description">{" - "}</p><p class="description">{description}</p></div>
             }) }

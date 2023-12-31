@@ -15,6 +15,7 @@ pub mod config {
         pub repo: &'a str,
         pub resume_url: &'a str,
         pub donate_urls: DonateURLs<'a>,
+        pub group: &'a str,
     }
 
     #[derive(Deserialize, Debug, Clone, PartialEq)]

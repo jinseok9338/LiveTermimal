@@ -29,4 +29,5 @@ regex = "1"
 lazy_static = "1.4.0"
 wasm-bindgen = "0.2.89"
 wasm-bindgen-test = "0.3.39"
+byteorder = "1.5.0"
 

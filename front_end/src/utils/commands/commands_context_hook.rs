@@ -40,6 +40,7 @@ pub const CONFIG: Config = Config {
     email: "jinseok9338@gmail.com",
     ps1_hostname: "hostName",
     ps1_username: "Jason Jin",
+    group: "individual",
     repo: "https://github.com/jinseok9338/CardGame",
     resume_url: "https://jinseokseo.tiiny.site/",
     donate_urls: DonateURLs {
