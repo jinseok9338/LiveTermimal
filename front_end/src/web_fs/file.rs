@@ -6,6 +6,11 @@ use super::{
 };
 use lazy_static::lazy_static;
 
+pub struct ReadData {
+    pub bytes_read: u64,
+    pub buffer: Vec<u8>,
+}
+
 lazy_static! {
     static ref FLAG_CACHE: Mutex<HashMap<String, FileFlag>> = Mutex::new(HashMap::new());
 }
@@ -97,7 +102,7 @@ impl FileFlag {
         self.flag_str.contains('r') || self.flag_str.contains('+')
     }
     /// Returns true if the file is writable.
-    pub fn is_writable(&self) -> bool {
+    pub fn is_writeable(&self) -> bool {
         self.flag_str.contains('w') || self.flag_str.contains('a') || self.flag_str.contains('+')
     }
     /// Returns true if the file is executable.
@@ -140,7 +145,7 @@ impl FileFlag {
     /// Returns one of the static fields on this object that indicates the
     /// appropriate response to the path not existing.
     pub fn path_not_exists_action(&self) -> ActionType {
-        if (self.is_writable() || self.is_appendable()) && self.flag_str != "r+" {
+        if (self.is_writeable() || self.is_appendable()) && self.flag_str != "r+" {
             ActionType::CREATE_FILE
         } else {
             ActionType::THROW_EXCEPTION
@@ -151,58 +156,58 @@ impl FileFlag {
     pub fn get_mode(&self) -> u32 {
         let mut mode = 0;
         mode |= self.is_readable() as u32;
-        mode |= (self.is_writable() as u32) << 1;
+        mode |= (self.is_writeable() as u32) << 1;
         mode |= (self.is_executable() as u32) << 2;
         mode
     }
 }
 
 pub trait File {
-    fn get_pos(&self) -> io::Result<u64>;
-    fn stat(&self) -> io::Result<Stats>;
-    fn stat_sync(&self) -> io::Result<Stats>;
-    fn close(&self) -> io::Result<()>;
-    fn close_sync(&self) -> io::Result<()>;
-    fn truncate(&self, len: u64) -> io::Result<()>;
-    fn truncate_sync(&self, len: u64) -> io::Result<()>;
-    fn sync(&self) -> io::Result<()>;
-    fn sync_sync(&self) -> io::Result<()>;
+    fn get_pos(&self) -> Result<u64, ApiError>;
+    fn stat(&self) -> Result<Stats, ApiError>;
+    fn stat_sync(&self) -> Result<Stats, ApiError>;
+    fn close(&self) -> Result<(), ApiError>;
+    fn close_sync(&self) -> Result<(), ApiError>;
+    fn truncate(&mut self, len: u64) -> Result<(), ApiError>;
+    fn truncate_sync(&mut self, len: u64) -> Result<(), ApiError>;
+    fn sync(&self) -> Result<(), ApiError>;
+    fn sync_sync(&self) -> Result<(), ApiError>;
     fn write(
-        &self,
+        &mut self,
         buffer: &[u8],
         offset: usize,
         length: usize,
         position: Option<u64>,
-    ) -> io::Result<usize>;
+    ) -> Result<usize, ApiError>;
     fn write_sync(
-        &self,
+        &mut self,
         buffer: &[u8],
         offset: usize,
         length: usize,
         position: Option<u64>,
-    ) -> io::Result<usize>;
+    ) -> Result<usize, ApiError>;
     fn read(
-        &self,
+        &mut self,
         buffer: &mut [u8],
         offset: usize,
         length: usize,
         position: Option<u64>,
-    ) -> io::Result<usize>;
+    ) -> Result<ReadData, ApiError>;
     fn read_sync(
-        &self,
+        &mut self,
         buffer: &mut [u8],
         offset: usize,
         length: usize,
         position: Option<u64>,
-    ) -> io::Result<usize>;
-    fn datasync(&self) -> io::Result<()>;
-    fn datasync_sync(&self) -> io::Result<()>;
-    fn chown(&self, uid: u32, gid: u32) -> io::Result<()>;
-    fn chown_sync(&self, uid: u32, gid: u32) -> io::Result<()>;
-    fn chmod(&self, mode: u32) -> io::Result<()>;
-    fn chmod_sync(&self, mode: u32) -> io::Result<()>;
-    fn utimes(&self, atime: SystemTime, mtime: SystemTime) -> io::Result<()>;
-    fn utimes_sync(&self, atime: SystemTime, mtime: SystemTime) -> io::Result<()>;
+    ) -> Result<usize, ApiError>;
+    fn datasync(&self) -> Result<(), ApiError>;
+    fn datasync_sync(&self) -> Result<(), ApiError>;
+    fn chown(&mut self, uid: u32, gid: u32) -> Result<(), ApiError>;
+    fn chown_sync(&mut self, uid: u32, gid: u32) -> Result<(), ApiError>;
+    fn chmod(&mut self, mode: u32) -> Result<(), ApiError>;
+    fn chmod_sync(&mut self, mode: u32) -> Result<(), ApiError>;
+    fn utimes(&self, atime: SystemTime, mtime: SystemTime) -> Result<(), ApiError>;
+    fn utimes_sync(&self, atime: SystemTime, mtime: SystemTime) -> Result<(), ApiError>;
 }
 
 pub struct BaseFile;
@@ -281,7 +286,7 @@ mod tests {
         let file_flag = FileFlag::new("r+".to_string()).unwrap();
 
         assert_eq!(file_flag.is_readable(), true);
-        assert_eq!(file_flag.is_writable(), true);
+        assert_eq!(file_flag.is_writeable(), true);
         assert_eq!(file_flag.is_truncating(), false);
         assert_eq!(file_flag.is_appendable(), false);
         assert_eq!(file_flag.is_synchronous(), false);

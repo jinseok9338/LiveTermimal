@@ -22,6 +22,8 @@ pub enum FileType {
 /// Attribute descriptions are from `man 2 stat`
 /// See: http://nodejs.org/api/fs.html#fs_class_fs_stats
 /// See: http://man7.org/linux/man-pages/man2/stat.2.html
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Stats {
     // Number of blocks
     pub blocks: u64,

@@ -138,6 +138,10 @@ impl ApiError {
         ApiError::file_error(ErrorCode::EPERM, path)
     }
 
+    pub fn enotsup(path: PathBuf) -> ApiError {
+        ApiError::file_error(ErrorCode::ENOTSUP, path)
+    }
+
     pub fn enotempty(path: PathBuf) -> ApiError {
         ApiError::file_error(ErrorCode::ENOTEMPTY, path)
     }
