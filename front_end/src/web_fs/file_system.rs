@@ -5,7 +5,6 @@ use std::{
 };
 
 use futures::Future;
-use tokio::sync::oneshot;
 
 use super::{
     cred::Cred,
